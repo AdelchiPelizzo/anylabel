@@ -1,0 +1,103 @@
+<!--
+ - Created by Adelchi on 26/03/2020.
+ -->
+
+
+
+<template >
+    <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+        Any Label Component
+    </h2>
+
+    Label color>> {labelColor}</br>
+    Font color >> {fontColor}</br>
+<!--    Labels List >>-->
+<!--    <ul>-->
+<!--        <template for:each={labelsList} for:item="label">-->
+<!--            <li key={label}>{label}</li>-->
+<!--        </template>-->
+<!--    </ul>-->
+<!--    All Labels List >>-->
+<!--    <ul>-->
+<!--        <template for:each={allLabelsList} for:item="label">-->
+<!--            <li key={label}>{label}</li>-->
+<!--        </template>-->
+<!--    </ul>-->
+
+    <div class="slds-p-around_medium ">
+        <lightning-input type="color" name="input-color" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
+    </div>
+    <div class="slds-pill-container current" ondrop={drop_handler} ondragover={dragover_handler}>
+        <div > </div>
+        <template for:each={labelsList} for:item="assignedLabel" >
+            <div class="slds-pill" draggable="true" key={assignedLabel} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={assignedLabel}>
+                <span class="slds-m-around--xx-small">
+                                {assignedLabel}
+                            </span>
+            </div>
+        </template>
+        <!--        </ul>-->
+    </div>
+    <div class="slds-pill-container available" ondrop={drop_handler} ondragover={dragover_handler} >
+        <div > </div>
+        <template for:each={labelsAvailable} for:item="labelAvailable">
+            <div class="slds-pill" draggable="true" key={labelAvailable} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable}>
+                            <span class="slds-m-around--xx-small">
+                                {labelAvailable}
+                            </span>
+            </div>
+        </template>
+        <!--        </ul>-->
+    </div>
+    <lightning-button title="save" label="Save" onclick={saveLabels}>save</lightning-button>
+<!--    <div id="target" ondrop={drop_handler} ondragover={dragover_handler}>Drop Zone</div>-->
+
+
+    <!--    <br class="slds-m-top_medium slds-m-bottom_x-large">-->
+    <!--    <h2 class="slds-text-heading_medium slds-m-bottom_medium">-->
+    <!--        Any Label Component-->
+    <!--    </h2>-->
+
+    <!--    Label color>> {labelColor}</br>-->
+    <!--    Font color >> {fontColor}</br>-->
+    <!--    Labels List >> -->
+    <!--    <ul>-->
+    <!--        <template for:each={labelsList.data} for:item="label">-->
+    <!--            <li key={label}>{label}</li>-->
+    <!--        </template>-->
+    <!--    </ul>-->
+    <!--    All Labels List >>-->
+    <!--    <ul>-->
+    <!--        <template for:each={allLabelsList.data} for:item="label">-->
+    <!--            <li key={label}>{label}</li>-->
+    <!--        </template>-->
+    <!--    </ul>-->
+
+    <!--    <div class="slds-p-around_medium lgc-bg">-->
+    <!--        <lightning-input type="color" name="input-color" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>-->
+    <!--    </div>-->
+    <!--    <div class="slds-pill-container"  >-->
+    <!--        <ul class="container" >-->
+    <!--            <template for:each={allLabelsList.data} for:item="labelAvailable">-->
+    <!--                <li class="slds-pill" draggable="true" key={labelAvailable} ondragstart={labelDragStart} ondrag= {labelDragOver} >-->
+    <!--                    <span class="slds-m-around&#45;&#45;xx-small">-->
+    <!--                        {labelAvailable}-->
+    <!--                    </span>-->
+    <!--                </li>-->
+    <!--            </template>-->
+    <!--        </ul>-->
+    <!--    </div>-->
+    <!--    <div class="slds-pill-container" >-->
+    <!--        <ul class="container"  >-->
+    <!--            <template for:each={labelsList.data} for:item="assignedLabel" >-->
+    <!--                <li class="slds-pill" draggable="true" key={assignedLabel} ondragstart={labelDragStart} ondrag={labelDragOver}>-->
+    <!--                    <span class="slds-m-around&#45;&#45;xx-small">-->
+    <!--                        {assignedLabel}-->
+    <!--                    </span>-->
+    <!--                </li>-->
+    <!--            </template>-->
+    <!--        </ul>-->
+    <!--    </div>-->
+</template>
+
+
