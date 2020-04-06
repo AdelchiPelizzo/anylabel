@@ -41,9 +41,28 @@ public with sharing class AnyLabelCtrl {
             userIdList.add(shareList[i].UserOrGroupId);
         }
         if(userIdList.contains(UserInfo.getUserId())){
+            System.debug(true);
             return true;
         }else{
+            System.debug(false);
             return false;
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static void NewLabel(String recordId, String fc, String bc, String n){
+        Id recId = recordId;
+        String obj = recId.getSobjectType().getDescribe().localName;
+        try {
+            AnyLabel__c a = new AnyLabel__c(
+                    Assignee__c = obj,
+                    Font_Color__c = fc,
+                    Background_Color__c = bc,
+                    Name = n);
+                    insert a;
+        } catch(DmlException e)
+        {
+            system.debug(e.getMessage());
         }
     }
 
@@ -54,8 +73,8 @@ public with sharing class AnyLabelCtrl {
         Boolean gotLabel = false;
         List<String> values = new List<String>();
         String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
-        DescribeFieldResult picklistUsingGlobal = AnyLabel__c.Assignee__c.getDescribe();
-        List<Schema.PicklistEntry> entries = picklistUsingGlobal.getPicklistValues();
+        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
+        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
         for(Integer i=0; i<entries.size(); i++){
             PicklistEntry pickListValue = entries[i];
             if(pickListValue.value == obj){
@@ -80,7 +99,7 @@ public with sharing class AnyLabelCtrl {
         List<SObject> record = Database.query(query);
         system.debug(record.size());
         List<String> labelsList = new List<String>();
-        if(record[0].get('labels__c')!= ''){
+        if(record[0].get('labels__c')!= ''&& record[0].get('labels__c') != null){
             String labelsListString = (String) record[0].get('Labels__c');
             labelsList = labelsListString.split(';');
         }
@@ -88,41 +107,166 @@ public with sharing class AnyLabelCtrl {
         return labelsList;
     }
 
-    @AuraEnabled(cacheable=true)
-    public static void updateGlobalPicklist(){
-        List<String> SObjectList = new List<String>();
-        for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().Values()){
-            String name = objTyp.getDescribe().getName();
-            if(objTyp.getDescribe().isCustom()){
-                SobjectList.add(name);
-            }
-        }
-        System.debug( 'Name : ' + SObjectList);
-    }
-}
-                // Exclude all the unwanted Sobjects e.g. History, Share etc..
-//                if((!name.containsignorecase('history') && !name.containsignorecase('tag')&&
-//                        !name.containsignorecase('share') && !name.containsignorecase('feed')) ||
-//                        name.toLowerCase.right(3) ==  '__c'){
-//                    SobjectList.add(name);
-//                    System.debug( 'Name : ' + name);
+//    @AuraEnabled(cacheable=true)
+//    public static void updateGlobalPicklist(){
+//        List<String> SObjectList = new List<String>();
+//        for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().Values()){
+//            String name = objTyp.getDescribe().getName();
+//            if(!objTyp.getDescribe().isCreateable())
+//                continue;
+//            if(!objTyp.getDescribe().isCustom() && objTyp.getDescribe().getRecordTypeInfos().size() > 0 && objTyp.getDescribe().isAccessible()
+//                    && name != 'DuplicateRecordSet'
+//                    && name != 'PartyConsent'
+//                    && name != 'ContentVersion'
+//                    && name != 'ContentVersion'
+//                    && name != 'SearchPromotionRule'
+//                    && name != 'Pricebook2'
+//                    && name != 'Individual'
+//                    && name != 'Event'
+//                    && name != 'Task'
+//                    && name != 'ContentVersion'
+//                    && name != 'Product2'
+//                    && name != 'Macro'
+//                    && name != 'MacroInstruction'
+//                    && name != 'Address'
+//                    && name != 'Location'
+//                    && name != 'AssociatedLocation'
+//                    && name != 'CalendarView'
+//                    && name != 'QuickText'
+//                    && name != 'SOSSession'
+//                    && name != 'DuplicateRecordItem'
+//                    && name != 'AssetRelationship'
+//                    && name != 'ListEmail'
+//                    && name != 'ListEmailRecipientSource'
+//                    && name != 'RecordAction'
+//                    && name != 'OrgDeleteRequest'
+//                    && name != 'FlowRecordRelation'
+//                    && name != 'ContactRequest'
+//                    && name != 'ContactPointEmail'
+//                    && name != 'ContactPointPhone'
+//                    && name != 'ListEmailIndividualRecipient'
+//                    && name != 'UserEmailPreferredPerson'
+//                    && name != 'ConsumptionSchedule'
+//                    && name != 'ConsumptionRate'
+//                    && name != 'ProductConsumptionSchedule'
+//                    && name != 'AppAnalyticsQueryRequest'
+//                    && name != 'ContactPointConsent'
+//                    && name != 'ContactPointTypeConsent'
+//                    && name != 'DataUseLegalBasis'
+//                    && name != 'DataUsePurpose'
+//                    && name != 'ExpressionFilter'
+//                    && name != 'ExpressionFilterCriteria'
+//                    && name != 'Image'
+//                    && name != 'Recommendation'
+//                    && name != 'AuthorizationForm'
+//                    && name != 'AuthorizationFormConsent'
+//                    && name != 'AuthorizationFormDataUse'
+//                    && name != 'AuthorizationFormText'
+//                    && name != 'PromptAction'
+//                    && name != 'OrgMetric'
+//                    && name != 'OrgMetricScanResult'
+//                    && name != 'OrgMetricScanSummary'
+//                    && name != 'RevenueElement'
+//                    && name != 'CommSubscription'
+//                    && name != 'CommSubscriptionChannelType'
+//                    && name != 'CommSubscriptionConsent'
+//                    && name != 'CommSubscriptionTiming'
+//                    && name != 'EngagementChannelType'
+//                    ){
+//                SobjectList.add(name);
+//                System.debug( 'Name : ' + name);
+//            } else if(objTyp.getDescribe().isCustom() && name != 'AnyLabel__c'){
+//                SobjectList.add(name);
+//                System.debug( 'Name : ' + name);
+//            }
+//        }
+//        System.debug( SObjectList.size());
+
+
+//        DescribeFieldResult pickList = SObjectType.AnyLabel__c.fields.Assignee__c;
+//        List<PicklistEntry> pickListEntries = pickList.getPicklistValues();
+//
+//        List<String> pickListValuesActive   = new List<String>();
+//        List<String> pickListValuesInactive = new List<String>();
+//
+//        for(Schema.PicklistEntry pickListVal : pickListEntries) {
+//            if(pickListVal.isActive()) {
+//                pickListValuesActive.add(pickListVal.getLabel());
+//            } else {
+//                pickListValuesInactive.add(pickListVal.getLabel());
+//            }
+//        }
+//        system.debug(pickListValuesActive+'  '+pickListValuesInactive);
+
+//        List<AnyLabel__c> anyLabelList = new List<AnyLabel__c>();
+//        anyLabelList = [SELECT Assignee__c FROM AnyLabel__c];
+//        system.debug(anyLabelList.size());
+//        for(AnyLabel__c a : anyLabelList){
+//            a.Assignee__c = '';
+//            a.Assignee__c = String.join(SObjectList,';');
+//        }
+//        update anyLabelList;
+
+
+
+
+
+//        HttpRequest reqGET = new HttpRequest();
+//        reqGET.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
+//        reqGET.setHeader('Content-Type', 'application/json');
+//        reqGET.setEndpoint(URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v48.0/tooling/query/?q=SELECT+Id,FullName+FROM+GlobalValueSet');
+//        reqGET.setMethod('GET');
+//        Http httpReqGET = new Http();
+//        HttpResponse resGET  = httpReqGET.send(reqGET);
+//        JSONParser parser = JSON.createParser(resGET.getBody());
+//        String globalPicklistName = '';
+//        String globalPicklistId = '';
+//        while (parser.nextToken() != null) {
+//            if (parser.getText() == 'FullName') {
+//                parser.nextToken();
+//                globalPicklistName = parser.getText();
+//            }
+//            if(globalPicklistName == 'SObject'){
+//                parser.nextToken();
+//                if(parser.getText() == 'Id'){
+//                    parser.nextToken();
+//                    globalPicklistId = parser.getText();
+//                    System.debug(globalPicklistId);
 //                }
 //            }
-//        DescribeFieldResult picklistUsingGlobal = SObjectType.AnyLabel__c.fields.Assignee__c;
-//        List<PicklistEntry> entries = picklistUsingGlobal.getPicklistValues();
-//        system.debug(entries);
+//        }
+
+
+//        String fieldDef = '{"Metadata": {"customValue": [';
 //
-//        String fieldDef = '{"Metadata": {"customValue": [{"color": null,"default": false,"description": null,"isActive": null,"label": "Opportunity2","urls": null,"valueName": "Opportunity2"}],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
+////        for(Integer i=0; i<SObjectList.size(); i++){
+//
+////        }
+////
+////        for(String s : SObjectList){
+//            fieldDef += '{"color": null,"default": false,"description": null,"isActive": true,"label": "'+SObjectList[0]+'",urls": null,"valueName": "'+SObjectList[0]+'"}';
+////        }
+//
+//        fieldDef += '],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
+//
+////        String fieldDef = '{"Metadata": {"customValue": [{"color": null,"default": false,"description": null,"isActive": true,"label": "Opportunity2","urls": null,"valueName": "Opportunity2"}],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
 //        HttpRequest req = new HttpRequest();
+//        system.debug(fieldDef);
 //        req.setBody(fieldDef);
 //        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
 //        req.setHeader('Content-Type', 'application/json');
-//        req.setEndpoint(URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v47.0/tooling/sobjects/GlobalValueSet/0Nt3z000000g8BO?_HttpMethod=PATCH');//replace id with your GlobalPicklist Id**
+//        system.debug(globalPicklistId);
+//        req.setEndpoint(URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v47.0/tooling/sobjects/GlobalValueSet/'+globalPicklistId+'?_HttpMethod=PATCH');//replace id with your GlobalPicklist Id**
 //        req.setMethod('POST');
 //        req.setHeader('X-HTTP-Method-Override','PATCH');
 //        Http httpreq = new Http();
 //        HttpResponse res  = httpreq.send(req);
 //        system.debug(res.getBody());
+    }
+
+//}
+
+
 
 //    }
 

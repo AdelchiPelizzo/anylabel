@@ -5,10 +5,19 @@
 import {LightningElement, wire, track, api} from 'lwc';
 import getAssignedLabels from '@salesforce/apex/AnyLabelCtrl.getAssignedLabelsList';
 import getObjectLabels from '@salesforce/apex/AnyLabelCtrl.getSObjectLabelsListAll';
+import is_admin from '@salesforce/apex/AnyLabelCtrl.isAdmin';
+import LABELS_OBJECT from  '@salesforce/schema/AnyLabel__c';
+import LABEL_FONT_COLOR from '@salesforce/schema/AnyLabel__c.Font_Color__c';
+import LABEL_BACKGROUND_COLOR from '@salesforce/schema/AnyLabel__c.Background_Color__c';
+import ASSIGNEE_NAME from '@salesforce/schema/AnyLabel__c.Assignee__c';
+import LABEL_NAME from '@salesforce/schema/AnyLabel__c.Name';
 import { updateRecord } from 'lightning/uiRecordApi';
+import { createRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class label_management extends LightningElement {
+
+    showModal = false;
 
     @api recordId;
     @api objectApiName;
@@ -23,7 +32,11 @@ export default class label_management extends LightningElement {
 
     // @wire  (getAssignedLabels, {recordId: '$recordId'}) labelsList;
     // @wire  (getObjectLabels, {recordId: '$recordId'}) allLabelsList;
+    @wire  (is_admin) isAdmin;
     @track labelsAvailable = [];
+
+
+    @api isAdmin;
 
     // @api drag_handler;
     // @api dragstart_handler;
@@ -32,17 +45,16 @@ export default class label_management extends LightningElement {
     // @api  dragover_handler;
 
     connectedCallback(){
+        is_admin().then(result => {
+            this.isAdmin = result;
+        });
         getAssignedLabels({recordId: this.recordId}).then(result => {this.labelsList = result;}).then( result =>{
             getObjectLabels({recordId: this.recordId}).then(result => {this.allLabelsList = result;}).then(result => {
-                console.log("all labels ... "+this.allLabelsList);
-                console.log("assigned labels ... .... "+this.labelsList);
                 for(let i=0; i<this.allLabelsList.length; i++){
                     if(!this.labelsList.includes(this.allLabelsList[i])){
                         this.labelsAvailable.push(this.allLabelsList[i]);
-                        console.log("inside if ... "+this.labelsAvailable);
                     }
                 }
-                console.log("all labels available lists ... "+this.labelsAvailable);
                 // this.drag_handler = function(ev) {
                 //     ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
                 // };
@@ -92,6 +104,68 @@ export default class label_management extends LightningElement {
                 // };
             });
         });
+    }
+
+    toggleModal(){
+        if(this.showModal == false){
+            this.showModal = true;
+        }else{
+            this.showModal = false;
+        }
+    }
+
+    handleDialogClose() {
+        alert('closed ... ');
+        this.showModal = false;
+        //Let parent know that dialog is closed (mainly by that cross button) so it can set proper variables if needed
+        // const closedialog = new CustomEvent('closedialog');
+        // this.dispatchEvent(closedialog);
+        // this.hide();
+    }
+
+    createNewLabel() {
+        let el = this.template.querySelector("lightning-input");
+        let name = JSON.parse(JSON.stringify(el.value));
+        let background_Color = this.labelColor;
+        let font_Color = this.fontColor;
+        if(!background_Color || !font_Color){
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Incomplete',
+                    message: 'Select a color',
+                    variant: 'error',
+                    mode: 'pester'
+                }),
+            );
+        }else{
+            const fields = {};
+            console.log(name+' '+background_Color+' '+font_Color);
+            fields[LABEL_NAME.fieldApiName] = name;
+            fields[LABEL_FONT_COLOR.fieldApiName] = font_Color;
+            fields[LABEL_BACKGROUND_COLOR.fieldApiName] = background_Color;
+            fields[ASSIGNEE_NAME.fieldApiName] = this.objectApiName;
+            const recordInput = { apiName: LABELS_OBJECT.objectApiName, fields };
+            createRecord(recordInput).then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Label created',
+                        variant: 'success',
+                    }),
+                );
+                window.location.reload();
+            }).catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating record',
+                        message: error.body.message,
+                        variant: 'error',
+                        mode: 'pester'
+                    }),
+                );
+            });
+
+        }
     }
 
     saveLabels(){
