@@ -5,6 +5,7 @@
 import {LightningElement, wire, track, api} from 'lwc';
 import getAssignedLabels from '@salesforce/apex/AnyLabelCtrl.getAssignedLabelsList';
 import getObjectLabels from '@salesforce/apex/AnyLabelCtrl.getSObjectLabelsListAll';
+import update_picklist from '@salesforce/apex/GlobalPicklistEngine.runUpdate';
 import is_admin from '@salesforce/apex/AnyLabelCtrl.isAdmin';
 import LABELS_OBJECT from  '@salesforce/schema/AnyLabel__c';
 import LABEL_FONT_COLOR from '@salesforce/schema/AnyLabel__c.Font_Color__c';
@@ -36,7 +37,7 @@ export default class label_management extends LightningElement {
     @track labelsAvailable = [];
 
 
-    @api isAdmin;
+    @api isAdmin = false;
 
     // @api drag_handler;
     // @api dragstart_handler;
@@ -46,6 +47,7 @@ export default class label_management extends LightningElement {
 
     connectedCallback(){
         is_admin().then(result => {
+            console.log(result);
             this.isAdmin = result;
         });
         getAssignedLabels({recordId: this.recordId}).then(result => {this.labelsList = result;}).then( result =>{
@@ -112,6 +114,7 @@ export default class label_management extends LightningElement {
         }else{
             this.showModal = false;
         }
+
     }
 
     handleDialogClose() {

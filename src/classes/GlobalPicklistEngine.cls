@@ -13,7 +13,22 @@ public with sharing class GlobalPicklistEngine {
  */
 
     @AuraEnabled(cacheable=true)
+//    @InvocableMethod
+    public static void runUpdate(){
+        System.debug('running update ....');
+        updateGlobalPicklist(getSObjectList(), getGlobalPicklistId('SObject'));
+    }
+
+    private final AnyLabel__c a;
+    public GlobalPicklistEngine(ApexPages.StandardController stdController) {
+        this.a = (AnyLabel__c)stdController.getRecord();
+    }
+
+
+
+    @AuraEnabled(cacheable=true)
     public static List<String> getSObjectList(){
+        System.debug('getting sobjects list ....');
         List<String> SObjectList = new List<String>();
         for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().Values()){
             String name = objTyp.getDescribe().getName();
@@ -83,16 +98,17 @@ public with sharing class GlobalPicklistEngine {
                 SobjectList.add(name);
             }
         }
-        system.debug(SObjectList);
         return SObjectList;
     }
 
 
     public static String getGlobalPicklistId(String globalPicklistName){
+        System.debug('getting picklist id ....');
+        System.debug(UserInfo.getOrganizationId()+''+UserInfo.getSessionId().SubString(15));
         HttpRequest reqGET = new HttpRequest();
         reqGET.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
         reqGET.setHeader('Content-Type', 'application/json');
-        reqGET.setEndpoint(URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v48.0/tooling/query/?q=SELECT+Id,FullName+FROM+GlobalValueSet');
+        reqGET.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v48.0/tooling/query/?q=SELECT+Id,FullName+FROM+GlobalValueSet');
         reqGET.setMethod('GET');
         Http httpReqGET = new Http();
         HttpResponse resGET  = httpReqGET.send(reqGET);
@@ -113,30 +129,40 @@ public with sharing class GlobalPicklistEngine {
                 }
             }
         }
+        System.debug('getting picklist id');
         return globalPicklistId;
     }
 
     public static void updateGlobalPicklist(List<String> SObjectList, String globalPicklistId){
+        System.debug('updating picklist ....');
+        Integer size = SObjectList.size();
+//        DescribeFieldResult picklistUsingGlobal = SObjectType.AnyLabel__c.fields.Assignee__c;
+//        List<PicklistEntry> entries = picklistUsingGlobal.getPicklistValues();
+        String fieldDef = '{"Metadata": {"customValue": [';
         for(Integer i=0; i<SObjectList.size(); i++){
             String s = SObjectList[i];
-            String fieldDef = '{"Metadata":{"customValue":[{"color":null,"default":false,"description":null,"isActive":true,"label":"'+s+'","urls":null,"valueName":"'+s+'"}],"description":null,"masterLabel":"SObject","sorted":false,"urls":null},"FullName":"SObject"}';
-//        String fieldDef = '{"Metadata": {"customValue": [';
+//            String fieldDef = '{"Metadata":{"customValue":[{"color":null,"default":false,"description":null,"isActive":true,"label":"'+s+'","urls":null,"valueName":"'+s+'"}],"description":null,"masterLabel":"SObject","sorted":false,"urls":null},"FullName":"SObject"}';
+            fieldDef += '{"color":null,"default":false,"description":null,"isActive":true,"label":"'+s+'","urls":null,"valueName":"'+s+'"}';
+            if(i<(size-1)){
+                fieldDef += ',';
+            }
+        }
 //        fieldDef += '{"color": null,"default": false,"description": null,"isActive": true,"label": "'+s+'",urls": null,"valueName": "'+s+'"}';
-//        fieldDef += '],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
+        fieldDef += '],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
+            system.debug(fieldDef);
 
 //        String fieldDef = '{"Metadata": {"customValue": [{"color": null,"default": false,"description": null,"isActive": true,"label": "Opportunity2","urls": null,"valueName": "Opportunity2"}],"description": null,"masterLabel": "SObject","sorted": false,"urls": null},"FullName": "SObject"}';
             HttpRequest req = new HttpRequest();
-//            system.debug(fieldDef);
             req.setBody(fieldDef);
             req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
             req.setHeader('Content-Type', 'application/json');
-            req.setEndpoint(URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v47.0/tooling/sobjects/GlobalValueSet/'+globalPicklistId+'?_HttpMethod=PATCH');//replace id with your GlobalPicklist Id**
+            req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/tooling/sobjects/GlobalValueSet/'+globalPicklistId+'?_HttpMethod=PATCH');//replace id with your GlobalPicklist Id**
             req.setMethod('POST');
-            req.setHeader('X-HTTP-Method-Override','PATCH');
+//            req.setHeader('X-HTTP-Method-Override','PATCH');
             Http httpReq = new Http();
             HttpResponse res  = httpReq.send(req);
 //            system.debug(res.getBody());
 
-        }
+//        }
     }
 }

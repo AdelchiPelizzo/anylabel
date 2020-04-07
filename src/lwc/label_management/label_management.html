@@ -9,6 +9,7 @@
         Any Label Component
     </h2>
 
+    {isAdmin}
 
     <template if:true={isAdmin}>
         <lightning-button title="open" label="Open" onclick={toggleModal}>open</lightning-button>
@@ -74,6 +75,8 @@
                 </ul>
                 <lightning-input id="name" label="Name" style="width: 30%; margin-bottom: 6px" ></lightning-input>
                 <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
+                </lightning-button>
+                <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={}>
                 </lightning-button>
 
                 <div class="slds-p-around_medium ">
