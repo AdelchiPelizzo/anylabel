@@ -29,15 +29,8 @@ export default class label_management extends LightningElement {
     @track labelsToBeRemoved;
     @track error;
     @track error2;
-    // @wire  (getAssignedLabels, {recordId: '$recordId'}) labelsList;
-    // @wire  (getObjectLabels, {recordId: '$recordId'}) allLabelsList;
     @wire (is_admin) isAdmin;
     @track labelsAvailable = [];
-    // @api drag_handler;
-    // @api dragstart_handler;
-    // @api drop_handler;
-    // @api dragend_handler;
-    // @api  dragover_handler;
 
     connectedCallback(){
         is_admin().then(result => {
@@ -193,6 +186,43 @@ export default class label_management extends LightningElement {
         let choice = confirm('Are you sure?\nYou are about to remove > "'+label+'" from available labels for all '+'"'+this.objectApiName+'".');
         if(choice){
             console.log("Removed ...");
+            alert(label);
+            // let data = event.dataTransfer.getData('text', event.target.firstChild.textContent);
+            // let objName = event.dataTransfer.getData("text", event.target.getAttribute("data-object"));
+            // console.log(objName);
+            let nodeChild = document.createElement("span");
+            let textnode = document.createTextNode(data);
+            // let buttonNode = document.createElement("button");
+            // let icon = document.createElement("span");
+            // let iconSymbol = document.createTextNode("+");
+            // icon.addEvententListener("click", this.removeFromAvailableLabels);
+            // icon.appendChild(iconSymbol);
+            // icon.setAttribute("style","display: block; font-family: Arial, sans-serif; font-size: 28px; font-weight: 100");
+            // icon.setAttribute("data-target-id", data);
+            // icon.setAttribute("data-target-object", objName);
+            // buttonNode.classList.add("slds-button", "slds-button_icon", "slds-button_icon", "slds-pill__remove");
+            // buttonNode.setAttribute("style", " transform: rotate(45deg); margin-bottom: 8.5px; padding-left: 2px; padding-bottom: 2px");
+            // buttonNode.appendChild(icon);
+            nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
+            nodeChild.appendChild(textnode);
+            let node = document.createElement("div");
+            node.classList.add("slds-pill");
+            node.style.cursor = "grab";
+            node.setAttribute("draggable", "true");
+            node.addEventListener("drag", this.drag_handler);
+            node.addEventListener("dragstart", this.dragstart_handler);
+            node.addEventListener("dragend", this.dragend_handler);
+            node.appendChild(nodeChild);
+            // node.appendChild(buttonNode);
+            node.setAttribute("data-id", data);
+            if(event.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
+                console.log('target removed.... '+event.currentTarget.classList);
+                console.log('target removed.... '+event.target.classList);
+                let el = this.template.querySelector('[data-id="'+data+'"]');
+                console.log(el);
+                el.remove();
+            }
+            event.currentTarget.appendChild(node);
         }else{
             console.log("Cancelled ...");
         }
@@ -286,4 +316,5 @@ export default class label_management extends LightningElement {
         let yiq = ((r*299)+(g*587)+(b*114))/1000;
         return (yiq >= 128) ? 'black' : 'white';
     }
+
 }

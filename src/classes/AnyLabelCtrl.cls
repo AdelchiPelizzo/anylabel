@@ -80,6 +80,28 @@ public with sharing class AnyLabelCtrl {
         String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
     }
 
+//    @AuraEnabled(cacheable=true)
+//    public static List<AnyLabel__c> getSObjectLabelsListAll(String recordId){
+//        Id recId = recordId;
+//        String obj = recId.getSobjectType().getDescribe().localName;
+////        Boolean gotLabel = false;
+//        List<AnyLabel__c> values = new List<AnyLabel__c>();
+//        String query = 'SELECT Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
+////        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
+////        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
+////        for(Integer i=0; i<entries.size(); i++){
+////            PicklistEntry pickListValue = entries[i];
+////            if(pickListValue.value == obj){
+////                gotLabel = true;
+//                values = Database.query(query);
+////                for(AnyLabel__c s : v){
+////                    values.add(s);
+////                }
+////            }
+////        }
+//        return  values;
+//    }
+
     @AuraEnabled(cacheable=true)
     public static List<String> getSObjectLabelsListAll(String recordId){
         Id recId = recordId;
