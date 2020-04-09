@@ -8,3 +8,12 @@
 .lgc-bg-inverse {
     background-color: rgb(22, 50, 92);
 }
+
+.grab {cursor: grab;}
+
+.grabbing {cursor: grabbing;}
+
+.close{
+    display: inline-block;
+    content: "\00d7"; /* This will render the 'X' */
+}

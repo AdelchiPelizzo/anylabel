@@ -12,8 +12,8 @@ public with sharing class GlobalPicklistEngine {
  * @return (description of the return value)
  */
 
-    @AuraEnabled(cacheable=true)
-//    @InvocableMethod
+//    @AuraEnabled(cacheable=true)
+    @InvocableMethod
     public static void runUpdate(){
         System.debug('running update ....');
         updateGlobalPicklist(getSObjectList(), getGlobalPicklistId('SObject'));

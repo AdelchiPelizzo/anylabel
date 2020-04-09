@@ -42,11 +42,18 @@ public with sharing class AnyLabelCtrl {
         }
         if(userIdList.contains(UserInfo.getUserId())){
             System.debug(true);
-            return true;
+            return false;
         }else{
             System.debug(false);
-            return false;
+            return true;
         }
+    }
+
+    @AuraEnabled
+    public static List<AnyLabel__c> getGlobalLabels(){
+        List<AnyLabel__c> al = [SELECT Font_Color__c, Background_Color__c, Assignee__c, Name FROM AnyLabel__c];
+        system.debug(al);
+        return al;
     }
 
     @AuraEnabled(cacheable=true)
@@ -64,6 +71,13 @@ public with sharing class AnyLabelCtrl {
         {
             system.debug(e.getMessage());
         }
+    }
+
+    @AuraEnabled
+    public static void removeLabelsFromObject(List<String> labelsList, String recordId){
+        Id recId = recordId;
+        String obj = recId.getSobjectType().getDescribe().localName;
+        String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
     }
 
     @AuraEnabled(cacheable=true)

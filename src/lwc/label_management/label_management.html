@@ -5,88 +5,106 @@
 
 
 <template >
-    <h2 class="slds-text-heading_medium slds-m-bottom_medium">
-        Any Label Component
-    </h2>
-
-    {isAdmin}
-
-    <template if:true={isAdmin}>
-        <lightning-button title="open" label="Open" onclick={toggleModal}>open</lightning-button>
-    </template>
+    <!--    <h2 class="slds-text-heading_medium slds-m-bottom_medium">-->
+    <!--        Any Label Component-->
+    <!--    </h2>-->
+    <!--    <div class="slds-float&#45;&#45;right">-->
+    <!--    </div>-->
 
     <template if:true={showModal}>
-        <section
-                role="dialog"
-                tabindex="-1"
-                aria-labelledby="modal-heading-01"
-                aria-modal="true"
-                aria-describedby="modal-content-id-1"
-                class="slds-modal slds-fade-in-open"
-        >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open" >
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
-                    <lightning-button-icon
-                            class="slds-modal__close"
-                            title="Close"
-                            icon-name="utility:close"
-                            icon-class="slds-button_icon-inverse"
-                            onclick={handleDialogClose}>
+                    <lightning-button-icon class="slds-modal__close" title="Close" icon-name="utility:close" icon-class="slds-button_icon-inverse" onclick={handleDialogClose} >
+                        <span class="slds-assistive-text">Close</span>
                     </lightning-button-icon>
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Manage Labels</h2>
 
-<!--                    <template if:true={hasHeaderString}>-->
-<!--                        <h2-->
-<!--                                class="slds-text-heading_medium slds-hyphenate header-string"-->
-<!--                        >-->
-<!--                            {header}-->
-<!--                        </h2>-->
-<!--                    </template>-->
-<!--                    <template if:false={hasHeaderString}>-->
-<!--                        <h2-->
-<!--                                class="slds-text-heading_medium slds-hyphenate header-slot"-->
-<!--                        >-->
-<!--                            <slot name="header"></slot>-->
-<!--                        </h2>-->
-<!--                    </template>-->
+                    <!--                    <template if:true={hasHeaderString}>-->
+                    <!--                        <h2-->
+                    <!--                                class="slds-text-heading_medium slds-hyphenate header-string"-->
+                    <!--                        >-->
+                    <!--                            {header}-->
+                    <!--                        </h2>-->
+                    <!--                    </template>-->
+                    <!--                    <template if:false={hasHeaderString}>-->
+                    <!--                        <h2-->
+                    <!--                                class="slds-text-heading_medium slds-hyphenate header-slot"-->
+                    <!--                        >-->
+                    <!--                            <slot name="header"></slot>-->
+                    <!--                        </h2>-->
+                    <!--                    </template>-->
 
-<!--                    <p class="slds-m-top_x-small modal-hidden">-->
-<!--                        <slot-->
-<!--                                name="tagline"-->
-<!--                                onslotchange={handleSlotTaglineChange}-->
-<!--                        ></slot>-->
-<!--                    </p>-->
+                    <!--                    <p class="slds-m-top_x-small modal-hidden">-->
+                    <!--                        <slot-->
+                    <!--                                name="tagline"-->
+                    <!--                                onslotchange={handleSlotTaglineChange}-->
+                    <!--                        ></slot>-->
+                    <!--                    </p>-->
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
-                    <slot></slot>
-                </div>
-                Label color>> {labelColor}</br>
-                Font color >> {fontColor}</br>
-                Labels List >>
-                <ul>
-                    <template for:each={labelsList} for:item="label">
-                        <li key={label}>{label}</li>
-                    </template>
-                </ul>
-                All Labels List >>
-                <ul>
-                    <template for:each={allLabelsList} for:item="label">
-                        <li key={label}>{label}</li>
-                    </template>
-                </ul>
-                <lightning-input id="name" label="Name" style="width: 30%; margin-bottom: 6px" ></lightning-input>
-                <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
-                </lightning-button>
-                <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={}>
-                </lightning-button>
+                    <!--                    <slot></slot>-->
+                    <label for="objectLabels">Labels Available for <span style="color: crimson; font-weight: bold">{objectApiName} </span></label>
+                    <div class="slds-pill-container current" ondrop={drop_handler} ondragover={dragover_handler} id="objectLabels">
+                        <div > </div>
+                        <template for:each={allLabelsList} for:item="allLabel" >
+                            <div class="slds-pill" draggable="true" key={allLabel} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={allLabel}>
+                            <span class="slds-m-around--xx-small">
+                                {allLabel}
+                            </span>
+                                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >
+                                    <lightning-icon icon-name="utility:close" data-target-id={allLabel}>
+                                        <!--                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>-->
+                                    </lightning-icon>
+                                    <span class="slds-assistive-text">Remove</span>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                    <label for="globalLabels">Labels Available <span style="color: crimson; font-weight: bold">Globally</span></label>
+                    <div class="slds-pill-container current" ondrop={drop_handler} ondragover={dragover_handler} id="globalLabels">
+                        <div > </div>
+                        <template for:each={globalLabelsList} for:item="globalLabel" >
+                            <div class="slds-pill" draggable="true" key={globalLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={globalLabel.Name}>
+                            <span class="slds-m-around--xx-small">
+                                {globalLabel.Name}
+                            </span>
+                                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >
+                                    <lightning-icon icon-name="utility:close" data-target-id={globalLabel.Name}>
+                                        <!--                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>-->
+                                    </lightning-icon>
+                                    <span class="slds-assistive-text">Remove</span>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+<!--                    Label color>> {labelColor}</br>-->
+<!--                    Font color >> {fontColor}</br>-->
+<!--                    Labels List >>-->
+<!--                    <ul>-->
+<!--                        <template for:each={labelsList} for:item="label">-->
+<!--                            <li key={label}>{label}</li>-->
+<!--                        </template>-->
+<!--                    </ul>-->
+<!--                    All Labels List >>-->
+<!--                    <ul>-->
+<!--                        <template for:each={allLabelsList} for:item="label">-->
+<!--                            <li key={label}>{label}</li>-->
+<!--                        </template>-->
+<!--                    </ul>-->
+                    <lightning-input id="name" label="Name" style="width: 30%; margin-bottom: 6px" ></lightning-input>
+                    <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
+                    </lightning-button>
 
-                <div class="slds-p-around_medium ">
-                    <lightning-input type="color" name="input-color" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
+                    <div class="slds-p-around_medium ">
+                        <lightning-input type="color" name="input-color" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
+                    </div>
                 </div>
                 <footer class="slds-modal__footer modal-hidden">
-<!--                    <slot-->
-<!--                            name="footer"-->
-<!--                            onslotchange={handleSlotFooterChange}-->
-<!--                    ></slot>-->
+                    <!--                    <slot-->
+                    <!--                            name="footer"-->
+                    <!--                            onslotchange={handleSlotFooterChange}-->
+                    <!--                    ></slot>-->
                 </footer>
             </div>
         </section>
@@ -108,16 +126,26 @@
     <div class="slds-pill-container available" ondrop={drop_handler} ondragover={dragover_handler} >
         <div > </div>
         <template for:each={labelsAvailable} for:item="labelAvailable">
-            <div class="slds-pill" draggable="true" key={labelAvailable} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable}>
+            <div class="slds-pill grab" draggable="true" key={labelAvailable} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable} onmousedown= {grabbing}>
                             <span class="slds-m-around--xx-small">
                                 {labelAvailable}
                             </span>
+                <!--                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >-->
+                <!--                    <lightning-icon icon-name="utility:close" data-target-id={labelAvailable} >-->
+                <!--                        &lt;!&ndash;                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>&ndash;&gt;-->
+                <!--                    </lightning-icon>-->
+                <!--                    <span class="slds-assistive-text">Remove</span>-->
+                <!--                </button>-->
             </div>
         </template>
         <!--        </ul>-->
     </div>
-    <lightning-button title="save" label="Save" onclick={saveLabels}>save</lightning-button>
-<!--    <div id="target" ondrop={drop_handler} ondragover={dragover_handler}>Drop Zone</div>-->
+    <lightning-button-group >
+        <lightning-button  title="open" label="Manage Labels" onclick={toggleModal} disabled={isAdmin}></lightning-button>
+        <lightning-button title="save" label="Save" onclick={saveLabels}></lightning-button>
+    </lightning-button-group>
+
+    <!--    <div id="target" ondrop={drop_handler} ondragover={dragover_handler}>Drop Zone</div>-->
 
 
     <!--    <br class="slds-m-top_medium slds-m-bottom_x-large">-->

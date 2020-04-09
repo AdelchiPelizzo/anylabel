@@ -5,7 +5,7 @@
 import {LightningElement, wire, track, api} from 'lwc';
 import getAssignedLabels from '@salesforce/apex/AnyLabelCtrl.getAssignedLabelsList';
 import getObjectLabels from '@salesforce/apex/AnyLabelCtrl.getSObjectLabelsListAll';
-import update_picklist from '@salesforce/apex/GlobalPicklistEngine.runUpdate';
+import getGlobal from '@salesforce/apex/AnyLabelCtrl.getGlobalLabels';
 import is_admin from '@salesforce/apex/AnyLabelCtrl.isAdmin';
 import LABELS_OBJECT from  '@salesforce/schema/AnyLabel__c';
 import LABEL_FONT_COLOR from '@salesforce/schema/AnyLabel__c.Font_Color__c';
@@ -18,27 +18,21 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class label_management extends LightningElement {
 
-    showModal = false;
-
+    @api showModal = false;
     @api recordId;
     @api objectApiName;
     @track labelColor = '#FFFFFF';
     @track fontColor;
-
     @track labelsList;
     @track allLabelsList;
-
+    @api globalLabelsList;
+    @track labelsToBeRemoved;
     @track error;
     @track error2;
-
     // @wire  (getAssignedLabels, {recordId: '$recordId'}) labelsList;
     // @wire  (getObjectLabels, {recordId: '$recordId'}) allLabelsList;
-    @wire  (is_admin) isAdmin;
+    @wire (is_admin) isAdmin;
     @track labelsAvailable = [];
-
-
-    @api isAdmin = false;
-
     // @api drag_handler;
     // @api dragstart_handler;
     // @api drop_handler;
@@ -50,6 +44,7 @@ export default class label_management extends LightningElement {
             console.log(result);
             this.isAdmin = result;
         });
+        getGlobal().then(result => {this.globalLabelsList = result;});
         getAssignedLabels({recordId: this.recordId}).then(result => {this.labelsList = result;}).then( result =>{
             getObjectLabels({recordId: this.recordId}).then(result => {this.allLabelsList = result;}).then(result => {
                 for(let i=0; i<this.allLabelsList.length; i++){
@@ -57,68 +52,20 @@ export default class label_management extends LightningElement {
                         this.labelsAvailable.push(this.allLabelsList[i]);
                     }
                 }
-                // this.drag_handler = function(ev) {
-                //     ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
-                // };
-                // this.dragstart_handler = function(ev) {
-                //     ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
-                // };
-                // this.drop_handler = function(ev) {
-                //     let data = ev.dataTransfer.getData('text', ev.target.firstChild.textContent);
-                //     let nodeChild = document.createElement("span");
-                //     let textnode = document.createTextNode(dataTransf);
-                //     console.log("data .. "+textnode.wholeText);
-                //     nodeChild.classList.add("slds-m-around--xx-small");
-                //     nodeChild.appendChild(textnode);
-                //     let node = document.createElement("div");
-                //     node.classList.add("slds-pill");
-                //     node.setAttribute("draggable", "true");
-                //     node.addEventListener("drag", this.drag_handler);
-                //     node.addEventListener("dragstart", this.dragstart_handler);
-                //     node.addEventListener("dragend", this.dragend_handler);
-                //     node.setAttribute("data-id", data);
-                //     node.appendChild(nodeChild);
-                //     if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
-                //         console.log('target removed.... '+ev.currentTarget.classList);
-                //         console.log('target removed.... '+ev.target.classList);
-                //         let el = this.template.querySelector('[data-id="'+data+'"]');
-                //         console.log(el);
-                //         el.remove();
-                //     }
-                //     ev.currentTarget.appendChild(node);
-                // };
-                // this.dragend_handler = function(ev){
-                //     ev.preventDefault();
-                //     // console.log('dragend target .... '+ev.target.classList);
-                //     // if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
-                //     // ev.currentTarget.appendChild(node);
-                //     // ev.target.remove();
-                //     // }
-                //     // console.log("start handler ..."+ev.target.classList);
-                //     // if(ev.currentTarget.classList('slds-pill-container current') || ev.currentTarget.classList('available')){
-                //     //     console.log("destroyed ...");
-                //     //     ev.target.remove();
-                //     // }
-                // };
-                // this.dragover_handler = function(ev) {
-                //     ev.preventDefault();
-                //     console.log("dragOver");
-                // };
             });
         });
     }
 
     toggleModal(){
+        console.log("showing modal ...");
         if(this.showModal == false){
             this.showModal = true;
         }else{
             this.showModal = false;
         }
-
     }
 
     handleDialogClose() {
-        alert('closed ... ');
         this.showModal = false;
         //Let parent know that dialog is closed (mainly by that cross button) so it can set proper variables if needed
         // const closedialog = new CustomEvent('closedialog');
@@ -129,45 +76,71 @@ export default class label_management extends LightningElement {
     createNewLabel() {
         let el = this.template.querySelector("lightning-input");
         let name = JSON.parse(JSON.stringify(el.value));
-        let background_Color = this.labelColor;
-        let font_Color = this.fontColor;
-        if(!background_Color || !font_Color){
+        let val = [];
+        val = this.globalLabelsList;
+        let globList = [];
+        let i;
+        for(i=0; i<val.length; i++){
+            globList.push(val[i]["Name"]);
+        }
+        if(this.allLabelsList.includes(name)){
             this.dispatchEvent(
                 new ShowToastEvent({
-                    title: 'Incomplete',
-                    message: 'Select a color',
+                    title: 'Error on saving!',
+                    message: this.objectApiName+" "+"\""+name+"\" Label Duplicate!",
+                    variant: 'error',
+                    mode: 'pester'
+                }),
+            );
+        }else if(globList.includes(name)){
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error on saving!',
+                    message: "Global \""+name+"\" Label Duplicate!",
                     variant: 'error',
                     mode: 'pester'
                 }),
             );
         }else{
-            const fields = {};
-            console.log(name+' '+background_Color+' '+font_Color);
-            fields[LABEL_NAME.fieldApiName] = name;
-            fields[LABEL_FONT_COLOR.fieldApiName] = font_Color;
-            fields[LABEL_BACKGROUND_COLOR.fieldApiName] = background_Color;
-            fields[ASSIGNEE_NAME.fieldApiName] = this.objectApiName;
-            const recordInput = { apiName: LABELS_OBJECT.objectApiName, fields };
-            createRecord(recordInput).then(() => {
+            let background_Color = this.labelColor;
+            let font_Color = this.fontColor;
+            if(!background_Color || !font_Color){
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Label created',
-                        variant: 'success',
-                    }),
-                );
-                window.location.reload();
-            }).catch(error => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error creating record',
-                        message: error.body.message,
+                        title: 'Incomplete',
+                        message: 'Select a name and color',
                         variant: 'error',
                         mode: 'pester'
                     }),
                 );
-            });
-
+            }else{
+                const fields = {};
+                console.log(name+' '+background_Color+' '+font_Color);
+                fields[LABEL_NAME.fieldApiName] = name;
+                fields[LABEL_FONT_COLOR.fieldApiName] = font_Color;
+                fields[LABEL_BACKGROUND_COLOR.fieldApiName] = background_Color;
+                fields[ASSIGNEE_NAME.fieldApiName] = this.objectApiName;
+                const recordInput = { apiName: LABELS_OBJECT.objectApiName, fields };
+                createRecord(recordInput).then(() => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Label created',
+                            variant: 'success',
+                        }),
+                    );
+                    window.location.reload();
+                }).catch(error => {
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error creating record',
+                            message: error.body.message,
+                            variant: 'error',
+                            mode: 'pester'
+                        }),
+                    );
+                });
+            }
         }
     }
 
@@ -210,6 +183,20 @@ export default class label_management extends LightningElement {
             });
     }
 
+    grabbing(event){
+        console.log("grabbing ...");
+        event.target.setAttribute("style", "cursor: grabbing");
+    }
+
+    removeFromAvailableLabels(event){
+        let label = event.target.dataset.targetId;
+        let choice = confirm('Are you sure?\nYou are about to remove > "'+label+'" from available labels for all '+'"'+this.objectApiName+'".');
+        if(choice){
+            console.log("Removed ...");
+        }else{
+            console.log("Cancelled ...");
+        }
+    }
 
     drag_handler(ev) {
         ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
@@ -221,18 +208,32 @@ export default class label_management extends LightningElement {
 
     drop_handler(ev) {
         let data = ev.dataTransfer.getData('text', ev.target.firstChild.textContent);
+        // let objName = ev.dataTransfer.getData("text", ev.target.getAttribute("data-object"));
+        // console.log(objName);
         let nodeChild = document.createElement("span");
         let textnode = document.createTextNode(data);
-        console.log("data .. "+textnode.wholeText);
-        nodeChild.classList.add("slds-m-around--xx-small");
+        // let buttonNode = document.createElement("button");
+        // let icon = document.createElement("span");
+        // let iconSymbol = document.createTextNode("+");
+        // icon.addEventListener("click", this.removeFromAvailableLabels);
+        // icon.appendChild(iconSymbol);
+        // icon.setAttribute("style","display: block; font-family: Arial, sans-serif; font-size: 28px; font-weight: 100");
+        // icon.setAttribute("data-target-id", data);
+        // icon.setAttribute("data-target-object", objName);
+        // buttonNode.classList.add("slds-button", "slds-button_icon", "slds-button_icon", "slds-pill__remove");
+        // buttonNode.setAttribute("style", " transform: rotate(45deg); margin-bottom: 8.5px; padding-left: 2px; padding-bottom: 2px");
+        // buttonNode.appendChild(icon);
+        nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
         nodeChild.appendChild(textnode);
         let node = document.createElement("div");
         node.classList.add("slds-pill");
+        node.style.cursor = "grab";
         node.setAttribute("draggable", "true");
         node.addEventListener("drag", this.drag_handler);
         node.addEventListener("dragstart", this.dragstart_handler);
         node.addEventListener("dragend", this.dragend_handler);
         node.appendChild(nodeChild);
+        // node.appendChild(buttonNode);
         node.setAttribute("data-id", data);
         if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
             console.log('target removed.... '+ev.currentTarget.classList);
