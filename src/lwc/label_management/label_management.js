@@ -31,6 +31,7 @@ export default class label_management extends LightningElement {
     @track error2;
     @wire (is_admin) isAdmin;
     @track labelsAvailable = [];
+    @track colorHEX;
 
     connectedCallback(){
         is_admin().then(result => {
@@ -50,9 +51,12 @@ export default class label_management extends LightningElement {
     }
 
     toggleModal(){
-        console.log("showing modal ...");
+        // [0].style.display = "none";
+        // this.colorHEX[0].style.display = "none";
         if(this.showModal == false){
             this.showModal = true;
+            // let el = this.template.querySelector(".slds-color-picker__summary-input");
+            // console.log("showing modal ... "+el);
         }else{
             this.showModal = false;
         }

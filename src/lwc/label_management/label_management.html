@@ -21,7 +21,7 @@
                     <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Manage Labels</h2>
                 </header>
                 <lightning-tabset>
-                    <lightning-tab label="Existing Labels">
+                    <lightning-tab label="Existing Labels"  title="Displays ALL Labels: Assigned and Available">
                         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
                             <label for="objectLabels">Labels currently associated with <span style="color: crimson; font-weight: bold">{objectApiName} </span></label>
                             <div class="slds-pill-container slds-listbox slds-listbox_horizontal current" ondrop={drop_handler} ondragover={dragover_handler} id="objectLabels">
@@ -58,10 +58,10 @@
                             </div>
                         </div>
                     </lightning-tab>
-                    <lightning-tab label="Create New Label" >
+                    <lightning-tab label="Create New Label"  title="New Labels will be available ONLY for current object">
                         <div class="slds-modal__content slds-p-left--large slds-p-bottom--large" id="modal-content-id-2" >
-                            <lightning-input id="name" label="Name" style="width: 50%; margin-bottom: 6px" ></lightning-input>
-                            <lightning-input type="color" name="input-color" style="width: 50%; margin-bottom: 6px" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
+                            <lightning-input required id="name" label="Name" style="width: 50%; margin-bottom: 6px" ></lightning-input>
+                            <lightning-input class="hex" required type="color" name="input-color" style="width: 50%; margin-bottom: 6px" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
                             <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
                             </lightning-button>
                         </div>
