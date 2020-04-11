@@ -76,34 +76,36 @@
     </template>
 
 
-    <div class="slds-pill-container current" ondrop={drop_handler} ondragover={dragover_handler}>
-        <div > </div>
+    <div class="slds-pill-container current" ondrop={drop_handler} ondragover={dragover_handler} onclick={openAvailableLabels}>
+        <div ></div>
         <template for:each={labelsList} for:item="assignedLabel" >
-            <div class="slds-pill" draggable="true" key={assignedLabel} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={assignedLabel}>
-                <span class="slds-m-around--xx-small">
-                                {assignedLabel}
-                            </span>
+            <div class="slds-pill grab" style={assignedLabel.Styling} draggable="true" key={assignedLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler}  data-id={assignedLabel.Name} onmousedown={grabbing} onmouseup={grab} >
+                <span class="slds-m-around--xx-small" >
+                                {assignedLabel.Name}
+                </span>
             </div>
         </template>
         <!--        </ul>-->
     </div>
-    <div class="slds-pill-container available" ondrop={drop_handler} ondragover={dragover_handler} >
-        <div > </div>
-        <template for:each={labelsAvailable} for:item="labelAvailable">
-            <div class="slds-pill grab" draggable="true" key={labelAvailable} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable} onmousedown= {grabbing}>
+    <template if:true={openAvailable}>
+        <div class="slds-pill-container available" ondrop={drop_handler} ondragover={dragover_handler} >
+            <div > </div>
+            <template for:each={labelsAvailable} for:item="labelAvailable">
+                <div class="slds-pill grab" style={labelAvailable.Styling}  draggable="true" key={labelAvailable.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable.Name} onmousedown={grabbing} onmouseup={grab}>
                             <span class="slds-m-around--xx-small">
-                                {labelAvailable}
+                                {labelAvailable.Name}
                             </span>
-                <!--                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >-->
-                <!--                    <lightning-icon icon-name="utility:close" data-target-id={labelAvailable} >-->
-                <!--                        &lt;!&ndash;                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>&ndash;&gt;-->
-                <!--                    </lightning-icon>-->
-                <!--                    <span class="slds-assistive-text">Remove</span>-->
-                <!--                </button>-->
-            </div>
-        </template>
-        <!--        </ul>-->
-    </div>
+                    <!--                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >-->
+                    <!--                    <lightning-icon icon-name="utility:close" data-target-id={labelAvailable} >-->
+                    <!--                        &lt;!&ndash;                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>&ndash;&gt;-->
+                    <!--                    </lightning-icon>-->
+                    <!--                    <span class="slds-assistive-text">Remove</span>-->
+                    <!--                </button>-->
+                </div>
+            </template>
+            <!--        </ul>-->
+        </div>
+    </template>
     <lightning-button-group >
         <lightning-button  title="open" label="Manage Labels" onclick={toggleModal} disabled={isAdmin}></lightning-button>
         <lightning-button title="save" label="Save" onclick={saveLabels}></lightning-button>

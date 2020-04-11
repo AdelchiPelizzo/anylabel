@@ -18,12 +18,14 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class label_management extends LightningElement {
 
+    @api myAttribute = 'background-color: red; color: white';
+
     @api showModal = false;
     @api recordId;
     @api objectApiName;
     @track labelColor = '#FFFFFF';
     @track fontColor;
-    @track labelsList;
+    @track labelsList = [];
     @track allLabelsList;
     @api globalLabelsList;
     @track labelsToBeRemoved;
@@ -32,6 +34,7 @@ export default class label_management extends LightningElement {
     @wire (is_admin) isAdmin;
     @track labelsAvailable = [];
     @track colorHEX;
+    @api openAvailable = false;
 
     connectedCallback(){
         is_admin().then(result => {
@@ -39,15 +42,50 @@ export default class label_management extends LightningElement {
             this.isAdmin = result;
         });
         getGlobal().then(result => {this.globalLabelsList = result;});
-        getAssignedLabels({recordId: this.recordId}).then(result => {this.labelsList = result;}).then( result =>{
-            getObjectLabels({recordId: this.recordId}).then(result => {this.allLabelsList = result;}).then(result => {
+        getAssignedLabels({recordId: this.recordId}).then(result => {
+        // alert(result[0].Name);
+            for(let i=0; i<result.length; i++){
+                    this.labelsList.push({
+                        Name : result[i].Name,
+                        Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
+                        Assigned : result[i].Assignee__c,
+                    });
+                }
+            }).then( result =>{
+            getObjectLabels({recordId: this.recordId}).then(result => {
+                this.allLabelsList = result;}).then(result => {
+                let lsAss = [];
+                for(let i=0; i<this.labelsList.length; i++){
+                    lsAss.push(this.labelsList[i].Name);
+                }
                 for(let i=0; i<this.allLabelsList.length; i++){
-                    if(!this.labelsList.includes(this.allLabelsList[i])){
-                        this.labelsAvailable.push(this.allLabelsList[i]);
+                    let n =this.allLabelsList[i].Name;
+                    if(!lsAss.includes(this.allLabelsList[i].Name)){
+                        this.labelsAvailable.push({
+                            Name : this.allLabelsList[i].Name,
+                            Styling : "background-color: "+this.allLabelsList[i].Background_Color__c+"; color: "+this.allLabelsList[i].Font_Color__c+"; cursor: grab",
+                            Assigned : this.allLabelsList[i].Assignee__c,
+                        });
                     }
                 }
             });
         });
+    }
+
+    openAvailableLabels(){
+        console.log("open available");
+        if(this.openAvailable){
+            this.openAvailable = false;
+        }else{this.openAvailable = true;}
+    }
+
+    grabColor(event){
+        console.log("start ...");
+        // console.log( event.target.parentElement.dataset.targetId);
+        // event.target.parentElement.style.backgroundColor = event.target.parentElement.dataset.targetId;
+        // let col = event.target.getAttribute("name");
+        // let id = event.target.getAttribute("data-id");
+        // console.log(col+" "+id);
     }
 
     toggleModal(){
@@ -180,8 +218,11 @@ export default class label_management extends LightningElement {
             });
     }
 
+    grab(event){
+        event.target.setAttribute("style", "cursor: grab");
+    }
+
     grabbing(event){
-        console.log("grabbing ...");
         event.target.setAttribute("style", "cursor: grabbing");
     }
 
@@ -194,8 +235,11 @@ export default class label_management extends LightningElement {
             // let data = event.dataTransfer.getData('text', event.target.firstChild.textContent);
             // let objName = event.dataTransfer.getData("text", event.target.getAttribute("data-object"));
             // console.log(objName);
+            let node = document.createElement("div");
             let nodeChild = document.createElement("span");
             let textnode = document.createTextNode(data);
+            nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
+            nodeChild.appendChild(textnode);
             // let buttonNode = document.createElement("button");
             // let icon = document.createElement("span");
             // let iconSymbol = document.createTextNode("+");
@@ -207,9 +251,6 @@ export default class label_management extends LightningElement {
             // buttonNode.classList.add("slds-button", "slds-button_icon", "slds-button_icon", "slds-pill__remove");
             // buttonNode.setAttribute("style", " transform: rotate(45deg); margin-bottom: 8.5px; padding-left: 2px; padding-bottom: 2px");
             // buttonNode.appendChild(icon);
-            nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
-            nodeChild.appendChild(textnode);
-            let node = document.createElement("div");
             node.classList.add("slds-pill");
             node.style.cursor = "grab";
             node.setAttribute("draggable", "true");
@@ -233,19 +274,43 @@ export default class label_management extends LightningElement {
     }
 
     drag_handler(ev) {
-        ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
+        // console.log("drag handler "+ev.target.firstChild.textContent+" "+ev.target.getAttribute("style"));
+        // ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
+        // ev.dataTransfer.setData("style", ev.target.getAttribute("style"));
     }
 
     dragstart_handler(ev) {
+        console.log("drag start "+ev.target.firstChild.textContent+" "+ev.target.getAttribute("style"));
         ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
+        ev.dataTransfer.setData("style", ev.target.getAttribute("style"));
     }
 
-    drop_handler(ev) {
-        let data = ev.dataTransfer.getData('text', ev.target.firstChild.textContent);
+    drop_handler(event) {
+        event.preventDefault();
+        let style = event.dataTransfer.getData("style");
+        let name = event.dataTransfer.getData("text");
+        console.log(style+" <> "+name);
+        // let b = event.currentTarget.style.cssText;
+        // let data = event.target.className;
+        // let computedStyle = window.getComputedStyle(data, null);
+        // let s = ev.dataTransfer.getData("style");
+        // console.log("dropped pay load ... "+data);
         // let objName = ev.dataTransfer.getData("text", ev.target.getAttribute("data-object"));
         // console.log(objName);
+        let node = document.createElement("div");
+        node.classList.add("slds-pill");
+        node.classList.add("grab");
+        node.style = style;
+        node.setAttribute("draggable", "true");
+        node.addEventListener("drag", this.drag_handler);
+        node.addEventListener("dragstart", this.dragstart_handler);
+        node.addEventListener("dragend", this.dragend_handler);
+        node.addEventListener("mousedown", this.grabbing);
+        node.addEventListener("mouseup", this.grab);
+        node.setAttribute("data-id", name);
         let nodeChild = document.createElement("span");
-        let textnode = document.createTextNode(data);
+        nodeChild.className = "slds-m-around--xx-small";
+        let textnode = document.createTextNode(name);
         // let buttonNode = document.createElement("button");
         // let icon = document.createElement("span");
         // let iconSymbol = document.createTextNode("+");
@@ -257,31 +322,22 @@ export default class label_management extends LightningElement {
         // buttonNode.classList.add("slds-button", "slds-button_icon", "slds-button_icon", "slds-pill__remove");
         // buttonNode.setAttribute("style", " transform: rotate(45deg); margin-bottom: 8.5px; padding-left: 2px; padding-bottom: 2px");
         // buttonNode.appendChild(icon);
-        nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
+        // nodeChild.setAttribute("style", '"'+style+'"');
         nodeChild.appendChild(textnode);
-        let node = document.createElement("div");
-        node.classList.add("slds-pill");
-        node.style.cursor = "grab";
-        node.setAttribute("draggable", "true");
-        node.addEventListener("drag", this.drag_handler);
-        node.addEventListener("dragstart", this.dragstart_handler);
-        node.addEventListener("dragend", this.dragend_handler);
         node.appendChild(nodeChild);
         // node.appendChild(buttonNode);
-        node.setAttribute("data-id", data);
-        if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
-            console.log('target removed.... '+ev.currentTarget.classList);
-            console.log('target removed.... '+ev.target.classList);
-            let el = this.template.querySelector('[data-id="'+data+'"]');
-            console.log(el);
+        if(event.currentTarget.classList == 'slds-pill-container current' || event.currentTarget.classList == 'slds-pill-container available'){
+            // console.log('target removed.... '+event.currentTarget.classList);
+            // console.log('target removed.... '+event.target.classList);
+            let el = this.template.querySelector('[data-id="'+name+'"]');
             el.remove();
         }
-        ev.currentTarget.appendChild(node);
+        event.currentTarget.appendChild(node);
     }
 
     dragend_handler(ev){
         ev.preventDefault();
-        console.log('dragend target .... '+ev.target.classList);
+        // console.log('dragend target .... ');
         // if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
         // ev.currentTarget.appendChild(node);
         // ev.target.remove();
@@ -295,7 +351,7 @@ export default class label_management extends LightningElement {
 
     dragover_handler(ev) {
         ev.preventDefault();
-        console.log("dragOver");
+        // console.log("dragOver");
     }
 
     getColor(event){

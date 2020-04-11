@@ -80,53 +80,53 @@ public with sharing class AnyLabelCtrl {
         String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<AnyLabel__c> getSObjectLabelsListAll(String recordId){
+        Id recId = recordId;
+        String obj = recId.getSobjectType().getDescribe().localName;
+//        Boolean gotLabel = false;
+        List<AnyLabel__c> values = new List<AnyLabel__c>();
+        String query = 'SELECT Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
+//        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
+//        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
+//        for(Integer i=0; i<entries.size(); i++){
+//            PicklistEntry pickListValue = entries[i];
+//            if(pickListValue.value == obj){
+//                gotLabel = true;
+                values = Database.query(query);
+//                for(AnyLabel__c s : v){
+//                    values.add(s);
+//                }
+//            }
+//        }
+        return  values;
+    }
+
 //    @AuraEnabled(cacheable=true)
-//    public static List<AnyLabel__c> getSObjectLabelsListAll(String recordId){
+//    public static List<String> getSObjectLabelsListAll(String recordId){
 //        Id recId = recordId;
 //        String obj = recId.getSobjectType().getDescribe().localName;
-////        Boolean gotLabel = false;
-//        List<AnyLabel__c> values = new List<AnyLabel__c>();
-//        String query = 'SELECT Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
-////        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
-////        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
-////        for(Integer i=0; i<entries.size(); i++){
-////            PicklistEntry pickListValue = entries[i];
-////            if(pickListValue.value == obj){
-////                gotLabel = true;
-//                values = Database.query(query);
-////                for(AnyLabel__c s : v){
-////                    values.add(s);
-////                }
-////            }
-////        }
-//        return  values;
+//        Boolean gotLabel = false;
+//        List<String> values = new List<String>();
+//        String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
+//        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
+//        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
+//        for(Integer i=0; i<entries.size(); i++){
+//            PicklistEntry pickListValue = entries[i];
+//            if(pickListValue.value == obj){
+//                gotLabel = true;
+//                List<AnyLabel__c> v = Database.query(query);
+//                for(AnyLabel__c s : v){
+//                    values.add(s.Name);
+//                }
+//            }
+//        }
+//        system.debug(values);
+//        return values;
 //    }
 
     @AuraEnabled(cacheable=true)
-    public static List<String> getSObjectLabelsListAll(String recordId){
-        Id recId = recordId;
-        String obj = recId.getSobjectType().getDescribe().localName;
-        Boolean gotLabel = false;
-        List<String> values = new List<String>();
-        String query = 'SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
-        DescribeFieldResult picklist = AnyLabel__c.Assignee__c.getDescribe();
-        List<Schema.PicklistEntry> entries = picklist.getPicklistValues();
-        for(Integer i=0; i<entries.size(); i++){
-            PicklistEntry pickListValue = entries[i];
-            if(pickListValue.value == obj){
-                gotLabel = true;
-                List<AnyLabel__c> v = Database.query(query);
-                for(AnyLabel__c s : v){
-                    values.add(s.Name);
-                }
-            }
-        }
-        system.debug(values);
-        return values;
-    }
-
-    @AuraEnabled(cacheable=true)
-    public static List<String> getAssignedLabelsList(String recordId){
+    public static List<AnyLabel__c> getAssignedLabelsList(String recordId){
         Id recId = recordId;
         String obj = recId.getSobjectType().getDescribe().localName;
 //        SObjectType objType = Schema.getGlobalDescribe().get(obj);
@@ -134,13 +134,15 @@ public with sharing class AnyLabelCtrl {
         String query = 'SELECT Labels__c FROM '+obj+' WHERE Id = \''+recordId+'\'';
         List<SObject> record = Database.query(query);
         system.debug(record.size());
+        List<AnyLabel__c> anyLabelsList = new List<AnyLabel__c>();
         List<String> labelsList = new List<String>();
         if(record[0].get('labels__c')!= ''&& record[0].get('labels__c') != null){
             String labelsListString = (String) record[0].get('Labels__c');
             labelsList = labelsListString.split(';');
         }
-        system.debug(labelsList);
-        return labelsList;
+        anyLabelsList = [SELECT Assignee__c, Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Name IN :labelsList];
+        system.debug(anyLabelsList);
+        return anyLabelsList;
     }
 
 //    @AuraEnabled(cacheable=true)
