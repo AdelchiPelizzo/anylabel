@@ -25,9 +25,12 @@ export default class label_management extends LightningElement {
     @api objectApiName;
     @track labelColor = '#FFFFFF';
     @track fontColor;
+    @api labelSample ;
     @track labelsList = [];
-    @track allLabelsList;
-    @api globalLabelsList;
+    @track allLabelsList = [];
+    @api allUnassignedObjectLabList = [];
+    @api allAssignedObjectLabList = [];
+    @api globalLabelsList = [];
     @track labelsToBeRemoved;
     @track error;
     @track error2;
@@ -36,47 +39,77 @@ export default class label_management extends LightningElement {
     @track colorHEX;
     @api openAvailable = false;
 
+
     connectedCallback(){
         is_admin().then(result => {
             console.log(result);
             this.isAdmin = result;
         });
-        getGlobal().then(result => {this.globalLabelsList = result;});
-        getAssignedLabels({recordId: this.recordId}).then(result => {
-        // alert(result[0].Name);
+        getGlobal().then( result => {
             for(let i=0; i<result.length; i++){
-                    this.labelsList.push({
+                if(!result[i].Assignee__c.includes(this.objectApiName)){
+                    this.allUnassignedObjectLabList.push({
+                        Name : result[i].Name,
+                        Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
+                        Assigned : result[i].Assignee__c,
+                    });
+                }else{
+                    this.allAssignedObjectLabList.push({
                         Name : result[i].Name,
                         Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
                         Assigned : result[i].Assignee__c,
                     });
                 }
-            }).then( result =>{
-            getObjectLabels({recordId: this.recordId}).then(result => {
-                this.allLabelsList = result;}).then(result => {
-                let lsAss = [];
-                for(let i=0; i<this.labelsList.length; i++){
-                    lsAss.push(this.labelsList[i].Name);
-                }
-                for(let i=0; i<this.allLabelsList.length; i++){
-                    let n =this.allLabelsList[i].Name;
-                    if(!lsAss.includes(this.allLabelsList[i].Name)){
-                        this.labelsAvailable.push({
-                            Name : this.allLabelsList[i].Name,
-                            Styling : "background-color: "+this.allLabelsList[i].Background_Color__c+"; color: "+this.allLabelsList[i].Font_Color__c+"; cursor: grab",
-                            Assigned : this.allLabelsList[i].Assignee__c,
-                        });
-                    }
-                }
-            });
+            }
+        }).then(result => {
+            getAssignedLabels({recordId: this.recordId}).then( result => {
+                console.log('result from getAssigned line line 64 '+result);
+                for(let i=0; i<result.length; i++){
+                    this.labelsList.push({
+                        Name : result[i].Name,
+                        Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
+                        Assigned : result[i].Assignee__c,
+                    });
+                }}).then(result =>{
+                        for(let i=0; i<this.allAssignedObjectLabList.length; i++){
+                            let recordAssignedLabels = [];
+                            for(let i=0; i<this.labelsList.length; i++){
+                                recordAssignedLabels.push(this.labelsList[i].Name);
+                            }
+                            if(!recordAssignedLabels.includes(this.allAssignedObjectLabList[i].Name)){
+                                // console.log("label available for object "+ this.allAssignedObjectLabList[i].Name+" "+this.labelsList[i].Name);
+                                //     this.allLabelsList.push({
+                                //         Name : this.labelsList[i].Name,
+                                //         Styling : "background-color: "+this.labelsList[i].Background_Color__c+"; color: "+this.labelsList[i].Font_Color__c+"; cursor: grab",
+                                //         Assigned : this.labelsList[i].Assignee__c,
+                                //     });
+                                // }
+                                // for(let i=0; i<this.allLabelsList.length; i++){
+                                //     let n =this.allLabelsList[i].Name;
+                                //     if(!lsAss.includes(this.allLabelsList[i].Name)){
+                                this.labelsAvailable.push(
+                                    this.allAssignedObjectLabList[i],);
+                            }
+                        }
         });
+                // }).then( if())
+                // result =>{ getObjectLabels({recordId: this.recordId})
+                // .then(result => {this.allLabelsList = result;})
+                // .then(result => {
+                // let lsAss = [];
+
+            }
+        );
     }
 
-    openAvailableLabels(){
-        console.log("open available");
-        if(this.openAvailable){
-            this.openAvailable = false;
-        }else{this.openAvailable = true;}
+    openAvailableLabels(event){
+        let el = this.template.querySelector(".availableContainer");
+        el.classList.toggle("close");
+
+        // console.log("open available");
+        // if(this.className("close")){
+        //     this.classList.add();
+        // }else{this.style.display = "none";}
     }
 
     grabColor(event){
@@ -89,12 +122,8 @@ export default class label_management extends LightningElement {
     }
 
     toggleModal(){
-        // [0].style.display = "none";
-        // this.colorHEX[0].style.display = "none";
         if(this.showModal == false){
             this.showModal = true;
-            // let el = this.template.querySelector(".slds-color-picker__summary-input");
-            // console.log("showing modal ... "+el);
         }else{
             this.showModal = false;
         }
@@ -359,6 +388,9 @@ export default class label_management extends LightningElement {
         let color = event.target.value;
         this.labelColor = color;
         this.fontColor = this.getContrastYIQ(color);
+        this.labelSample = "background-color: "+color+"; color: "+this.fontColor+"; width: 50%; margin-bottom: 6px";
+        // el.children[2].style.backgroundColor =  color;
+        // el.children[2].style.color = this.fontColor;
     }
 
     getContrastYIQ(hexColor){

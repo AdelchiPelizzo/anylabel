@@ -133,7 +133,7 @@ public with sharing class AnyLabelCtrl {
 //        Map<String,Schema.SObjectField> fields = objType.getDescribe().fields.getMap();
         String query = 'SELECT Labels__c FROM '+obj+' WHERE Id = \''+recordId+'\'';
         List<SObject> record = Database.query(query);
-        system.debug(record.size());
+        system.debug('Number of record '+recId+' assigned labels list .. '+record.size());
         List<AnyLabel__c> anyLabelsList = new List<AnyLabel__c>();
         List<String> labelsList = new List<String>();
         if(record[0].get('labels__c')!= ''&& record[0].get('labels__c') != null){

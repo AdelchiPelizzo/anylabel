@@ -22,6 +22,20 @@
     display: none;
 }
 
-.styled{
+.close{
+    display: none;
+}
 
+.open{
+    display: block;
+}
+
+.transparent{
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.back{
+    background-color: #b0c4df;
+    border-color: #b0c4df;
 }
