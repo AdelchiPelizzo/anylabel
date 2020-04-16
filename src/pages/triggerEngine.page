@@ -761,7 +761,24 @@
             var fie = document.getElementsByName('fieldName')[0].innerText;
             var cond = document.getElementsByClassName('condition')[0].value;
             var inp = document.getElementsByName('inputValue')[0].value;
-            var lab = document.getElementsByClassName('labelName')[0].value;
+            var labOptions = document.getElementsByClassName('labelName')[0];
+            var labValues = [];
+            console.log('labValues ... '+labValues);
+            for (var i=0; i< labOptions.options.length ; i++) {
+                console.log('labValues ... Inside for. '+i);
+                if (labOptions.options[i].selected) {
+                    console.log('last if ... ... ');
+                labValues.push(labOptions.options[i].text)}
+            }
+            var lab = labValues.toString();
+            console.log(lab);
+            // var labOptions = document.getElementsByClassName('labelName').options;
+            // for(var i=0; i<labOptions.length; i++){
+            //     if(labOptions[i]){
+            //
+            //     }
+            //
+            // }
             var setupList = [];
             setupList.push(obj);
             setupList.push(fie);
