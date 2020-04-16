@@ -23,7 +23,7 @@ public with sharing class AnyLabelAutomation {
     public List<SelectOption> fieldNames {get; set;}
     public String labelName {get; set;}
     public String conditionName {get; set;}
-    public String inputValue {get; set;}
+    public String inputValue {get{return inputValue;} set{inputValue = inputValue;}}
 //    public List<SelectOption> ConditionNames {get; set;}
     private final AnyLabel__c a;
 
@@ -44,18 +44,18 @@ public with sharing class AnyLabelAutomation {
         return null;
     }
 
+    public PageReference runEngine2() {
+        //retrieve relevant fields name from selected object
+        system.debug('running engine ... '+fieldName);
+        return null;
+    }
+
     public PageReference runSetup(){
 //        List<String> setup = new List<String>();
 //        setup.add(objectName);
         system.debug(objectNameTest);
         system.debug(objectName);
 //        createTrigger(setup);
-        return null;
-    }
-
-    public PageReference runEngine2() {
-        //retrieve relevant fields name from selected object
-        system.debug('running engine ... '+fieldName);
         return null;
     }
 
@@ -71,21 +71,21 @@ public with sharing class AnyLabelAutomation {
 
     public static List<SelectOption> getFieldNames(String obj){
         List<SelectOption> options = new List<SelectOption>();
+        options.add(new SelectOption('', ''));
         Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(obj).getDescribe().fields.getMap();
         List<String> lst = new List<String>(objectFields.keySet());
-        for(Integer i=0; i<lst.size(); i++){
-            options.add(new SelectOption(lst[i], lst[i]));
-        }
-        return options;
-    }
+        List<String> b = New List<String>();
+        for(Integer i=0; i<objectFields.size(); i++){
+            b.add(String.valueOf(objectFields.values()[i].getDescribe().getType()));
+            if(objectFields.values()[i].getDescribe().isAccessible() && objectFields.values()[i].getDescribe()
+                    .isCreateable() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values
+                    ()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId()){
+                options.add(new SelectOption(lst[i]+'-'+b[i], objectFields.values().get(i).getDescribe().getLabel()));
 
-    public static List<SelectOption> getLabelsNames(){
-        List<SelectOption> so = new List<SelectOption>();
-        List<AnyLabel__c> al = [SELECT Name FROM AnyLabel__c WHERE Assignee__c =: objectName];
-        for(Integer i=0; i<al.size(); i++){
-            so.add(new SelectOption(al[i].Name, al[i].Name));
+            }
         }
-        return so;
+        system.debug(b);
+        return options;
     }
 
     public static List<SelectOption> getConditionNames(){
@@ -100,23 +100,34 @@ public with sharing class AnyLabelAutomation {
         return so;
     }
 
+    public static List<SelectOption> getLabelsNames(){
+        List<SelectOption> so = new List<SelectOption>();
+        List<AnyLabel__c> al = [SELECT Name FROM AnyLabel__c WHERE Assignee__c =: objectName];
+        for(Integer i=0; i<al.size(); i++){
+            so.add(new SelectOption(al[i].Name, al[i].Name));
+        }
+        return so;
+    }
+
     @RemoteAction
     public static void createTrigger(List<String> setup){
-        system.debug('I am running ...'+setup[0]);
-        String x = String.valueOf(Datetime.now());
-        String y = x.replace(' ', '_');
-        String z = y.replace('-', '_');
-        String w = z.replace(':', '_');
-        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update) {}"}'; // JSON format to create trigger
-        system.debug(json);
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
-        req.setMethod('POST');
-        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
-        req.setHeader('Content-Type', 'application/json');
-        req.setBody(json);
-        Http httpReq = new Http();
-        HttpResponse res  = httpReq.send(req);
-        System.debug(res.getBody());
+        for(Integer i=0; i<setup.size(); i++){
+            system.debug('I am running ...'+setup[i]);
+        }
+//        String x = String.valueOf(Datetime.now());
+//        String y = x.replace(' ', '_');
+//        String z = y.replace('-', '_');
+//        String w = z.replace(':', '_');
+//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update) {}"}'; // JSON format to create trigger
+//        system.debug(json);
+//        HttpRequest req = new HttpRequest();
+//        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
+//        req.setMethod('POST');
+//        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
+//        req.setHeader('Content-Type', 'application/json');
+//        req.setBody(json);
+//        Http httpReq = new Http();
+//        HttpResponse res  = httpReq.send(req);
+//        System.debug(res.getBody());
     }
 }

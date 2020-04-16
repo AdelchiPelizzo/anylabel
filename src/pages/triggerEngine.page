@@ -30,21 +30,13 @@
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
                                     <apex:actionRegion >
-                                        <!--                                        <div class="slds-input slds-combobox__input">-->
                                         <div class="slds-text-heading_small">
                                             <apex:selectList value="{!objectName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input">
-                                                <apex:actionSupport action="{!runEngine}" event="onchange" >
-                                                    <apex:param name="obJname" value="{!objectName}" assignTo="{!objectNameTest}"/>
-                                                </apex:actionSupport>
+                                                <apex:actionSupport action="{!runEngine}" event="onchange" />
                                                 <apex:selectOptions value="{!objectNames}" />
                                             </apex:selectList>
                                         </div>
-                                        <!--                                      </div>-->
-                                        <!--                       <apex:commandButton value="Select" action="{!runEngine}"/>-->
                                     </apex:actionRegion>
-                                    <!--                                    <div class="slds-button" title="Select Object" aria-controls="Select Object" aria-expanded="false">-->
-                                    <!--                                        <apex:commandButton value="Select" action="{!runEngine}" />-->
-                                    <!--                                    </div>-->
                                 </apex:form>
                             </div>
                         </div>
@@ -65,10 +57,11 @@
                                 <apex:form>
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input">
-                                                <!--                                            <apex:actionSupport action="{!runEngine2}" event="onchange"  />-->
-                                                <apex:selectOptions value="{!fieldNames}"/>
-                                            </apex:selectList></div>
+                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input " onChange="filterCondition(this)">
+<!--                                                <apex:actionSupport action="{!runEngine2}" event="onchange" />-->
+                                                    <apex:selectOptions value="{!fieldNames}" />
+                                            </apex:selectList>
+                                        </div>
                                     </apex:actionRegion>
                                 </apex:form>
                             </div>
@@ -90,7 +83,7 @@
                                 <apex:form>
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!conditionName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input">
+                                            <apex:selectList value="{!conditionName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input condition condition" >
                                                 <!--                  <apex:actionSupport action="{!runEngine2}" event="onchange"  />-->
                                                 <apex:selectOptions value="{!ConditionNames}"/>
                                             </apex:selectList></div>
@@ -114,7 +107,7 @@
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
                                     <article>
-                                        <apex:input styleClass="slds-input slds-text-heading_small" title="Enter value to check with" value="{!inputValue}" />
+                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" name="inputValue"/>
                                     </article>
                                 </apex:form>
                             </div>
@@ -136,10 +129,10 @@
                                 <apex:form>
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!labelName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input">
-                                                <!--                <apex:actionSupport action="{!runEngine2}" event="onchange"  />-->
-                                                <apex:selectOptions value="{!LabelsNames}"/>
-                                            </apex:selectList></div>
+                                            <apex:selectList value="{!labelName}" multiSelect="true" size="5" styleClass="slds-input slds-combobox__input slds-p-left_large slds-p-right_large slds-color__background_gray-3 labelName">
+                                                    <apex:selectOptions value="{!LabelsNames}" />
+                                            </apex:selectList>
+                                        </div>
                                     </apex:actionRegion>
                                 </apex:form>
                             </div>
@@ -156,10 +149,15 @@
 <!--                <label for="fieldName" class=" slds-text-title_bold">Select Label</label>-->
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
-                        <div class="slds-form-element" >{!objectName}|||{!objectNameTest}
+                        <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
                                     <div class="slds-button-group">
+                                        <div name="objectName" >{!objectName}</div>
+                                        <div name="fieldName" >{!fieldName}</div>
+                                        <div name="conditionName" >{!conditionName}</div>
+                                        <div name="inputValue" >{!inputValue}</div>
+                                        <div name="labelsName" >{!labelName}</div>
                                         <apex:actionRegion>
                                             <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />
                                         </apex:actionRegion>
@@ -757,17 +755,53 @@
             </li>
         </ol>
     </section>
-    <div name="setupName" >{!objectName}</div>
     <script>
         function setTriggerItems(){
-            var oName = document.getElementsByName('setupName');
+            var obj = document.getElementsByName('objectName')[0].innerText;
+            var fie = document.getElementsByName('fieldName')[0].innerText;
+            var cond = document.getElementsByClassName('condition')[0].value;
+            var inp = document.getElementsByName('inputValue')[0].value;
+            var lab = document.getElementsByClassName('labelName')[0].value;
             var setupList = [];
-            for(var i=0; i<oName.length; i++){
-                setupList.push(oName[i].innerText);
-            }
+            setupList.push(obj);
+            setupList.push(fie);
+            setupList.push(cond);
+            setupList.push(inp);
+            setupList.push(lab);
             Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AnyLabelAutomation.createTrigger}', setupList, function(result, event){}, {escape: false, timeout:3000, buffer: false});
             // Visualforce.remoting.Manager.invokeAction();
             console.log('setting up trigger ... '+setupList);
+        }
+        function filterCondition(el){
+            console.log('field type ... ');
+            console.log('field type ... '+el.value);
+            document.getElementsByName('fieldName')[0].innerText = el.value.split('-',1);
+            var elF = document.getElementsByClassName('condition')[0];
+            //Remove condition not compatible with data type
+            if(el.value.includes('CURRENCY') || el.value.includes('DOUBLE') || el.value.includes('INTEGER') || el.value.includes('DATE')){
+                for(var i=0; i<elF.children.length; i++){
+                    console.log('This is the value ... '+elF.children[i].value);
+                    var v = '';
+                    v = elF.children[i].value;
+                    console.log(typeof v);
+                    var v2 = '';
+                    v2 = "Start with";
+                    console.log('Does the above value matches "Start With" ? '+( v2 === v));
+                    if(elF.children[i].value === 'Start with'){
+                        console.log('I am deeper in ...');
+                        elF.children[i].style.display='none';
+                    }
+                }
+            }
+            //Restore condition on field type change
+            else if(el.value.includes('STRING')){
+                for(var i=0; i<elF.children.length; i++){
+                    if(elF.children[i].value === 'Start with'){
+                        console.log('restore value');
+                        elF.children[i].style.display='inline';
+                    }
+                }
+            }
         }
 
     </script>
