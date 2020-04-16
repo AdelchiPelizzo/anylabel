@@ -28,7 +28,7 @@ export default class label_management extends LightningElement {
     @api labelSample ;
     @track labelsList = [];
     @track allLabelsList = [];
-    @api allUnassignedObjectLabList = [];
+    @track allUnassignedObjectLabList = [];
     @api allAssignedObjectLabList = [];
     @api globalLabelsList = [];
     @track labelsToBeRemoved;
@@ -38,6 +38,7 @@ export default class label_management extends LightningElement {
     @track labelsAvailable = [];
     @track colorHEX;
     @api openAvailable = false;
+    @track tempList = [];
 
 
     connectedCallback(){
@@ -111,6 +112,46 @@ export default class label_management extends LightningElement {
         //     this.classList.add();
         // }else{this.style.display = "none";}
     }
+
+
+
+
+    filterLabel(event){
+        console.log("filtering ... "+event.target.value);
+        if(event.target.value.length>2){
+            let patt = new RegExp(event.target.value);
+            // console.log(patt);
+            // console.log(patt.test(str));
+            // let v = event.target.value;
+            let unAss = [];
+            for(let i=0; i<this.allUnassignedObjectLabList.length; i++ ){
+                let str = this.allUnassignedObjectLabList[i].Name;
+                // console.log(str);
+                if(patt.test(str)){
+                    unAss.push(this.allUnassignedObjectLabList[i]);
+                }
+            }
+            this.allUnassignedObjectLabList = unAss;
+        }else if (event.target.value.length <2 || event.target.value == ''){
+            getGlobal().then( result => {
+                let list = [];
+                for(let i=0; i<result.length; i++){
+                    if(!result[i].Assignee__c.includes(this.objectApiName)){
+                        list.push({
+                            Name : result[i].Name,
+                            Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
+                            Assigned : result[i].Assignee__c,
+                        });
+                    }
+                }
+                this.allUnassignedObjectLabList = list;
+            });
+        }
+    }
+
+
+
+
 
     grabColor(event){
         console.log("start ...");
@@ -256,17 +297,18 @@ export default class label_management extends LightningElement {
     }
 
     removeFromAvailableLabels(event){
-        let label = event.target.dataset.targetId;
+        event.preventDefault();
+        let st = event.dataTransfer.getData("style");
+        let label = event.dataTransfer.getData("text");
         let choice = confirm('Are you sure?\nYou are about to remove > "'+label+'" from available labels for all '+'"'+this.objectApiName+'".');
         if(choice){
-            console.log("Removed ...");
-            alert(label);
+            console.log("Removed ..."+label);
             // let data = event.dataTransfer.getData('text', event.target.firstChild.textContent);
             // let objName = event.dataTransfer.getData("text", event.target.getAttribute("data-object"));
             // console.log(objName);
             let node = document.createElement("div");
             let nodeChild = document.createElement("span");
-            let textnode = document.createTextNode(data);
+            let textnode = document.createTextNode(label);
             nodeChild.setAttribute("style", "margin-top: 2px; margin-right: 6px; margin-left: 6px");
             nodeChild.appendChild(textnode);
             // let buttonNode = document.createElement("button");
@@ -281,18 +323,20 @@ export default class label_management extends LightningElement {
             // buttonNode.setAttribute("style", " transform: rotate(45deg); margin-bottom: 8.5px; padding-left: 2px; padding-bottom: 2px");
             // buttonNode.appendChild(icon);
             node.classList.add("slds-pill");
-            node.style.cursor = "grab";
+            node.style = st;
             node.setAttribute("draggable", "true");
             node.addEventListener("drag", this.drag_handler);
             node.addEventListener("dragstart", this.dragstart_handler);
             node.addEventListener("dragend", this.dragend_handler);
             node.appendChild(nodeChild);
             // node.appendChild(buttonNode);
-            node.setAttribute("data-id", data);
-            if(event.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
-                console.log('target removed.... '+event.currentTarget.classList);
-                console.log('target removed.... '+event.target.classList);
-                let el = this.template.querySelector('[data-id="'+data+'"]');
+            node.setAttribute("data-id", label);
+            if(event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal associated scroll' || event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal global scroll'){
+                console.log('drop zone .... inside');
+                // console.log('target removed.... '+'[data-id="'+label+'"]');
+                // console.log('target removed.... '+event.currentTarget.classList);
+                // console.log('target removed.... '+event.target.classList);
+                let el = this.template.querySelector('[data-id="'+label+'"]');
                 console.log(el);
                 el.remove();
             }
@@ -388,7 +432,7 @@ export default class label_management extends LightningElement {
         let color = event.target.value;
         this.labelColor = color;
         this.fontColor = this.getContrastYIQ(color);
-        this.labelSample = "background-color: "+color+"; color: "+this.fontColor+"; width: 50%; margin-bottom: 6px";
+        this.labelSample = "background-color: "+color+"; color: "+this.fontColor+"; width: 50%; margin-bottom: 6px; text-align: center";
         // el.children[2].style.backgroundColor =  color;
         // el.children[2].style.color = this.fontColor;
     }

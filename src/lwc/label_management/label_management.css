@@ -39,3 +39,8 @@
     background-color: #b0c4df;
     border-color: #b0c4df;
 }
+
+.scroll {
+    height:150px;
+    overflow-y: scroll;
+}

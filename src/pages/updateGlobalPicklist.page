@@ -1,14 +1,12 @@
 <!--
  - Created by Adelchi on 07/04/2020.
  -->
+
 <apex:page id="updateGlobalPicklist" standardController="AnyLabel__c" extensions="GlobalPicklistEngine" action="{!runUpdate}" showheader="false" sidebar="false" standardStylesheets="false" title="Update Global Picklist" >
-<!--    <script>-->
-<!--        function close_window() {-->
-<!--            close();-->
-<!--        }-->
-<!--    </script>-->
-<!--    <apex:form>-->
-        <apex:outputText value="Picklist has been updated. Please minimize this panel"></apex:outputText>
+        <head>
+                <apex:slds/>
+        </head>
+        <apex:outputText styleClass="slds-text-heading_medium slds-color__border_gray-4" value="Picklist has been updated. Please minimize this panel"></apex:outputText>
 <!--        <apex:commandButton onClick="close_window()">Picklist has been updated. Please close</apex:commandButton>-->
 <!--    </apex:form>-->
 </apex:page>

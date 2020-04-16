@@ -1,7 +1,0 @@
-<!--
- - Created by Adelchi on 07/04/2020.
- -->
-
-<aura:component description="UpdatePicklist" implements="force:lightningQuickAction">
-    <c:runPicklistUpdate/>
-</aura:component>

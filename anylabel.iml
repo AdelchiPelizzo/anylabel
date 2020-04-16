@@ -33,6 +33,10 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
+                            <option name="name" value="AnyLabelAutomation" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="AnyLabelCtrl" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -50,6 +54,10 @@
                     <MetadataType>
                       <option name="entries">
                         <list>
+                          <MetadataEntry>
+                            <option name="name" value="triggerEngine" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="updateGlobalPicklist" />
                             <option name="selected" value="true" />
@@ -112,14 +120,6 @@
                       <option name="wildcard" value="false" />
                     </MetadataType>
                     <MetadataType>
-                      <option name="entries">
-                        <list>
-                          <MetadataEntry>
-                            <option name="name" value="UpdatePicklist" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                        </list>
-                      </option>
                       <option name="name" value="AuraDefinitionBundle" />
                     </MetadataType>
                     <MetadataType>
@@ -1325,10 +1325,6 @@
                         <list>
                           <MetadataEntry>
                             <option name="name" value="label_management" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                          <MetadataEntry>
-                            <option name="name" value="runPicklistUpdate" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                         </list>
