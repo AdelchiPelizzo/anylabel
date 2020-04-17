@@ -31,7 +31,7 @@
                                 <apex:form>
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!objectName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input">
+                                            <apex:selectList value="{!objectName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input objectName">
                                                 <apex:actionSupport action="{!runEngine}" event="onchange" />
                                                 <apex:selectOptions value="{!objectNames}" />
                                             </apex:selectList>
@@ -57,7 +57,7 @@
                                 <apex:form>
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input " onChange="filterCondition(this)">
+                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" onChange="filterCondition(this)">
 <!--                                                <apex:actionSupport action="{!runEngine2}" event="onchange" />-->
                                                     <apex:selectOptions value="{!fieldNames}" />
                                             </apex:selectList>
@@ -153,11 +153,6 @@
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
                                     <div class="slds-button-group">
-                                        <div name="objectName" >{!objectName}</div>
-                                        <div name="fieldName" >{!fieldName}</div>
-                                        <div name="conditionName" >{!conditionName}</div>
-                                        <div name="inputValue" >{!inputValue}</div>
-                                        <div name="labelsName" >{!labelName}</div>
                                         <apex:actionRegion>
                                             <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />
                                         </apex:actionRegion>
@@ -757,11 +752,17 @@
     </section>
     <script>
         function setTriggerItems(){
-            var obj = document.getElementsByName('objectName')[0].innerText;
-            var fie = document.getElementsByName('fieldName')[0].innerText;
+            console.log('setting up trigger START ...')
+            var obj = document.getElementsByClassName('objectName')[0].value;
+            console.log('setting up trigger 1st step START ...');
+            var fie = document.getElementsByClassName('fieldName')[0].value;
+            console.log('setting up trigger 2nd step START ...')
             var cond = document.getElementsByClassName('condition')[0].value;
+            console.log('setting up trigger 3rd step START ...')
             var inp = document.getElementsByName('inputValue')[0].value;
+            console.log('setting up trigger 4th step START ...')
             var labOptions = document.getElementsByClassName('labelName')[0];
+            console.log('setting up trigger 5th step START ...')
             var labValues = [];
             console.log('labValues ... '+labValues);
             for (var i=0; i< labOptions.options.length ; i++) {
@@ -781,7 +782,7 @@
             // }
             var setupList = [];
             setupList.push(obj);
-            setupList.push(fie);
+            setupList.push(fie.split('-',1).toString());
             setupList.push(cond);
             setupList.push(inp);
             setupList.push(lab);
