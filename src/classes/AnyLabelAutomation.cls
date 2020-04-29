@@ -12,23 +12,14 @@ public with sharing class AnyLabelAutomation {
  * @return (description of the return value)
  */
 
-
-    public static String message {get{return 'hello man ...';} set;}
-    public static List<String> objects {get{return GlobalPicklistEngine.getSObjectList();} set;}
-    public static List<String> setupItems {get; set;}
-    public static String objectName {get; set;}
-    public static String objectNameTest {get; set;}
-//    {objectNameTest = value; System.debug('value: '+value);}}
+    public String objectName {get; set;}
     public String fieldName {get; set;}
     public List<SelectOption> fieldNames {get; set;}
     public String labelName {get; set;}
     public String conditionName {get; set;}
-    public String inputValue {get{return inputValue;} set{inputValue = inputValue;}}
-//    public List<SelectOption> ConditionNames {get; set;}
     private final AnyLabel__c a;
 
     ApexPages.StandardController stdCtrl;
-
 
     public AnyLabelAutomation(ApexPages.StandardController stdController) {
         stdCtrl = stdController;
@@ -36,26 +27,10 @@ public with sharing class AnyLabelAutomation {
     }
 
     public PageReference runEngine() {
-        objectNameTest = objectName;
         //retrieve relevant fields name from selected object
         system.debug('running engine ... '+objectName);
         fieldNames = getFieldNames(objectName);
         system.debug('running engine ... '+fieldNames);
-        return null;
-    }
-
-    public PageReference runEngine2() {
-        //retrieve relevant fields name from selected object
-        system.debug('running engine ... '+fieldName);
-        return null;
-    }
-
-    public PageReference runSetup(){
-//        List<String> setup = new List<String>();
-//        setup.add(objectName);
-        system.debug(objectNameTest);
-        system.debug(objectName);
-//        createTrigger(setup);
         return null;
     }
 
@@ -69,7 +44,7 @@ public with sharing class AnyLabelAutomation {
         return options;
     }
 
-    public static List<SelectOption> getFieldNames(String obj){
+    public List<SelectOption> getFieldNames(String obj){
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('', ''));
         Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(obj).getDescribe().fields.getMap();
@@ -88,7 +63,7 @@ public with sharing class AnyLabelAutomation {
         return options;
     }
 
-    public static List<SelectOption> getConditionNames(){
+    public List<SelectOption> getConditionNames(){
         List<SelectOption> so = new List<SelectOption>();
         so.add(new SelectOption('',''));
         so.add(new SelectOption('Includes', 'Includes'));
@@ -100,7 +75,7 @@ public with sharing class AnyLabelAutomation {
         return so;
     }
 
-    public static List<SelectOption> getLabelsNames(){
+    public List<SelectOption> getLabelsNames(){
         List<SelectOption> so = new List<SelectOption>();
         List<AnyLabel__c> al = [SELECT Name FROM AnyLabel__c WHERE Assignee__c =: objectName];
         for(Integer i=0; i<al.size(); i++){
@@ -118,31 +93,15 @@ public with sharing class AnyLabelAutomation {
         String y = x.replace(' ', '_');
         String z = y.replace('-', '_');
         String w = z.replace(':', '_');
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update after insert) {}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition = \''+setup[2]+'\';List<'+setup[0]+'> acc = new List<'+setup[0]+'>();List<String> labelsList = new List<String>();String input = \''+setup[3]+'\';String labString = \''+setup[4]+'\';List<String> lstLab = labString.split(\',\');for(Integer i=0; i<lstLab.size(); i++){ labelsList.add(lstLab[i]);}List<AnyLabel__c> al = new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES '+setup[0]+']; for ('+setup[0]+' objNew: Trigger.new){ String field = objNew.'+setup[1]+';for(Account objOld:trigger.old){if(field != objOld.'+setup[1]+'){labelsList.toString();objNew.Labels__c += labelsList.toString();}}}}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition = \''+setup[2]+'\';List<'+setup[0]+'> acc = new List<'+setup[0]+'>();List<String> labelsList = new List<String>();String input = \''+setup[3]+'\';String labString = \''+setup[4]+'\';List<String> lstLab = labString.split(\',\');for(Integer i=0; i<lstLab.size(); i++){ labelsList.add(lstLab[i]);}List<AnyLabel__c> al = new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES '+setup[0]+']; for ('+setup[0]+' objNew: Trigger.new){String field = objNew.'+setup[1]+';for(Account objOld:trigger.old){if(field != objOld.'+setup[1]+'){system.debug(\'hello world\');}}}}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition = \''+setup[2]+'\';List<'+setup[0]+'> acc = new List<'+setup[0]+'>();List<String> labelsList = new List<String>();String input = \''+setup[3]+'\';String labString = \''+setup[4]+'\';List<String> lstLab = labString.split(\',\');for(Integer i=0; i<lstLab.size(); i++){ labelsList.add(lstLab[i]);}List<AnyLabel__c> al = new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES '+setup[0]+']; for ('+setup[0]+' objNew: Trigger.new){String field = objNew.'+setup[1]+';for(Account objOld:trigger.old){system.debug(\'hello world\')}}}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition=\''+setup[2]+'\';List<'+setup[0]+'> acc=new List<'+setup[0]+'>();List<String> labelsList=new List<String>();String input=\''+setup[3]+'\';String labString=\''+setup[4]+'\';List<String> lstLab=labString.split(\',\');for(Integer i=0;i<lstLab.size();i++){labelsList.add(lstLab[i]);}List<AnyLabel__c> al=new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES '+setup[0]+']; for ('+setup[0]+' objNew: Trigger.new){String field = objNew.'+setup[1]+';system.debug(\'hello world\')}}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition=\''+setup[2]+'\';List<'+setup[0]+'> acc=new List<'+setup[0]+'>();List<String> labelsList=new List<String>();String input=\''+setup[3]+'\';String labString=\''+setup[4]+'\';List<String> lstLab=labString.split(\',\');for(Integer i=0;i<lstLab.size();i++){labelsList.add(lstLab[i]);}List<AnyLabel__c> al=new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES \''+setup[0]+'\']; for ('+setup[0]+' objNew: Trigger.new){system.debug(\'hello world\')}}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition=\''+setup[2]+'\';List<'+setup[0]+'> acc=new List<'+setup[0]+'>();List<String> labelsList=new List<String>();String input=\''+setup[3]+'\';String labString=\''+setup[4]+'\';List<String> lstLab=labString.split(\',\');for(Integer i=0;i<lstLab.size();i++){labelsList.add(lstLab[i]);}List<AnyLabel__c> al=new List<AnyLabel__c>();al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES \''+setup[0]+'\'];system.debug(\'hello world\')}"}'; // JSON format to create trigger
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update, after insert){String condition=\''+setup[2]+'\';List<'+setup[0]+'> acc=new List<'+setup[0]+'>();List<String> labelsList=new List<String>();String input=\''+setup[3]+'\';String labString=\''+setup[4]+'\';List<String> lstLab=labString.split(\',\');for(Integer i=0;i<lstLab.size();i++){labelsList.add(lstLab[i]);}List<AnyLabel__c> al=new List<AnyLabel__c>();}"}'; // JSON format to create trigger
-        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update,after insert){String objectSelected=\''+setup[0]+'\';String fieldSelected=\''+setup[1]+'\';String conditionSelected=\''+setup[2]+'\';String checkValue=\''+setup[3]+'\';String labelsSelected=\''+setup[4]+'\';system.debug(objectSelected+labelsSelected);}"}'; //List<String> lstLab=labelsSelected.split(\',\');List<AnyLabel__c> al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES (\''+setup[0]+'\')];List<'+setup[0]+'> acc=new List<'+setup[0]+'>(); JSON format to create trigger
-        system.debug(json);
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
-        req.setMethod('POST');
-        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
-        req.setHeader('Content-Type', 'application/json');
-        req.setBody(json);
-        Http httpReq = new Http();
-        HttpResponse res  = httpReq.send(req);
-        System.debug(res.getBody());
-
-//        String x = String.valueOf(Datetime.now());
-//        String y = x.replace(' ', '_');
-//        String z = y.replace('-', '_');
-//        String w = z.replace(':', '_');
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update after insert) {}"}'; // JSON format to create trigger
+        AnyLabelTrigger__c alt = new AnyLabelTrigger__c(
+                Name = setup[0],
+                fieldName__c = setup[1],
+                condition__c = setup[2],
+                inputValue__c = setup[3],
+                labelsName__c = setup[4]
+        );
+        insert alt;
+//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update,after insert){String objectSelected=\''+setup[0]+'\';String fieldSelected=\''+setup[1]+'\';String conditionSelected=\''+setup[2]+'\';String checkValue=\''+setup[3]+'\';String labelsSelected=\''+setup[4]+'\';List<AnyLabel__c> aList= [SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES(\''+setup[0]+'\')];system.debug(aList.size());}"}'; //List<String> lstLab=labelsSelected.split(\',\');List<AnyLabel__c> al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES (\''+setup[0]+'\')];List<'+setup[0]+'> acc=new List<'+setup[0]+'>(); JSON format to create trigger
 //        system.debug(json);
 //        HttpRequest req = new HttpRequest();
 //        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
@@ -153,5 +112,22 @@ public with sharing class AnyLabelAutomation {
 //        Http httpReq = new Http();
 //        HttpResponse res  = httpReq.send(req);
 //        System.debug(res.getBody());
+    }
+
+
+
+    @future (callout=true)
+//    @InvocableMethod
+    public static void anyLabelProcessAction(List<String> recId){
+        String recordId = recId[0];
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://anylabel.herokuapp.com/1/2');
+        req.setMethod('GET');
+        Http httpReq = new Http();
+        HttpResponse res  = httpReq.send(req);
+        System.debug(res.getBody());
+        Account a = [SELECT test__c from Account WHERE Id = :recordId LIMIT 1];
+        a.test__c = res.getBody();
+        update a;
     }
 }

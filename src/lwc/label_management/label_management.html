@@ -5,14 +5,8 @@
 
 
 <template >
-    <!--    <h2 class="slds-text-heading_medium slds-m-bottom_medium">-->
-    <!--        Any Label Component-->
-    <!--    </h2>-->
-    <!--    <div class="slds-float&#45;&#45;right">-->
-    <!--    </div>-->
-
     <template if:true={showModal} >
-        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open" >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large" >
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon class="slds-modal__close" title="Close" icon-name="utility:close" icon-class="slds-button_icon-inverse" onclick={handleDialogClose} >
@@ -24,13 +18,11 @@
                     <lightning-tab label="All"  title="Displays ALL Labels: Assigned and Available">
                         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
                             <label for="objectLabels">Labels currently <span style="color: crimson; font-weight: bold">associated</span> with {objectApiName}</label>
-                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal associated scroll" ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="objectLabels">
+                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal associated " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="objectLabels">
                                 <div > </div>
                                 <template for:each={allAssignedObjectLabList} for:item="allLabel" >
                                     <div class="slds-pill" style={allLabel.Styling} draggable="true" key={allLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={allLabel.Name}>
-                            <span class="slds-m-around--xx-small">
-                                {allLabel.Name}
-                            </span>
+                                         <span class="slds-m-around--xx-small">{allLabel.Name}</span>
                                         <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >
                                             <lightning-icon icon-name="utility:close" data-target-id={allLabel.Name}>
                                             </lightning-icon>
@@ -51,7 +43,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal global scroll" ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="globalLabels">
+                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal global " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="globalLabels">
                                 <div > </div>
                                 <template for:each={allUnassignedObjectLabList} for:item="globalLabel" >
                                     <div class="slds-pill" draggable="true" key={globalLabel.Name} style={globalLabel.Styling} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={globalLabel.Name}>
@@ -105,12 +97,6 @@
                             <span class="slds-m-around--xx-small">
                                 {labelAvailable.Name}
                             </span>
-                    <!--                <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >-->
-                    <!--                    <lightning-icon icon-name="utility:close" data-target-id={labelAvailable} >-->
-                    <!--                        &lt;!&ndash;                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>&ndash;&gt;-->
-                    <!--                    </lightning-icon>-->
-                    <!--                    <span class="slds-assistive-text">Remove</span>-->
-                    <!--                </button>-->
                 </div>
             </template>
         </div>
@@ -119,58 +105,6 @@
         </div>
         <button class="slds-button slds-button--inverse" style="margin-top: 5px" title="save" label="Save" onclick={saveLabels}>Save</button>
     </div>
-<!--    <lightning-button-group >-->
-<!--        <lightning-button  title="open" label="Manage Labels" onclick={toggleModal} disabled={isAdmin}></lightning-button>-->
-<!--    </lightning-button-group>-->
-
-    <!--    <div id="target" ondrop={drop_handler} ondragover={dragover_handler}>Drop Zone</div>-->
-
-
-    <!--    <br class="slds-m-top_medium slds-m-bottom_x-large">-->
-    <!--    <h2 class="slds-text-heading_medium slds-m-bottom_medium">-->
-    <!--        Any Label Component-->
-    <!--    </h2>-->
-
-    <!--    Label color>> {labelColor}</br>-->
-    <!--    Font color >> {fontColor}</br>-->
-    <!--    Labels List >> -->
-    <!--    <ul>-->
-    <!--        <template for:each={labelsList.data} for:item="label">-->
-    <!--            <li key={label}>{label}</li>-->
-    <!--        </template>-->
-    <!--    </ul>-->
-    <!--    All Labels List >>-->
-    <!--    <ul>-->
-    <!--        <template for:each={allLabelsList.data} for:item="label">-->
-    <!--            <li key={label}>{label}</li>-->
-    <!--        </template>-->
-    <!--    </ul>-->
-
-    <!--    <div class="slds-p-around_medium lgc-bg">-->
-    <!--        <lightning-input type="color" name="input-color" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>-->
-    <!--    </div>-->
-    <!--    <div class="slds-pill-container"  >-->
-    <!--        <ul class="container" >-->
-    <!--            <template for:each={allLabelsList.data} for:item="labelAvailable">-->
-    <!--                <li class="slds-pill" draggable="true" key={labelAvailable} ondragstart={labelDragStart} ondrag= {labelDragOver} >-->
-    <!--                    <span class="slds-m-around&#45;&#45;xx-small">-->
-    <!--                        {labelAvailable}-->
-    <!--                    </span>-->
-    <!--                </li>-->
-    <!--            </template>-->
-    <!--        </ul>-->
-    <!--    </div>-->
-    <!--    <div class="slds-pill-container" >-->
-    <!--        <ul class="container"  >-->
-    <!--            <template for:each={labelsList.data} for:item="assignedLabel" >-->
-    <!--                <li class="slds-pill" draggable="true" key={assignedLabel} ondragstart={labelDragStart} ondrag={labelDragOver}>-->
-    <!--                    <span class="slds-m-around&#45;&#45;xx-small">-->
-    <!--                        {assignedLabel}-->
-    <!--                    </span>-->
-    <!--                </li>-->
-    <!--            </template>-->
-    <!--        </ul>-->
-    <!--    </div>-->
 </template>
 
 

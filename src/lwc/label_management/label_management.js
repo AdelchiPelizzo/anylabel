@@ -40,7 +40,6 @@ export default class label_management extends LightningElement {
     @api openAvailable = false;
     @track tempList = [];
 
-
     connectedCallback(){
         is_admin().then(result => {
             console.log(result);
@@ -113,9 +112,6 @@ export default class label_management extends LightningElement {
         // }else{this.style.display = "none";}
     }
 
-
-
-
     filterLabel(event){
         console.log("filtering ... "+event.target.value);
         if(event.target.value.length>2){
@@ -148,10 +144,6 @@ export default class label_management extends LightningElement {
             });
         }
     }
-
-
-
-
 
     grabColor(event){
         console.log("start ...");
@@ -331,7 +323,7 @@ export default class label_management extends LightningElement {
             node.appendChild(nodeChild);
             // node.appendChild(buttonNode);
             node.setAttribute("data-id", label);
-            if(event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal associated scroll' || event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal global scroll'){
+            if(event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal associated' || event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal global'){
                 console.log('drop zone .... inside');
                 // console.log('target removed.... '+'[data-id="'+label+'"]');
                 // console.log('target removed.... '+event.currentTarget.classList);

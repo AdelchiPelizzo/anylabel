@@ -4,33 +4,31 @@
  */
 
 
-public with sharing class GlobalPicklistEngine {
+global with sharing class GlobalPicklistEngine {
     /**
  * Purpose : (Write a succinct description of this method here.)
  * @param (parameter name) (Describe the first parameter here)
  * @param (parameter name) (Do the same for each additional parameter)
  * @return (description of the return value)
  */
+    private final AnyLabel__c a;
 
-//    @AuraEnabled(cacheable=true)
-    @InvocableMethod
+    @AuraEnabled(cacheable=true)
     public static void runUpdate(){
         System.debug('running update ....');
         updateGlobalPicklist(getSObjectList(), getGlobalPicklistId('SObject'));
     }
 
-    private final AnyLabel__c a;
     public GlobalPicklistEngine(ApexPages.StandardController stdController) {
         this.a = (AnyLabel__c)stdController.getRecord();
     }
 
-
-
     @AuraEnabled(cacheable=true)
-    public static List<String> getSObjectList(){
+//    @InvocableMethod
+    global static List<String> getSObjectList(){
         System.debug('getting sobjects list ....');
         List<String> SObjectList = new List<String>();
-        for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().Values()){
+        for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().values()){
             String name = objTyp.getDescribe().getName();
             if(!objTyp.getDescribe().isCreateable())
                 continue;
@@ -133,6 +131,7 @@ public with sharing class GlobalPicklistEngine {
         return globalPicklistId;
     }
 
+    @AuraEnabled
     public static void updateGlobalPicklist(List<String> SObjectList, String globalPicklistId){
         System.debug('updating picklist ....');
         Integer size = SObjectList.size();

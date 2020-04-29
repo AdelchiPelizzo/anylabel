@@ -4,7 +4,32 @@
  */
 
 
-trigger triggerSample on Account (before update , after insert) {
+trigger triggerSample on Account (after update , after insert) {
+
+//    for (Account objNew: Trigger.new) {
+//        system.debug('trigger started');
+//        updateLabel updt = new updateLabel(objNew.Id);
+//        system.debug('trigger ended');
+//    }
+
+
+
+
+    List<Account> accs = new List<Account>();
+    List<String> accsId = new List<String>();
+
+    for (Account objNew: Trigger.new) {
+        accsId.add(objNew.Id);
+    }
+
+    if(!System.isFuture() && !System.isBatch())
+            AnyLabelAutomation.anyLabelProcessAction(accsId);
+}
+
+
+
+
+
 //    List<Account> acc = new List<Account>();
 //    List<String> labelsList = new List<String>();
 //
@@ -20,4 +45,4 @@ trigger triggerSample on Account (before update , after insert) {
 //        }
 //    }
 
-}
+//}
