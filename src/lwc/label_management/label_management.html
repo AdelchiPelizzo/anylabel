@@ -17,57 +17,58 @@
                 <lightning-tabset >
                     <lightning-tab label="All"  title="Displays ALL Labels: Assigned and Available">
                         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
-                            <label for="objectLabels">Labels currently <span style="color: crimson; font-weight: bold">associated</span> with {objectApiName}</label>
-                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal associated " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="objectLabels">
+                            <label for="objectLabels">Labels <span style="color: crimson; font-weight: bold">associated</span> with {objectApiName} (Drop labels here to make them available for all {objectApiName}).</label>
+                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal slds-m-top_small associated " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="objectLabels" title="Drop labels here to make them available">
                                 <div > </div>
                                 <template for:each={allAssignedObjectLabList} for:item="allLabel" >
                                     <div class="slds-pill" style={allLabel.Styling} draggable="true" key={allLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={allLabel.Name}>
                                          <span class="slds-m-around--xx-small">{allLabel.Name}</span>
-                                        <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={removeFromAvailableLabels} >
-                                            <lightning-icon icon-name="utility:close" data-target-id={allLabel.Name}>
-                                            </lightning-icon>
-                                            <span class="slds-assistive-text">Remove</span>
-                                        </button>
+<!--                                        <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove" title="Remove"  onclick={deleteLabelForObject} >-->
+<!--                                            <lightning-icon icon-name="utility:close" data-target-id={allLabel.Name}>-->
+<!--                                            </lightning-icon>-->
+<!--                                            <span class="slds-assistive-text">Remove</span>-->
+<!--                                        </button>-->
                                     </div>
                                 </template>
                             </div>
-                            <table class="slds-size--2-of-2 slds-m-bottom_xx-small slds-m-top_medium">
+                            <table class="slds-size--2-of-2 slds-m-bottom_xx-small slds-m-top_large">
                                 <tr>
                                     <td>
-                                        <div class="slds-size--1-of-2">
-                                            <label  for="globalLabels">Labels <span style="color: crimson; font-weight: bold">available</span></label>
+                                        <div >
+                                            <label  for="globalLabels">Labels <span style="color: crimson; font-weight: bold">not associated</span> with {objectApiName} (Drop labels here to make them un-available for all {objectApiName}).</label>
                                         </div>
                                     </td>
                                     <td>
-                                        <input class="slds-input slds-size--1-of-2 slds-float_right" label="Filter" placeholder="filter by name ..." onkeyup={filterLabel} ></input>
+                                        <input title="Start typing at least 3 characters of the label you are looking for." class="slds-input slds-float_right" label="Filter" placeholder="filter by name ..." onkeyup={filterLabel} ></input>
                                     </td>
                                 </tr>
                             </table>
-                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal global " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="globalLabels">
+                            <div class="slds-pill-container slds-listbox slds-listbox_horizontal global " ondrop={removeFromAvailableLabels} ondragover={dragover_handler} id="globalLabels" title="Drop labels here to make them un-available">
                                 <div > </div>
                                 <template for:each={allUnassignedObjectLabList} for:item="globalLabel" >
                                     <div class="slds-pill" draggable="true" key={globalLabel.Name} style={globalLabel.Styling} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={globalLabel.Name}>
                                         <span class="slds-m-around--xx-small">
                                             {globalLabel.Name}
                                         </span>
-                                        <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove " title="Remove"  onclick={removeFromAvailableLabels} >
-                                            <div style="background-color: #b0c4df; border-radius: 2px">
-                                                <lightning-icon icon-name="utility:close" data-target-id={globalLabel.Name}>
-                                                <!--                                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>-->
-                                            </lightning-icon>
-                                            </div>
-                                            <span class="slds-assistive-text">Remove</span>
-                                        </button>
+<!--                                        <button class="slds-button slds-button_icon slds-button_icon slds-pill__remove " data-target-id={globalLabel.Name} title="Remove"  onclick={deleteLabelForObject} >-->
+<!--                                            <div style="background-color: #b0c4df; border-radius: 2px">-->
+<!--                                                <lightning-icon icon-name="utility:close" data-target-id={globalLabel.Name}>-->
+<!--                                            </lightning-icon>-->
+<!--                                            </div>-->
+<!--                                            <span class="slds-assistive-text">Remove</span>-->
+<!--                                        </button>-->
                                     </div>
                                 </template>
                             </div>
+                            <lightning-button title="Save the new Global Labels Availability" variant="brand" class="slds-button slds-float_right slds-m-top_medium" label="Save" onclick={manageObjectLabel}>
+                            </lightning-button>
                         </div>
                     </lightning-tab>
                     <lightning-tab label="Create New"  title="New Labels will be available ONLY for current object" >
                         <div class="slds-modal__content slds-p-left--large slds-p-bottom--large" id="modal-content-id-2" >
                             <input class="slds-input  slds-size--1-of-2" style={labelSample} required id="name" label="Name" placeholder="enter label name here"></input>
                             <lightning-input class="hex" required type="color" name="input-color" style="width: 50%; margin-bottom: 6px" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
-                            <lightning-button class="slds-button" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
+                            <lightning-button class="slds-button" variant="brand" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
                             </lightning-button>
                         </div>
                     </lightning-tab>
