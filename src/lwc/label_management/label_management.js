@@ -84,6 +84,7 @@ export default class label_management extends LightningElement {
             // console.log(' <<<>>> '+this.allAssignedObjectLabList.length);
 
         }).then(result => {
+            console.log('results >> Assigned Labels ...!'+this.recordId);
                 getAssignedLabels({recordId: this.recordId}).then( result => {
                     if(result!=null){
                         for(let i=0; i<result.length; i++){
@@ -450,7 +451,7 @@ export default class label_management extends LightningElement {
         nodeChild.appendChild(textnode);
         node.appendChild(nodeChild);
         // node.appendChild(buttonNode);
-        if(event.currentTarget.classList == 'slds-pill-container current' || event.currentTarget.classList == 'slds-pill-container available'){
+        if(event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal current' || event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal available'){
             // console.log('target removed.... '+event.currentTarget.classList);
             // console.log('target removed.... '+event.target.classList);
             let el = this.template.querySelector('[data-id="'+name+'"]');

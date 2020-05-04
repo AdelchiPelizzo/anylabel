@@ -7,7 +7,7 @@
 @IsTest
 private class GlobalPicklistEngineTest {
 
-    public static globalValueSet gblV = new GlobalValueSet();
+//    public static globalValueSet gblV = new GlobalValueSet();
     private static AnyLabel__c a = new AnyLabel__c();
     private static ApexPages.StandardController stdCtrl = new ApexPages.StandardController(a);
     @IsTest
@@ -18,7 +18,7 @@ private class GlobalPicklistEngineTest {
         ctrl.runEngine();
         system.assert(ctrl.fieldNames.size()>0);
         ctrl.getObjectNames();
-        system.assert();
+//        system.assert(GlobalPicklistEngine.getGlobalPicklistId('SObject') != null);
         Test.stopTest();
 
     }

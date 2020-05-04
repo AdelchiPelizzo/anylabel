@@ -2,11 +2,21 @@
  - Created by Adelchi on 07/04/2020.
  -->
 
-<apex:page id="updateGlobalPicklist" standardController="AnyLabel__c" extensions="GlobalPicklistEngine" action="{!runUpdate}" showheader="false" sidebar="false" standardStylesheets="false" title="Update Global Picklist" >
+<apex:page id="updateGlobalPicklist" standardController="AnyLabel__c" extensions="GlobalPicklistEngine"  showheader="false" sidebar="false" standardStylesheets="false" title="Update Global Picklist" >
         <head>
                 <apex:slds/>
         </head>
-        <apex:outputText styleClass="slds-text-heading_medium slds-color__border_gray-4" value="Picklist has been updated. Please minimize this panel"></apex:outputText>
+        <div class="slds-text-heading_small" >You are about to update global picklist field values.<br/><br/> Standard and custom objects of your organization are going to be available for assignment to Labels.
+        </div>
+
+        <br/>
+        <br/>
+        <apex:form>
+                <div class="slds-float_right">
+                        <apex:commandButton title="Click to update AnyLabel global picklist values." value="Proceed" styleClass=" slds-button slds-button_success" action="{!runUpdate}" onclick="if(!confirm('Are you sure?')){return false};"/>
+                </div>
+        </apex:form>
+<!--onclick="{!runUpdate}"     -->
 <!--        <apex:commandButton onClick="close_window()">Picklist has been updated. Please close</apex:commandButton>-->
 <!--    </apex:form>-->
 </apex:page>

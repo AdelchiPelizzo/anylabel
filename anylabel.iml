@@ -73,11 +73,19 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="MockHttpRespGenUpdateGlobalPicklistId" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="MockHttpResponseGenerator" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="MockHttpResponseGeneratorGPicklistEngine" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="TriggerCreationService" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>

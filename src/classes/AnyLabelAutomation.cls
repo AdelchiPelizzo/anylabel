@@ -93,25 +93,25 @@ public with sharing class AnyLabelAutomation {
         String y = x.replace(' ', '_');
         String z = y.replace('-', '_');
         String w = z.replace(':', '_');
-        AnyLabelTrigger__c alt = new AnyLabelTrigger__c(
-                Name = setup[0],
-                fieldName__c = setup[1],
-                condition__c = setup[2],
-                inputValue__c = setup[3],
-                labelsName__c = setup[4]
-        );
-        insert alt;
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update,after insert){String objectSelected=\''+setup[0]+'\';String fieldSelected=\''+setup[1]+'\';String conditionSelected=\''+setup[2]+'\';String checkValue=\''+setup[3]+'\';String labelsSelected=\''+setup[4]+'\';List<AnyLabel__c> aList= [SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES(\''+setup[0]+'\')];system.debug(aList.size());}"}'; //List<String> lstLab=labelsSelected.split(\',\');List<AnyLabel__c> al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES (\''+setup[0]+'\')];List<'+setup[0]+'> acc=new List<'+setup[0]+'>(); JSON format to create trigger
-//        system.debug(json);
-//        HttpRequest req = new HttpRequest();
-//        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
-//        req.setMethod('POST');
-//        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
-//        req.setHeader('Content-Type', 'application/json');
-//        req.setBody(json);
-//        Http httpReq = new Http();
-//        HttpResponse res  = httpReq.send(req);
-//        System.debug(res.getBody());
+//        AnyLabelTrigger__c alt = new AnyLabelTrigger__c(
+//                Name = setup[0],
+//                fieldName__c = setup[1],
+//                condition__c = setup[2],
+//                inputValue__c = setup[3],
+//                labelsName__c = setup[4]
+//        );
+//        insert alt;
+        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update,after insert){String objectSelected=\''+setup[0]+'\';String fieldSelected=\''+setup[1]+'\';String conditionSelected=\''+setup[2]+'\';String checkValue=\''+setup[3]+'\';String labelsSelected=\''+setup[4]+'\';List<AnyLabel__c> aList= [SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES(\''+setup[0]+'\')];system.debug(aList.size());}"}'; //List<String> lstLab=labelsSelected.split(\',\');List<AnyLabel__c> al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES (\''+setup[0]+'\')];List<'+setup[0]+'> acc=new List<'+setup[0]+'>(); JSON format to create trigger
+        system.debug(json);
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
+        req.setMethod('POST');
+        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
+        req.setHeader('Content-Type', 'application/json');
+        req.setBody(json);
+        Http httpReq = new Http();
+        HttpResponse res  = httpReq.send(req);
+        System.debug(res.getBody());
     }
 
 

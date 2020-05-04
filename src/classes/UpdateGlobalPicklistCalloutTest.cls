@@ -13,5 +13,7 @@ private class UpdateGlobalPicklistCalloutTest {
         lsS.add('Account');
         lsS.add('Contact');
         GlobalPicklistEngine.updateGlobalPicklist(lsS, '12345678910');
+        Test.setMock(HttpCalloutMock.class, new MockHttpRespGenUpdateGlobalPicklistId());
+        GlobalPicklistEngine.getGlobalPicklistId('12345678910');
     }
 }
