@@ -33,6 +33,10 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
+                            <option name="name" value="AnalyzeObject" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="AnyLabelAutomation" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -57,6 +61,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="getType" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="GlobalPicklistEngine" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -66,6 +74,18 @@
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="invocableWrapper" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="MetadataDeployController" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="MetadataDeployController2" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="MetadataRemoveController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
@@ -85,6 +105,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="Opportunity1Test" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="TriggerCreationService" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -101,11 +125,35 @@
                       <option name="name" value="ApexClass" />
                     </MetadataType>
                     <MetadataType>
+                      <option name="entries">
+                        <list>
+                          <MetadataEntry>
+                            <option name="name" value="metadatadeploy" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="MetadataRemove" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="zip" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="zipEntry" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                        </list>
+                      </option>
                       <option name="name" value="ApexComponent" />
                     </MetadataType>
                     <MetadataType>
                       <option name="entries">
                         <list>
+                          <MetadataEntry>
+                            <option name="name" value="RemoveRule" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="triggerEngine" />
                             <option name="selected" value="true" />
@@ -125,6 +173,14 @@
                     <MetadataType>
                       <option name="entries">
                         <list>
+                          <MetadataEntry>
+                            <option name="name" value="AnyLabelTrigger20_05_09_14_53" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="opportunity1" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="triggerSample" />
                             <option name="selected" value="true" />

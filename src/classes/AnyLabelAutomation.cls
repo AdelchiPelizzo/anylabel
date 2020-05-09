@@ -15,22 +15,78 @@ public with sharing class AnyLabelAutomation {
     public String objectName {get; set;}
     public String fieldName {get; set;}
     public List<SelectOption> fieldNames {get; set;}
-    public String labelName {get; set;}
+    public String[] labelName {get; set;}
     public String conditionName {get; set;}
+    public String InputValue {get; set;}
+    public String triggerNme {get; set;}
+    public List<SelectOption> ConditionNames ;
+
     private final AnyLabel__c a;
 
     ApexPages.StandardController stdCtrl;
 
+//    public static List<ApexTrigger> triggers {get{
+//        return [SELECT Id, Name, TableEnumOrId, Status  FROM ApexTrigger];
+//    }set;}
+
+    public List<triggerWrapper> triggerList = new List<triggerWrapper>();
+    public List<ApexTrigger> selectedTriggers = new List<ApexTrigger>();
+
+    public List<triggerWrapper> getTriggers()
+    {
+        for(ApexTrigger a : [SELECT Id, Name, TableEnumOrId, Status  FROM ApexTrigger]){
+            triggerList.add(new triggerWrapper(a));
+        }
+        return triggerList;
+    }
+
+    public PageReference getSelected()
+    {
+        selectedTriggers.clear();
+        for(triggerWrapper trgWrapper : triggerList)
+            if(trgWrapper.selected == true)
+                selectedTriggers.add(trgWrapper.apxTrg);
+        return null;
+    }
+
+    public List<ApexTrigger> GetSelectedTriggers()
+    {
+        if(selectedTriggers.size()>0)
+            return selectedTriggers;
+        else
+                return null;
+    }
+
+    public class triggerWrapper
+    {
+        public ApexTrigger apxTrg{get; set;}
+        public Boolean selected {get; set;}
+        public triggerWrapper(ApexTrigger a)
+        {
+            apxTrg = a;
+            selected = false;
+        }
+    }
+
     public AnyLabelAutomation(ApexPages.StandardController stdController) {
         stdCtrl = stdController;
         this.a = (AnyLabel__c)stdController.getRecord();
+        List<SelectOption> so = new List<SelectOption>();
+        so.add(new SelectOption('',''));
+        so.add(new SelectOption('Includes', 'Includes'));
+        so.add(new SelectOption('Not Includes', 'Not Includes'));
+        so.add(new SelectOption('Is Changed', 'Is Changed'));
+        so.add(new SelectOption('Equal to', 'Equal to'));
+        so.add(new SelectOption('Not Equal to', 'Not Equal to'));
+        so.add(new SelectOption('Start with', 'Start with'));
+        ConditionNames = so;
     }
 
     public PageReference runEngine() {
         //retrieve relevant fields name from selected object
         system.debug('running engine ... '+objectName);
         fieldNames = getFieldNames(objectName);
-        system.debug('running engine ... '+fieldNames);
+        system.debug('running engine... '+fieldNames);
         return null;
     }
 
@@ -64,6 +120,34 @@ public with sharing class AnyLabelAutomation {
     }
 
     public List<SelectOption> getConditionNames(){
+        return conditionNames;
+    }
+
+    public PageReference getInputValue(){
+        system.debug('InputValue 1234 ... '+InputValue);
+        InputValue = InputValue;
+        return null;
+    }
+
+    public PageReference getLabelName(){
+        system.debug('InputValue 1234 ... '+LabelName);
+        LabelName = LabelName;
+        return null;
+    }
+
+    public List<SelectOption> getLabelsNames(){
+        List<SelectOption> so = new List<SelectOption>();
+        List<AnyLabel__c> al = [SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (: objectName)];
+        for(Integer i=0; i<al.size(); i++){
+            so.add(new SelectOption(al[i].Name, al[i].Name));
+        }
+        return so;
+    }
+
+    public PageReference getFieldName(){
+        system.debug('hello ...');
+        system.debug('hello ...'+fieldName);
+        fieldNames = fieldNames;
         List<SelectOption> so = new List<SelectOption>();
         so.add(new SelectOption('',''));
         so.add(new SelectOption('Includes', 'Includes'));
@@ -72,16 +156,27 @@ public with sharing class AnyLabelAutomation {
         so.add(new SelectOption('Equal to', 'Equal to'));
         so.add(new SelectOption('Not Equal to', 'Not Equal to'));
         so.add(new SelectOption('Start with', 'Start with'));
-        return so;
+        ConditionNames = so;
+        filterOptions(fieldName);
+        return null;
     }
 
-    public List<SelectOption> getLabelsNames(){
-        List<SelectOption> so = new List<SelectOption>();
-        List<AnyLabel__c> al = [SELECT Name FROM AnyLabel__c WHERE Assignee__c =: objectName];
-        for(Integer i=0; i<al.size(); i++){
-            so.add(new SelectOption(al[i].Name, al[i].Name));
+    public PageReference getConditionName(){
+        system.debug('passing condition name  ... '+conditionName);
+        conditionName = conditionName;
+        return null;
+    }
+
+    public PageReference filterOptions(String fld){
+        system.debug('filtering ...'+fld);
+        if(fld.contains('CURRENCY') || fld.contains('DOUBLE') || fld.contains('INTEGER') || fld.contains('DATE')){
+            system.debug('inside filter check 1 ... '+fld);
+            ConditionNames.remove(6);
+        }else if(ConditionNames.size()<6){
+            system.debug('inside filter check 2 ... '+fld);
+            ConditionNames.add(new SelectOption('Start with', 'Start with'));
         }
-        return so;
+        return null;
     }
 
     @RemoteAction

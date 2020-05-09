@@ -1,0 +1,29 @@
+<!--
+ - Created by Adelchi on 09/05/2020.
+ -->
+
+<apex:component id="MetadataRemove" controller="MetadataRemoveController">
+        <head>
+            <apex:slds />
+        </head>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-load.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-deflate.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-inflate.js')}"/>
+        <apex:attribute name="triggerName" type="String" assignTo="{!trigger_Name}" description="pass the trigger  name"/>
+        <apex:form id="form">
+            <!--            <apex:sectionHeader title="Metadata Deploy Demo"/>-->
+            <apex:pageMessages />
+            <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
+            <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
+                <apex:param name="data" assignTo="{!ZipData}" value=""/>
+            </apex:actionFunction>
+            <c:zip name="generateZip" oncomplete="deployZip(data);" rendered="{!ISNULL(AsyncResult)}">
+                <c:zipEntry path="package.xml" data="{!PackageXml}"/>
+                <c:zipEntry path="destructiveChanges.xml" data="{!Metadata}"/>
+            </c:zip>
+            <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
+                <input class="slds-button slds-button_success slds-float_right" type="button" onclick="generateZip();" value="Remove"/>
+            </apex:outputPanel>
+        </apex:form>
+    </apex:component>

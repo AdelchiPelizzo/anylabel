@@ -50,15 +50,27 @@
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
-                                    <apex:actionRegion >
+<!--                                    <apex:actionRegion >-->
                                         <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" onChange="filterCondition(this)">
-<!--                                                <apex:actionSupport action="{!runEngine2}" event="onchange" />-->
-                                                    <apex:selectOptions value="{!fieldNames}" />
-                                            </apex:selectList>
+                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" >
+<!--                                                <apex:actionSupport event="onchange" action="{!filterOptions}" reRender="opt"/>-->
+                                                <apex:actionSupport event="onchange" action="{!getFieldName}" reRender="opt" />
+                                                <apex:selectOptions value="{!fieldNames}" />
+                                               </apex:selectList>
                                         </div>
-                                    </apex:actionRegion>
+<!--                                    </apex:actionRegion>-->
                                 </apex:form>
+<!--                                <apex:form>-->
+<!--                                    <apex:actionRegion >-->
+<!--                                        <div class="slds-text-heading_small">-->
+<!--                                            <apex:actionSupport event="onChange" action="{!passFieldName}" reRender="test" >-->
+<!--                                            <apex:selectList value="{!fieldName}"  multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" onChange="filterCondition(this)" >-->
+<!--&lt;!&ndash;                                                &ndash;&gt;-->
+<!--                                                <apex:selectOptions value="{!fieldNames}" />-->
+<!--                                            </apex:selectList></apex:actionSupport>-->
+<!--                                        </div>-->
+<!--                                    </apex:actionRegion>-->
+<!--                                </apex:form>-->
                             </div>
                         </div>
                     </div>
@@ -75,11 +87,11 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form id="opt">
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
                                             <apex:selectList value="{!conditionName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input condition condition" >
-                                                <!--                  <apex:actionSupport action="{!runEngine2}" event="onchange"  />-->
+                                                <apex:actionSupport action="{!getConditionName}" event="onchange"  />
                                                 <apex:selectOptions value="{!ConditionNames}"/>
                                             </apex:selectList></div>
                                     </apex:actionRegion>
@@ -101,8 +113,10 @@
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
-                                    <article>
-                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" name="inputValue"/>
+                                    <article id="input">
+                                        <apex:actionSupport action="{!getInputValue}" event="onkeyup" reRender="test"/>
+                                        <apex:input  value="{!InputValue}" />
+<!--                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" value="{!InputValue}" />-->
                                     </article>
                                 </apex:form>
                             </div>
@@ -122,13 +136,14 @@
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
-                                    <apex:actionRegion >
-                                        <div class="slds-text-heading_small">
+                                    <div class="slds-text-heading_small">
+                                        <apex:actionRegion >
                                             <apex:selectList value="{!labelName}" multiSelect="true" size="5" styleClass="slds-input slds-combobox__input slds-p-left_large slds-p-right_large slds-color__background_gray-3 labelName">
-                                                    <apex:selectOptions value="{!LabelsNames}" />
+                                                <apex:actionSupport reRender="test" event="onmouseup" action="{!getLabelName}" />
+                                                <apex:selectOptions value="{!LabelsNames}" />
                                             </apex:selectList>
-                                        </div>
-                                    </apex:actionRegion>
+                                        </apex:actionRegion>
+                                    </div>
                                 </apex:form>
                             </div>
                         </div>
@@ -136,7 +151,7 @@
                 </article>
                 <article>
                     <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please Label(s) to be applied.</p>
+                        <p>Please Select Label(s) to be applied.</p>
                     </div>
                 </article>
             </li>
@@ -145,14 +160,16 @@
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
-                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
-                                    <div class="slds-button-group">
-                                        <apex:actionRegion>
-                                            <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />
-                                        </apex:actionRegion>
-                                    </div>
-                                </apex:form>
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-float_right" role="button">
+<!--                                <apex:form>-->
+<!--                                    <div class="slds-button-group slds-float_right">-->
+
+                                <c:metadatadeploy ObjNm="{!objectName}" FldNm="{!fieldName}" id="test" CondNm="{!conditionName}" InpV="{!InputValue}" Labls="{!labelName}"/>
+<!--                                        <apex:actionRegion>-->
+<!--                                            <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />-->
+<!--                                        </apex:actionRegion>-->
+<!--                                    </div>-->
+<!--                                </apex:form>-->
                             </div>
                         </div>
                     </div>
@@ -203,11 +220,13 @@
         function filterCondition(el){
             console.log('field type ... ');
             console.log('field type ... '+el.value);
-            document.getElementsByName('fieldName')[0].innerText = el.value.split('-',1);
+            // document.getElementsByName('fieldName')[0].innerText = el.value.split('-',1);includes('CURRENCY')
+            // console.log(document.getElementsByName('fieldName')[0].value);
             var elF = document.getElementsByClassName('condition')[0];
             //Remove condition not compatible with data type
             if(el.value.includes('CURRENCY') || el.value.includes('DOUBLE') || el.value.includes('INTEGER') || el.value.includes('DATE')){
                 for(var i=0; i<elF.children.length; i++){
+                    console.log('I am IN ...');
                     console.log('This is the value ... '+elF.children[i].value);
                     var v = '';
                     v = elF.children[i].value;

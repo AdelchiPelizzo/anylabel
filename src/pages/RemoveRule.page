@@ -1,0 +1,58 @@
+<!--
+ - Created by Adelchi on 09/05/2020.
+ -->
+
+<apex:page id="RemoveRule" standardController="AnyLabel__c" extensions="AnyLabelAutomation">
+    <head>
+        <apex:slds />
+    </head>
+        <apex:form>
+            <apex:pageBlock Title="Triggers with CheckBoxes">
+                <apex:pageBlockSection Title="List of Available  Triggers">
+                    <apex:dataTable value="{!triggers}" var="a" columnswidth="50px,50px" cellpadding="4" border="1">
+                        <apex:column >
+<!--                            <apex:facet name="header">-->
+<!--                                <apex:inputCheckbox >-->
+<!--                                    <apex:actionSupport event="onclick" action="{!getTriggers}" onsubmit="checkAll(this)" rerender="Selected_PBS"/>-->
+<!--                                </apex:inputCheckbox>-->
+<!--                            </apex:facet>-->
+                            <apex:inputCheckbox value="{!a.selected}" id="checkedone">
+                                <apex:actionSupport event="onclick" action="{!GetSelected}" rerender="Selected_PBS"/>
+                            </apex:inputCheckbox>
+                        </apex:column>
+                        <apex:column headervalue="Account Name" value="{!a.apxTrg.Name}" />
+                        <apex:column headervalue="Account Number" value="{!a.apxTrg.TableEnumOrId}" />
+                        <apex:column headervalue="Phone" value="{!a.apxTrg.Status}" />
+                    </apex:dataTable>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection Title="Selected Triggers" id="Selected_PBS">
+                    <apex:dataTable value="{!SelectedTriggers}" var="s" columnswidth="50px,50px" cellpadding="4" border="1">
+                        <apex:column headervalue="Account Name" value="{!s.Name}" />
+                        <apex:column headervalue="Account Number" value="{!s.TableEnumOrId}" />
+                        <apex:column headervalue="Phone" value="{!s.Status}" />
+                    </apex:dataTable>
+                </apex:pageBlockSection>
+
+            </apex:pageBlock>
+        </apex:form>
+        <script>
+            function checkAll(cb)
+            {
+                var inputElem = document.getElementsByTagName("input");
+                for(var i=0; i<inputElem.length; i++)
+                {
+                    if(inputElem[i].id.indexOf("checkedone")!=-1)
+                        inputElem[i].checked = cb.checked;
+                }
+            }
+        </script>
+<!--    <apex:pageBlock >-->
+<!--        <apex:pageBlockTable value="{!triggers}" var="ul" styleClass="slds-box slds-color__background_gray-3">-->
+<!--            <apex:column value="{!ul.Name}" styleClass="slds-size_1-of-7"/>-->
+<!--            <apex:column value="{!ul.TableEnumOrId}"/>-->
+<!--            <apex:column value="{!ul.Status}"/>-->
+<!--        </apex:pageBlockTable>-->
+<!--    </apex:pageBlock>-->
+    <c:MetadataRemove triggerName="{!triggerNme}" />
+</apex:page>
