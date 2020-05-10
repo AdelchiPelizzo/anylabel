@@ -12,7 +12,7 @@ public class MetadataRemoveController {
  * @return (description of the return value)
  */
     public String ZipData { get; set; }
-    public String trigger_Name {get{return trigger_Name;} set;}
+    public List<ApexTrigger> trigger_Name {get; set;}
 
     public MetadataService.AsyncResult AsyncResult {get; private set;}
 
@@ -25,21 +25,36 @@ public class MetadataRemoveController {
     }
 
     public String getMetadata()
-    {
+    {   String members= '';
+        if(trigger_Name!=null){
+            for(ApexTrigger apxTrg : trigger_Name){
+                members += '<members>'+apxTrg.Name+'</members>';
+            }
+        }else{
+            members += '<members></members>';
+        }
+        system.debug(members);
+        system.debug('<?xml version="1.0" encoding="UTF-8"?>'+
+                '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
+                '<types>'+
+                members+
+                '<name>ApexTrigger</name>'+
+                '</types>'+
+                '<version>28.0</version>'+
+                '</Package>');
         return '<?xml version="1.0" encoding="UTF-8"?>'+
-                    '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
-                        '<types>'+
-                            '<members>AnyLabelTrigger</members>'+
-                            '<members>'+trigger_Name+'</members>'+
-                            '<name>ApexTrigger</name>'+
-                        '</types>'+
-                         '<version>26.0</version>'+
-                    '</Package>';
+                '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
+                    '<types>'+
+                        members+
+                        '<name>ApexTrigger</name>'+
+                    '</types>'+
+                '<version>28.0</version>'+
+                '</Package>';
     }
 
     public PageReference deployZip()
     {
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Deploying...'));
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Removing Rules ... please wait.'));
 
         // Deploy zip file posted back from the page action function
         MetadataService.MetadataPort service = createService();
@@ -54,7 +69,7 @@ public class MetadataRemoveController {
 //        String[] s = new String[]{'AnyLabelTrigger'+triggerId+'Test'};
 //        deployOptions.runTests = s;
 //        deployOptions.testLevel = 'RunSpecifiedTests';
-//      deployOptions.testLevel = 'NoTestRun';
+        deployOptions.testLevel = 'NoTestRun';
         deployOptions.singlePackage = true;
         AsyncResult = service.deploy(ZipData, DeployOptions);
         return null;
@@ -67,7 +82,7 @@ public class MetadataRemoveController {
         MetadataService.DeployResult deployResult = service.checkDeployStatus(AsyncResult.Id, true);
         if(deployResult.done)
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Deployment complete'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Rules Removed - refresh page to continue.'));
 
             // Deployment errors?
             if(deployResult.details!=null && deployResult.details.componentFailures!=null)

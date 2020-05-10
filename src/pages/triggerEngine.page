@@ -156,6 +156,29 @@
                 </article>
             </li>
             <li class="slds-setup-assistant__item" >
+                <label for="fieldName" class=" slds-text-title_bold">Rule Name <span style="color: crimson;font-size:12px; font-weight: lighter"> do not exceed 25 characters</span></label>
+                <article class="slds-setup-assistant__step" id="fieldName">
+                    <div class="slds-summary-detail">
+                        <div class="slds-form-element" >
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                <apex:form>
+                                    <article id="input">{!triggerId}
+                                        <apex:actionSupport action="{!getTriggerId}" event="onkeyup" reRender="test"/>
+                                        <apex:input  value="{!triggerId}" />
+                                        <!--                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" value="{!InputValue}" />-->
+                                    </article>
+                                </apex:form>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article>
+                <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
+                        <p>Please enter Rule Identifier.</p>
+                    </div>
+                </article>
+            </li>
+            <li class="slds-setup-assistant__item" >
 <!--                <label for="fieldName" class=" slds-text-title_bold">Select Label</label>-->
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
@@ -164,7 +187,7 @@
 <!--                                <apex:form>-->
 <!--                                    <div class="slds-button-group slds-float_right">-->
 
-                                <c:metadatadeploy ObjNm="{!objectName}" FldNm="{!fieldName}" id="test" CondNm="{!conditionName}" InpV="{!InputValue}" Labls="{!labelName}"/>
+                                <c:metadatadeploy ObjNm="{!objectName}" FldNm="{!fieldName}" id="test" CondNm="{!conditionName}" InpV="{!InputValue}" Labls="{!labelName}" trgId="{!triggerId}"/>
 <!--                                        <apex:actionRegion>-->
 <!--                                            <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />-->
 <!--                                        </apex:actionRegion>-->

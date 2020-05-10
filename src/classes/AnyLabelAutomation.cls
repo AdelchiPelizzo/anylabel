@@ -18,7 +18,7 @@ public with sharing class AnyLabelAutomation {
     public String[] labelName {get; set;}
     public String conditionName {get; set;}
     public String InputValue {get; set;}
-    public String triggerNme {get; set;}
+    public String triggerId {get; set;}
     public List<SelectOption> ConditionNames ;
 
     private final AnyLabel__c a;
@@ -34,7 +34,7 @@ public with sharing class AnyLabelAutomation {
 
     public List<triggerWrapper> getTriggers()
     {
-        for(ApexTrigger a : [SELECT Id, Name, TableEnumOrId, Status  FROM ApexTrigger]){
+        for(ApexTrigger a : [SELECT Id, Name, TableEnumOrId, Status, CreatedDate FROM ApexTrigger WHERE Name LIKE 'AL_%' ORDER BY CreatedDate DESC ]){
             triggerList.add(new triggerWrapper(a));
         }
         return triggerList;
@@ -66,6 +66,10 @@ public with sharing class AnyLabelAutomation {
             apxTrg = a;
             selected = false;
         }
+    }
+
+    public void getTriggerId(){
+        triggerId = triggerId;
     }
 
     public AnyLabelAutomation(ApexPages.StandardController stdController) {

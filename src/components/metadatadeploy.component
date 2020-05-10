@@ -1,0 +1,42 @@
+<!--
+ - Created by Adelchi on 04/05/2020.
+ -->
+
+<apex:component id="metadatadeploy" controller="MetadataDeployController2">
+    <head>
+        <apex:slds />
+    </head>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-load.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-deflate.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-inflate.js')}"/>
+    <apex:attribute name="ObjNm" type="String" assignTo="{!ObjName}" description="pass the object name"/>
+    <apex:attribute name="FldNm" type="String" assignTo="{!FldName}" description="pass the field name"/>
+    <apex:attribute name="CondNm" type="String" assignTo="{!OptName}" description="pass the option name"/>
+    <apex:attribute name="InpV" type="String" assignTo="{!InpVal}" description="pass the input name"/>
+    <apex:attribute name="Labls" type="String[]" assignTo="{!Labs}" description="pass the labels name "/>
+    <apex:attribute name="trgId" type="String" assignTo="{!triggerId}" description="pass the labels name "/>
+        <apex:form id="form">
+<!--            <apex:sectionHeader title="Metadata Deploy Demo"/>-->
+            <div class="slds-text-body_small slds-text-color_destructive slds-m-bottom_x-large"><apex:pageMessages  /></div>
+            <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
+            <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
+                <apex:param name="data" assignTo="{!ZipData}" value=""/>
+            </apex:actionFunction>
+            <c:zip name="generateZip" oncomplete="deployZip(data);" rendered="{!ISNULL(AsyncResult)}">
+                <c:zipEntry path="package.xml" data="{!PackageXml}"/>
+                <c:zipEntry path="triggers/AL_{!triggerId}.trigger-meta.xml" data="{!HelloWorldMetadata}"/>
+                <c:zipEntry path="classes/AL_{!triggerId}Test.cls-meta.xml" data="{!HelloWorldTestMetadata}"/>
+                <c:zipEntry path="triggers/AL_{!triggerId}.trigger" data="{!HelloWorld}"/>
+                <c:zipEntry path="classes/AL_{!triggerId}Test.cls" data="{!HelloWorldTest}"/>
+
+<!--                <c:zipEntry path="classes/HelloWorld.cls-meta.xml" data="{!HelloWorldMetadata}"/>-->
+<!--                <c:zipEntry path="classes/HelloWorldTest.cls-meta.xml" data="{!HelloWorldTestMetadata}"/>-->
+<!--                <c:zipEntry path="classes/HelloWorld.cls" data="{!HelloWorld}"/>-->
+<!--                <c:zipEntry path="classes/HelloWorldTest.cls" data="{!HelloWorldTest}"/>-->
+            </c:zip>
+            <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
+                <input class="slds-button slds-button_success slds-float_right" type="button" onclick="generateZip();" value="Set Rule"/>
+            </apex:outputPanel>
+        </apex:form>
+</apex:component>

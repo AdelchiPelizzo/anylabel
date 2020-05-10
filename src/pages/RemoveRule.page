@@ -2,57 +2,93 @@
  - Created by Adelchi on 09/05/2020.
  -->
 
-<apex:page id="RemoveRule" standardController="AnyLabel__c" extensions="AnyLabelAutomation">
+<apex:page id="RemoveRule" standardController="AnyLabel__c" extensions="AnyLabelAutomation" showheader="false" sidebar="false" standardStylesheets="false" title="Setup Rule" docType="html-5.0">
     <head>
         <apex:slds />
     </head>
-        <apex:form>
-            <apex:pageBlock Title="Triggers with CheckBoxes">
-                <apex:pageBlockSection Title="List of Available  Triggers">
-                    <apex:dataTable value="{!triggers}" var="a" columnswidth="50px,50px" cellpadding="4" border="1">
-                        <apex:column >
-<!--                            <apex:facet name="header">-->
-<!--                                <apex:inputCheckbox >-->
-<!--                                    <apex:actionSupport event="onclick" action="{!getTriggers}" onsubmit="checkAll(this)" rerender="Selected_PBS"/>-->
-<!--                                </apex:inputCheckbox>-->
-<!--                            </apex:facet>-->
-                            <apex:inputCheckbox value="{!a.selected}" id="checkedone">
-                                <apex:actionSupport event="onclick" action="{!GetSelected}" rerender="Selected_PBS"/>
-                            </apex:inputCheckbox>
-                        </apex:column>
-                        <apex:column headervalue="Account Name" value="{!a.apxTrg.Name}" />
-                        <apex:column headervalue="Account Number" value="{!a.apxTrg.TableEnumOrId}" />
-                        <apex:column headervalue="Phone" value="{!a.apxTrg.Status}" />
-                    </apex:dataTable>
-                </apex:pageBlockSection>
+    <!--    <section class="slds-card">-->
+    <section class="slds-card">
+        <header class="slds-theme_shade slds-p-around_medium slds-m-bottom_small">
+            <div>
+                <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" >
+                    <span class="slds-text-heading_small">Select Rules to be removed</span>
+                    <span aria-hidden="true">
+                    </span>
+                </div>
+            </div>
+        </header>
+        <ol class="slds-setup-assistant">
+            <li class="slds-setup-assistant__item" >
+                <label class=" slds-text-title_bold" for="triggerList">List of Active Rules</label>
+                <article class="slds-setup-assistant__step" id="triggerList">
+                    <div class="slds-summary-detail">
+                        <div class="slds-form-element">
+                            <div class="slds-combobox__form-element" >
+                                <apex:form>
+                                    <!--            <apex:pageBlock Title="Triggers with CheckBoxes">-->
+                                    <!--    columnswidth="50px,50px"  cellpadding="4"           <apex:pageBlockSection Title="List of Available  Triggers">-->
+                                    <apex:dataTable value="{!triggers}" align="center" var="a" columns="5"  styleClass="slds-table" rules="row"  >
+                                        <apex:column >
+                                            <!--                            <apex:facet name="header">-->
+                                            <!--                                <apex:inputCheckbox >-->
+                                            <!--                                    <apex:actionSupport event="onclick" action="{!getTriggers}" onsubmit="checkAll(this)" rerender="Selected_PBS"/>-->
+                                            <!--                                </apex:inputCheckbox>-->
+                                            <!--                            </apex:facet>-->
+                                            <apex:inputCheckbox value="{!a.selected}" id="checkedone" styleClass="slds-checkbox">
+                                                <apex:actionSupport event="onclick" action="{!GetSelected}" reRender="MDComp, Selected_PBS"/>
+                                            </apex:inputCheckbox>
+                                        </apex:column>
+                                        <apex:column headervalue="Rule Name" value="{!a.apxTrg.Name}" style="width:250px; display:block;color:blue;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"/>
+                                        <apex:column headervalue="Object" value="{!a.apxTrg.TableEnumOrId}" />
+                                        <apex:column headervalue="Status" value="{!a.apxTrg.Status}" />
+                                        <apex:column headervalue="Created Date" >
+                                            <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                                <apex:param value="{!a.apxTrg.CreatedDate}" />
+                                            </apex:outputText>
+                                        </apex:column>
+                                    </apex:dataTable>
+                                </apex:form>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </li>
+        </ol>
+    </section>
+    <!--    </section>-->
 
-                <apex:pageBlockSection Title="Selected Triggers" id="Selected_PBS">
-                    <apex:dataTable value="{!SelectedTriggers}" var="s" columnswidth="50px,50px" cellpadding="4" border="1">
-                        <apex:column headervalue="Account Name" value="{!s.Name}" />
-                        <apex:column headervalue="Account Number" value="{!s.TableEnumOrId}" />
-                        <apex:column headervalue="Phone" value="{!s.Status}" />
-                    </apex:dataTable>
-                </apex:pageBlockSection>
-
-            </apex:pageBlock>
-        </apex:form>
-        <script>
-            function checkAll(cb)
-            {
-                var inputElem = document.getElementsByTagName("input");
-                for(var i=0; i<inputElem.length; i++)
-                {
-                    if(inputElem[i].id.indexOf("checkedone")!=-1)
-                        inputElem[i].checked = cb.checked;
-                }
-            }
-        </script>
+<!--    <script>-->
+<!--        function checkAll(cb)-->
+<!--        {-->
+<!--            var inputElem = document.getElementsByTagName("input");-->
+<!--            for(var i=0; i<inputElem.length; i++)-->
+<!--            {-->
+<!--                if(inputElem[i].id.indexOf("checkedone")!=-1)-->
+<!--                    inputElem[i].checked = cb.checked;-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
 <!--    <apex:pageBlock >-->
-<!--        <apex:pageBlockTable value="{!triggers}" var="ul" styleClass="slds-box slds-color__background_gray-3">-->
+<!--        <apex:pageBlockTable value="{!selectedTriggers}" var="ul" styleClass="slds-box slds-color__background_gray-3" id="Selected_PBS">-->
 <!--            <apex:column value="{!ul.Name}" styleClass="slds-size_1-of-7"/>-->
 <!--            <apex:column value="{!ul.TableEnumOrId}"/>-->
 <!--            <apex:column value="{!ul.Status}"/>-->
 <!--        </apex:pageBlockTable>-->
 <!--    </apex:pageBlock>-->
-    <c:MetadataRemove triggerName="{!triggerNme}" />
+    <section>
+        <ul>
+            <li class="slds-setup-assistant__item slds-m-top_x-small" >
+                <!--                <label for="fieldName" class=" slds-text-title_bold">Select Label</label>-->
+                <article class="slds-setup-assistant__step" id="fieldName">
+                    <div class="slds-summary-detail">
+                        <div class="slds-form-element" >
+                            <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-float_right" role="button">
+                                <c:MetadataRemove triggerName="{!selectedTriggers}" id="MDComp" />
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </li>
+        </ul>
+    </section>
 </apex:page>

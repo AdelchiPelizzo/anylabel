@@ -31,14 +31,15 @@ public class MetadataDeployController2{
     public String OptName { get{return OptName;} set; }
     public String InpVal { get{return InpVal;} set; }
     public String[] Labs { get{return Labs;} set; }
-    public String triggerId {get{
-        String x = String.valueOf(Datetime.now());
-        String y = x.replace(' ', '_');
-        String z = y.replace('-', '_');
-        String w = z.replace(':', '_');
-        String k = w.substring(2,16);
-        return k;
-    } set;}
+    public String triggerId {get{return triggerId;}set;}
+//    public String triggerId {get{
+//        String x = String.valueOf(Datetime.now());
+//        String y = x.replace(' ', '_');
+//        String z = y.replace('-', '_');
+//        String w = z.replace(':', '_');
+//        String k = w.substring(2,16);
+//        return k;
+//    } set;}
 
     public MetadataService.AsyncResult AsyncResult {get; private set;}
 
@@ -68,11 +69,11 @@ public class MetadataDeployController2{
         return '<?xml version="1.0" encoding="UTF-8"?>' +
                 '<Package xmlns="http://soap.sforce.com/2006/04/metadata">' +
                 '<types>' +
-                '<members>AnyLabelTrigger'+triggerId+'</members>' +
+                '<members>AL_'+triggerId+'</members>' +
                 '<name>ApexTrigger</name>' +
                 '</types>' +
                 '<types>'+
-                '<members>AnyLabelTrigger'+triggerId+'Test</members>' +
+                '<members>AL_'+triggerId+'Test</members>' +
                 '<name>ApexClass</name>' +
                 '</types>'+
                 '<version>26.0</version>' +
@@ -154,7 +155,7 @@ public class MetadataDeployController2{
                 cond = 'vNew.startsWith(\''+i+'\')';
             }
         }
-        String s = 'trigger AnyLabelTrigger' + triggerId + ' on ' + ObjName + ' (before update, before insert) ' +
+        String s = 'trigger AL_' + triggerId + ' on ' + ObjName + ' (before update, before insert) ' +
                 '{' +
                     'Map<Id,' + ObjName + '>  oldObj  =  Trigger.oldMap;' +
                     'Map<Id,' + ObjName + '>  newObj  =  Trigger.newMap;' +
@@ -248,7 +249,7 @@ public class MetadataDeployController2{
 //                            '}'+
 //                        '}');
                 return '@IsTest ' +
-                        'private class  AnyLabelTrigger'+triggerId+'Test {'+
+                        'private class  AL_'+triggerId+'Test {'+
                             'static testMethod void run() {'+
                                 ObjName+' a = New '+ObjName+'();'+
                                 'a.Name = \'test\' ;'+
@@ -261,7 +262,7 @@ public class MetadataDeployController2{
             }else if(ObjName == 'Contract'){
             system.debug(
                     '@IsTest ' +
-                            'private class  AnyLabelTrigger'+triggerId+'Test {'+
+                            'private class  AL_'+triggerId+'Test {'+
                                 'static testMethod void run() {'+
                                     'Account acc = new Account();'+
                                     'acc.Name = \'test\';'+
@@ -276,7 +277,7 @@ public class MetadataDeployController2{
                             '}'
                     );
             return '@IsTest ' +
-                    'private class  AnyLabelTrigger'+triggerId+'Test {'+
+                    'private class  AL_'+triggerId+'Test {'+
                         'static testMethod void run() {'+
                             'Account acc = new Account();'+
                             'acc.Name = \'test\';'+
@@ -293,7 +294,7 @@ public class MetadataDeployController2{
             }else{
             system.debug(
                     '@IsTest ' +
-                            'private class  AnyLabelTrigger'+triggerId+'Test {'+
+                            'private class  AL_'+triggerId+'Test {'+
                             'static testMethod void run() {'+
                             ObjName+' a = New '+ObjName+'();'+
                             'a.Name = \'test\';'+
@@ -301,7 +302,7 @@ public class MetadataDeployController2{
                             '}' +
                             '}');
                 return	'@IsTest ' +
-                        'private class  AnyLabelTrigger'+triggerId+'Test {'+
+                        'private class AL_'+triggerId+'Test {'+
                             'static testMethod void run() {'+
                                 ObjName+' a = New '+ObjName+'();'+
                                 'a.Name = \'test\';'+
@@ -327,7 +328,7 @@ public class MetadataDeployController2{
 
     public PageReference deployZip()
     {
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Deploying...'));
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Creating Rule >>> please wait.'));
 
         // Deploy zip file posted back from the page action function
         MetadataService.MetadataPort service = createService();
@@ -339,7 +340,7 @@ public class MetadataDeployController2{
         deployOptions.performRetrieve = false;
         deployOptions.purgeOnDelete = false;
         deployOptions.rollbackOnError = true;
-        String[] s = new String[]{'AnyLabelTrigger'+triggerId+'Test'};
+        String[] s = new String[]{'AL_'+triggerId+'Test'};
         deployOptions.runTests = s;
         deployOptions.testLevel = 'RunSpecifiedTests';
 //      deployOptions.testLevel = 'NoTestRun';
@@ -355,7 +356,7 @@ public class MetadataDeployController2{
         MetadataService.DeployResult deployResult = service.checkDeployStatus(AsyncResult.Id, true);
         if(deployResult.done)
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Deployment complete'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Rule Created, refresh page to continue.'));
 
             // Deployment errors?
             if(deployResult.details!=null && deployResult.details.componentFailures!=null)
