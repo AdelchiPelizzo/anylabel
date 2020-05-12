@@ -19,11 +19,16 @@ public with sharing class AnyLabelAutomation {
     public String conditionName {get; set;}
     public String InputValue {get; set;}
     public String triggerId {get; set;}
-    public List<SelectOption> ConditionNames ;
+    public List<SelectOption> ConditionNames;
+    public String triggerLink {get{
+        return Url.getSalesforceBaseUrl().toExternalForm()+'/';
+    }set;}
 
     private final AnyLabel__c a;
 
     ApexPages.StandardController stdCtrl;
+
+    public AnyLabelAutomation(){}
 
 //    public static List<ApexTrigger> triggers {get{
 //        return [SELECT Id, Name, TableEnumOrId, Status  FROM ApexTrigger];
@@ -83,6 +88,8 @@ public with sharing class AnyLabelAutomation {
         so.add(new SelectOption('Equal to', 'Equal to'));
         so.add(new SelectOption('Not Equal to', 'Not Equal to'));
         so.add(new SelectOption('Start with', 'Start with'));
+        so.add(new SelectOption('Greater than', 'Greater than'));
+        so.add(new SelectOption('Less than', 'Less than'));
         ConditionNames = so;
     }
 
@@ -114,7 +121,7 @@ public with sharing class AnyLabelAutomation {
             b.add(String.valueOf(objectFields.values()[i].getDescribe().getType()));
             if(objectFields.values()[i].getDescribe().isAccessible() && objectFields.values()[i].getDescribe()
                     .isCreateable() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values
-                    ()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId()){
+                    ()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId() && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATETIME&& objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATE){
                 options.add(new SelectOption(lst[i]+'-'+b[i], objectFields.values().get(i).getDescribe().getLabel()));
 
             }
@@ -149,8 +156,6 @@ public with sharing class AnyLabelAutomation {
     }
 
     public PageReference getFieldName(){
-        system.debug('hello ...');
-        system.debug('hello ...'+fieldName);
         fieldNames = fieldNames;
         List<SelectOption> so = new List<SelectOption>();
         so.add(new SelectOption('',''));
@@ -160,6 +165,9 @@ public with sharing class AnyLabelAutomation {
         so.add(new SelectOption('Equal to', 'Equal to'));
         so.add(new SelectOption('Not Equal to', 'Not Equal to'));
         so.add(new SelectOption('Start with', 'Start with'));
+        so.add(new SelectOption('Greater than', 'Greater than'));
+        so.add(new SelectOption('Less than', 'Less than'));
+        so.add(new SelectOption('Changed', 'Changed'));
         ConditionNames = so;
         filterOptions(fieldName);
         return null;
@@ -172,12 +180,23 @@ public with sharing class AnyLabelAutomation {
     }
 
     public PageReference filterOptions(String fld){
-        system.debug('filtering ...'+fld);
+        ConditionNames = new List<SelectOption>();
         if(fld.contains('CURRENCY') || fld.contains('DOUBLE') || fld.contains('INTEGER') || fld.contains('DATE')){
-            system.debug('inside filter check 1 ... '+fld);
-            ConditionNames.remove(6);
-        }else if(ConditionNames.size()<6){
-            system.debug('inside filter check 2 ... '+fld);
+            ConditionNames.add(new SelectOption('',''));
+            ConditionNames.add(new SelectOption('Greater than', 'Greater than'));
+            ConditionNames.add(new SelectOption('Less than', 'Less than'));
+            ConditionNames.add(new SelectOption('Changed', 'Changed'));
+        } else if(fld.contains('PERCENT')) {
+            ConditionNames.add(new SelectOption('Equal', 'Equal'));
+            ConditionNames.add(new SelectOption('Higher', 'Higher'));
+            ConditionNames.add(new SelectOption('Lower', 'Lower'));
+        }else{
+            ConditionNames.add(new SelectOption('',''));
+            ConditionNames.add(new SelectOption('Includes', 'Includes'));
+            ConditionNames.add(new SelectOption('Not Includes', 'Not Includes'));
+            ConditionNames.add(new SelectOption('Is Changed', 'Is Changed'));
+            ConditionNames.add(new SelectOption('Equal to', 'Equal to'));
+            ConditionNames.add(new SelectOption('Not Equal to', 'Not Equal to'));
             ConditionNames.add(new SelectOption('Start with', 'Start with'));
         }
         return null;

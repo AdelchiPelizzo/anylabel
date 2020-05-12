@@ -10,7 +10,7 @@
         <header class="slds-theme_shade slds-p-around_medium slds-m-bottom_small">
             <div>
                 <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" >
-                    <span class="slds-text-heading_small">Complete all the steps below to finish setting up AnyLabel automation</span>
+                    <span class="slds-text-heading_small">Complete all the steps below to finish setting up AnyLabel rules.</span>
                     <span aria-hidden="true">
                     </span>
                 </div>
@@ -156,7 +156,7 @@
                 </article>
             </li>
             <li class="slds-setup-assistant__item" >
-                <label for="fieldName" class=" slds-text-title_bold">Rule Name <span style="color: crimson;font-size:12px; font-weight: lighter"> do not exceed 25 characters</span></label>
+                <label for="fieldName" class=" slds-text-title_bold">Rule Name ( <span style="color: crimson;font-size:12px; font-weight: lighter"> Max 25 characters</span>)</label>
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
@@ -164,7 +164,7 @@
                                 <apex:form>
                                     <article id="input">{!triggerId}
                                         <apex:actionSupport action="{!getTriggerId}" event="onkeyup" reRender="test"/>
-                                        <apex:input  value="{!triggerId}" />
+                                        <apex:input  value="{!triggerId}" html-placeholder="enter a brief description"/>
                                         <!--                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" value="{!InputValue}" />-->
                                     </article>
                                 </apex:form>

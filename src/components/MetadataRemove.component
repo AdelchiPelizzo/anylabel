@@ -14,7 +14,7 @@
         <apex:attribute name="triggerName" type="ApexTrigger[]" assignTo="{!trigger_Name}" description="pass   triggers list"/>
 
         <apex:form id="form" style="width: 100%">
-            <div class="slds-text-body_small slds-text-color_destructive slds-m-bottom_x-large"><apex:pageMessages  /></div>
+            <div class="slds-text-body_small slds-text-color_destructive slds-m-bottom_medium"><apex:pageMessages  /></div>
             <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
             <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
                 <apex:param name="data" assignTo="{!ZipData}" value=""/>

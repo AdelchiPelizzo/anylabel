@@ -42,23 +42,10 @@ export default class label_management extends LightningElement {
 
     connectedCallback(){
         is_admin().then(result => {
-            console.log(result);
             this.isAdmin = result;
         });
         getGlobal().then(  result => {
-            console.log(result.length);
             for(let i=0; i<result.length; i++){
-                // console.log('loop result ... '+result[i].Assignee__c);
-
-                // if(result[i].Assignee__c === undefined){
-                //     console.log('in ... undefined');
-                // }
-                //         this.allUnassignedObjectLabList.push({
-                //             Name : result[i].Name,
-                //             Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
-                //             Assigned : '',
-                //         });
-
                 if(!result[i].Assignee__c.includes(this.objectApiName)){
                     this.allUnassignedObjectLabList.push({
                         Name : result[i].Name,
@@ -74,28 +61,16 @@ export default class label_management extends LightningElement {
                     });
                 }
             }
-            console.log('out ...');
-            // console.log(result.length);
-            // console.log(this.allAssignedObjectLabList.length);
-            // console.log(this.allUnassignedObjectLabList.length)
-            // console.log('getting unassigned ....');
-            // console.log(this.allUnassignedObjectLabList.length+' <<<>>> ');
-            // console.log('getting assigned ....');
-            // console.log(' <<<>>> '+this.allAssignedObjectLabList.length);
-
         }).then(result => {
-            console.log('results >> Assigned Labels ...!'+this.recordId);
                 getAssignedLabels({recordId: this.recordId}).then( result => {
                     if(result!=null){
                         for(let i=0; i<result.length; i++){
-                            console.log('result from getAssigned line line 67 >> '+result[i].Name);
                             this.labelsList.push({
                                 Name : result[i].Name,
                                 Styling : "background-color: "+result[i].Background_Color__c+"; color: "+result[i].Font_Color__c+"; cursor: grab",
                                 Assigned : result[i].Assignee__c,
                             });
                         }
-                        console.log(result);
                     }}).then(result =>{
                     for(let i=0; i<this.allAssignedObjectLabList.length; i++){
                         let recordAssignedLabels = [];
@@ -103,16 +78,6 @@ export default class label_management extends LightningElement {
                             recordAssignedLabels.push(this.labelsList[i].Name);
                         }
                         if(!recordAssignedLabels.includes(this.allAssignedObjectLabList[i].Name)){
-                            //  console.log("label available for object "+ this.allAssignedObjectLabList[i].Name+" "+this.labelsList[i].Name);
-                            //     this.allLabelsList.push({
-                            //         Name : this.labelsList[i].Name,
-                            //         Styling : "background-color: "+this.labelsList[i].Background_Color__c+"; color: "+this.labelsList[i].Font_Color__c+"; cursor: grab",
-                            //         Assigned : this.labelsList[i].Assignee__c,
-                            //     });
-                            // }
-                            // for(let i=0; i<this.allLabelsList.length; i++){
-                            //     let n =this.allLabelsList[i].Name;
-                            //     if(!lsAss.includes(this.allLabelsList[i].Name)){
                             this.labelsAvailable.push(this.allAssignedObjectLabList[i]);
                         }
                     }
@@ -125,24 +90,14 @@ export default class label_management extends LightningElement {
     openAvailableLabels(event){
         let el = this.template.querySelector(".availableContainer");
         el.classList.toggle("close");
-
-        // console.log("open available");
-        // if(this.className("close")){
-        //     this.classList.add();
-        // }else{this.style.display = "none";}
     }
 
     filterLabel(event){
-        console.log("filtering ... "+event.target.value);
         if(event.target.value.length>2){
             let patt = new RegExp(event.target.value.toUpperCase());
-            // console.log(patt);
-            // console.log(patt.test(str));
-            // let v = event.target.value;
             let unAss = [];
             for(let i=0; i<this.allUnassignedObjectLabList.length; i++ ){
                 let str = this.allUnassignedObjectLabList[i].Name.toUpperCase();
-                // console.log(str);
                 if(patt.test(str)){
                     unAss.push(this.allUnassignedObjectLabList[i]);
                 }
@@ -188,16 +143,16 @@ export default class label_management extends LightningElement {
             let labToAdd = [''];
             let labToRem = [''];
             for(let i=0; i<elGlobSize; i++){
-                console.log(elGlobChild[i].innerText);
+                // console.log(elGlobChild[i].innerText);
                 labToRem.push(elGlobChild[i].innerText);
             }
             for(let i=0; i<elAssSize; i++){
-                console.log(elAssChild[i].innerText);
+                // console.log(elAssChild[i].innerText);
                 labToAdd.push(elAssChild[i].innerText);
             }
-            console.log(labToAdd.length+'<>'+labToRem.length);
+            // console.log(labToAdd.length+'<>'+labToRem.length);
             deleteLabelsFromObject({labelsToRemoveName: labToRem, labelsToAddName: labToAdd, recordId: this.recordId}).then(result =>{
-                console.log(result);
+                // console.log(result);
             });
             this.handleDialogClose();
         }else{
@@ -206,11 +161,6 @@ export default class label_management extends LightningElement {
 
     grabColor(event){
         console.log("start ...");
-        // console.log( event.target.parentElement.dataset.targetId);
-        // event.target.parentElement.style.backgroundColor = event.target.parentElement.dataset.targetId;
-        // let col = event.target.getAttribute("name");
-        // let id = event.target.getAttribute("data-id");
-        // console.log(col+" "+id);
     }
 
     toggleModal(){
@@ -223,10 +173,6 @@ export default class label_management extends LightningElement {
 
     handleDialogClose() {
         this.showModal = false;
-        //Let parent know that dialog is closed (mainly by that cross button) so it can set proper variables if needed
-        // const closedialog = new CustomEvent('closedialog');
-        // this.dispatchEvent(closedialog);
-        // this.hide();
     }
 
     createNewLabel() {
@@ -303,7 +249,7 @@ export default class label_management extends LightningElement {
     saveLabels(){
         let labels = this.template.querySelector(".current");
         let labelsList = '';
-        console.log(labels.children.length);
+        // console.log(labels.children.length);
         for(let i=1; i<labels.children.length; i++){
             labelsList += labels.children[i].textContent+";";
         }
@@ -313,8 +259,8 @@ export default class label_management extends LightningElement {
                 Labels__c: labelsList,
             },
         };
-        console.log(recordInput.fields.Labels__c);
-        console.log(recordInput.fields.Id);
+        // console.log(recordInput.fields.Labels__c);
+        // console.log(recordInput.fields.Id);
         updateRecord(recordInput)
             .then(() => {
                 console.log("saved ...");
@@ -339,15 +285,18 @@ export default class label_management extends LightningElement {
             });
     }
 
-    grab(event){
-        event.target.setAttribute("style", "cursor: grab");
-    }
-
-    grabbing(event){
-        event.target.setAttribute("style", "cursor: grabbing");
-    }
+    // grab(event){
+    //     console.log('grab ... set grabbing');
+    //     event.target.setAttribute("style", "cursor: grabbing");
+    // }
+    //
+    // grabbing(event){
+    //     console.log('grabbing ... set to grab');
+    //     event.target.setAttribute("style", "cursor: grab");
+    // }
 
     removeFromAvailableLabels(event){
+        console.log('removeFromAvailableLabels');
         event.preventDefault();
         let st = event.dataTransfer.getData("style");
         let label = event.dataTransfer.getData("text");
@@ -384,7 +333,7 @@ export default class label_management extends LightningElement {
             // node.appendChild(buttonNode);
             node.setAttribute("data-id", label);
             if(event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal slds-m-top_small associated' || event.currentTarget.classList == 'slds-pill-container slds-listbox slds-listbox_horizontal global'){
-                console.log('drop zone .... inside');
+                // console.log('drop zone .... inside');
                 // console.log('target removed.... '+'[data-id="'+label+'"]');
                 // console.log('target removed.... '+event.currentTarget.classList);
                 // console.log('target removed.... '+event.target.classList);
@@ -399,22 +348,24 @@ export default class label_management extends LightningElement {
     }
 
     drag_handler(ev) {
+
+        // console.log('drag_handler');
         // console.log("drag handler "+ev.target.firstChild.textContent+" "+ev.target.getAttribute("style"));
         // ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
         // ev.dataTransfer.setData("style", ev.target.getAttribute("style"));
     }
 
     dragstart_handler(ev) {
-        console.log("drag start "+ev.target.firstChild.textContent+" "+ev.target.getAttribute("style"));
         ev.dataTransfer.setData("text", ev.target.firstChild.textContent);
         ev.dataTransfer.setData("style", ev.target.getAttribute("style"));
+        console.log('drargstart_handler setData >> text >'+ ev.target.firstChild.textContent+' < style >> '+ev.target.getAttribute("style"));
     }
 
     drop_handler(event) {
         event.preventDefault();
         let style = event.dataTransfer.getData("style");
         let name = event.dataTransfer.getData("text");
-        console.log(style+" <> "+name);
+        console.log('drop_handler getData>> '+style+' << label >> '+name);
         // let b = event.currentTarget.style.cssText;
         // let data = event.target.className;
         // let computedStyle = window.getComputedStyle(data, null);
@@ -461,6 +412,7 @@ export default class label_management extends LightningElement {
     }
 
     dragend_handler(ev){
+        console.log('dragend_handler');
         ev.preventDefault();
         // console.log('dragend target .... ');
         // if(ev.currentTarget.classList == 'slds-pill-container current' || ev.currentTarget.classList == 'slds-pill-container available'){
@@ -475,6 +427,7 @@ export default class label_management extends LightningElement {
     }
 
     dragover_handler(ev) {
+        console.log('dragover_handler');
         ev.preventDefault();
         // console.log("dragOver");
     }

@@ -29,16 +29,13 @@
                                     <!--    columnswidth="50px,50px"  cellpadding="4"           <apex:pageBlockSection Title="List of Available  Triggers">-->
                                     <apex:dataTable value="{!triggers}" align="center" var="a" columns="5"  styleClass="slds-table" rules="row"  >
                                         <apex:column >
-                                            <!--                            <apex:facet name="header">-->
-                                            <!--                                <apex:inputCheckbox >-->
-                                            <!--                                    <apex:actionSupport event="onclick" action="{!getTriggers}" onsubmit="checkAll(this)" rerender="Selected_PBS"/>-->
-                                            <!--                                </apex:inputCheckbox>-->
-                                            <!--                            </apex:facet>-->
                                             <apex:inputCheckbox value="{!a.selected}" id="checkedone" styleClass="slds-checkbox">
                                                 <apex:actionSupport event="onclick" action="{!GetSelected}" reRender="MDComp, Selected_PBS"/>
                                             </apex:inputCheckbox>
                                         </apex:column>
-                                        <apex:column headervalue="Rule Name" value="{!a.apxTrg.Name}" style="width:250px; display:block;color:blue;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"/>
+                                        <apex:column headervalue="Rule Name" style="width:250px; display:block;color:blue;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+                                            <apex:outputLink value="{!triggerLink}{!a.apxTrg.Id}" target="_blank">{!a.apxTrg.Name}</apex:outputLink>
+                                        </apex:column>
                                         <apex:column headervalue="Object" value="{!a.apxTrg.TableEnumOrId}" />
                                         <apex:column headervalue="Status" value="{!a.apxTrg.Status}" />
                                         <apex:column headervalue="Created Date" >
@@ -77,7 +74,7 @@
 <!--    </apex:pageBlock>-->
     <section>
         <ul>
-            <li class="slds-setup-assistant__item slds-m-top_x-small" >
+            <li class="slds-setup-assistant__item slds-m-top_xxx-small" >
                 <!--                <label for="fieldName" class=" slds-text-title_bold">Select Label</label>-->
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">

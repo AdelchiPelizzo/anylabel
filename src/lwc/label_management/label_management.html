@@ -83,7 +83,7 @@
     <div class="slds-pill-container slds-listbox slds-listbox_horizontal  current" ondrop={drop_handler} ondragover={dragover_handler} onclick={openAvailableLabels}>
         <div ></div>
         <template for:each={labelsList} for:item="assignedLabel" >
-            <div class="slds-pill grab" style={assignedLabel.Styling} draggable="true" key={assignedLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler}  data-id={assignedLabel.Name} onmousedown={grabbing} onmouseup={grab} >
+            <div class="slds-pill grab" style={assignedLabel.Styling} draggable="true" key={assignedLabel.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler}  data-id={assignedLabel.Name}  >
                 <span class="slds-m-around--xx-small" >
                                 {assignedLabel.Name}
                 </span>
@@ -94,7 +94,7 @@
         <div class="slds-pill-container slds-listbox slds-listbox_horizontal  available " ondrop={drop_handler} ondragover={dragover_handler} >
             <div></div>
             <template for:each={labelsAvailable} for:item="labelAvailable">
-                <div class="slds-pill grab" style={labelAvailable.Styling}  draggable="true" key={labelAvailable.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable.Name} onmousedown={grabbing} onmouseup={grab}>
+                <div class="slds-pill grab" style={labelAvailable.Styling}  draggable="true" key={labelAvailable.Name} ondrag={drag_handler} ondragstart={dragstart_handler} ondragend={dragend_handler} data-id={labelAvailable.Name} >
                             <span class="slds-m-around--xx-small">
                                 {labelAvailable.Name}
                             </span>

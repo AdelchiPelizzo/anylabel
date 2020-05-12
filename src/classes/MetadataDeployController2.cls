@@ -1,28 +1,3 @@
-/**
- * Copyright (c) 2012, FinancialForce.com, inc
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- *   are permitted provided that the following conditions are met:
- *
- * - Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
- *      may be used to endorse or promote products derived from this software without
- *      specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**/
 
 public class MetadataDeployController2{
     public String ZipData { get; set; }
@@ -32,14 +7,6 @@ public class MetadataDeployController2{
     public String InpVal { get{return InpVal;} set; }
     public String[] Labs { get{return Labs;} set; }
     public String triggerId {get{return triggerId;}set;}
-//    public String triggerId {get{
-//        String x = String.valueOf(Datetime.now());
-//        String y = x.replace(' ', '_');
-//        String z = y.replace('-', '_');
-//        String w = z.replace(':', '_');
-//        String k = w.substring(2,16);
-//        return k;
-//    } set;}
 
     public MetadataService.AsyncResult AsyncResult {get; private set;}
 
@@ -50,19 +17,6 @@ public class MetadataDeployController2{
     public String getInpVal(){
         return InpVal;
     }
-
-//    public String getPackageXml()
-//    {
-//        return '<?xml version="1.0" encoding="UTF-8"?>' +
-//                '<Package xmlns="http://soap.sforce.com/2006/04/metadata">' +
-//                '<types>' +
-//                '<members>HelloWorld</members>' +
-//                '<members>HelloWorldTest</members>' +
-//                '<name>ApexClass</name>' +
-//                '</types>' +
-//                '<version>26.0</version>' +
-//                '</Package>';
-//    }
 
     public String getPackageXml()
     {
@@ -80,16 +34,6 @@ public class MetadataDeployController2{
                 '</Package>';
     }
 
-
-//    public String getHelloWorldMetadata()
-//    {
-//        return '<?xml version="1.0" encoding="UTF-8"?>' +
-//                '<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">' +
-//                '<apiVersion>28.0</apiVersion>' +
-//                '<status>Active</status>' +
-//                '</ApexClass>';
-//    }
-
     public String getHelloWorldMetadata()
     {
         return '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -98,17 +42,6 @@ public class MetadataDeployController2{
                 '<status>Active</status>' +
                 '</ApexTrigger >';
     }
-
-//    public String getHelloWorld()
-//    {
-//        return 'public class HelloWorld' +
-//                '{' +
-//                'public static void helloWorld()' +
-//                '{' +
-//                'System.debug('+'\''+hwObjName+'\');' +
-//                '}' +
-//                '}';
-//    }
 
     public String getHelloWorld() {
         List<String> Lab = new List<String>();
@@ -121,7 +54,7 @@ public class MetadataDeployController2{
         }
         system.debug(OptName);
         String i = getInpVal();
-        String f;
+        String f = '';
         if (fldName != null) {
             f = getFieldName().substringBefore('-');
         }
@@ -135,33 +68,76 @@ public class MetadataDeployController2{
         }
         System.debug(lb);
         String cond;
+        String dataTp ='';
         switch on OptName {
             when 'Includes' {
+                DataTp = 'String';
                 cond = 'vNew.contains(\''+i+'\')';
             }
             when 'Not Includes' {
+                DataTp = 'String';
                 cond = '!vNew.contains(\''+i+'\')';
             }
             when 'Is Changed' {
+                DataTp = 'String';
                 cond = 'vOld!=vNew';
             }
             when 'Equal to' {
+                DataTp = 'String';
                 cond = 'vNew=='+'\''+i+'\'';
             }
             when 'Not Equal to' {
+                DataTp = 'String';
                 cond = 'vNew!='+'\''+i+'\'';
             }
             when 'Start with' {
+                DataTp = 'String';
                 cond = 'vNew.startsWith(\''+i+'\')';
+            }
+            when 'Greater than' {
+                DataTp = 'Decimal';
+                if(i!=null){
+                    cond = 'vNew>'+Decimal.valueOf(i);
+                }
+            }
+            when 'Less than' {
+                DataTp = 'Decimal';
+                if(i!=null){
+                cond = 'vNew<'+Decimal.valueOf(i);
+                }
+            }
+            when 'Changed' {
+                DataTp = 'Decimal';
+                cond = 'vNew!=vOld';
+            }
+            when 'Higher' {
+                DataTp = 'Decimal';
+                if(i!=null){
+                    cond = 'vNew>'+Decimal.valueOf(String.valueOf(i));
+                }
+            }
+            when 'Lower' {
+                DataTp = 'Decimal';
+                if(i!=null){
+                    cond = 'vNew<'+Decimal.valueOf(String.valueOf(i));
+                }
+            }
+            when 'Equal' {
+                DataTp = 'Decimal';
+                cond = 'vNew!=vOld';
             }
         }
         String s = 'trigger AL_' + triggerId + ' on ' + ObjName + ' (before update, before insert) ' +
                 '{' +
                     'Map<Id,' + ObjName + '>  oldObj  =  Trigger.oldMap;' +
                     'Map<Id,' + ObjName + '>  newObj  =  Trigger.newMap;' +
+                    'List<String> labListD = new List<String>();'+
                     'List<String> labList = new List<String>();'+
                     'String s = \''+lab+'\'.remove(\')\').remove(\'(\');'+
-                    'labList = s.split(\',\');'+
+                    'labListD = s.split(\',\');'+
+                'for(String labStr : labListD){' +
+                    'LabList.add(labStr.removeStart(\' \'));' +
+                '}'+
                     'if(Trigger.isInsert)' +
                     '{' +
                         'for(' + ObjName + ' aNew : Trigger.new)' +
@@ -174,17 +150,22 @@ public class MetadataDeployController2{
                             ObjName+' rec = [SELECT Labels__c FROM '+ObjName+' WHERE Id =: aOld.Id ];'+
                             ObjName+' objOld = Trigger.oldMap.get(aOld.Id);'+
                             ObjName+' objNew = Trigger.newMap.get(aOld.Id);'+
-                            'String vOld = objOld.'+f+';'+
-                            'String vNew = objNew.'+f+';'+
+                            DataTp+' vOld = objOld.'+f+';'+
+                            DataTp+' vNew = objNew.'+f+';'+
                             'if('+cond+'){' +
                                 'if(labList.size()>'+1+'){' +
                                     'for(String s : labList){'+
+                                        'System.debug(s);'+
+                                        'if(rec.Labels__c == null){rec.Labels__c = \'\';}'+
                                         'if(!rec.Labels__c.contains(s)){'+
                                             'objNew.Labels__c += \';\'+s;'+
-                                            '}'+
+                                        '}'+
                                     '}'+
-                                '}else{'+
+                                '}else if (rec.Labels__c==null){'+
+                                    'objNew.Labels__c = \'\';'+
                                     'objNew.Labels__c += \''+Label1+'\';'+
+                                '}else{' +
+                                    'objNew.Labels__c += \';'+Label1+'\';'+
                                 '}' +
                             '}' +
                         '}'+
@@ -213,16 +194,6 @@ public class MetadataDeployController2{
 //    system.debug(s);
 //return s;
 
-
-//    public String getHelloWorldTestMetadata()
-//    {
-//        return '<?xml version="1.0" encoding="UTF-8"?>' +
-//                '<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">' +
-//                '<apiVersion>28.0</apiVersion>' +
-//                '<status>Active</status>' +
-//                '</ApexClass>';
-//    }
-
     public String getHelloWorldTestMetadata()
     {
         return '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -234,31 +205,57 @@ public class MetadataDeployController2{
 
     public String getHelloWorldTest()
     {
-        String f;
-        if(fldName!=null){f = getFieldName().substringBefore('-');}
+        String f = '';
+        if(fldName!=null ){f = getFieldName().substringBefore('-');
+            if(ObjName!=null){Schema.DisplayType fieldDisplayType = Schema.getGlobalDescribe().get(ObjName).getDescribe().fields.getMap().get(f).getDescribe().getType();
+                System.debug(fieldDisplayType);
+            }
+        }
         if(ObjName == 'Opportunity'){
-//            System.debug('@IsTest ' +
-//                        'private class  AnyLabelTrigger'+triggerId+'Test {'+
-//                            'static testMethod void run() {'+
-//                                ObjName+' a = New '+ObjName+'();'+
-//                                'a.Name = \'test\' ;'+
-//                                'a.CloseDate = Date.today();'+
-//                                'a.'+f+' =  \'test\' ;'+
-//                                'insert a;'+
-//                                'System.debug(a.'+f+');' +
-//                            '}'+
-//                        '}');
+            System.debug('in 1st IF ....');
+            if(f == 'Probability'){
+                System.debug('in 2nd IF ...');
                 return '@IsTest ' +
                         'private class  AL_'+triggerId+'Test {'+
-                            'static testMethod void run() {'+
-                                ObjName+' a = New '+ObjName+'();'+
-                                'a.Name = \'test\' ;'+
-                                'a.CloseDate = Date.today();'+
-                                'a.'+f+' =  \'test\' ;'+
-                                'insert a;'+
-                                'System.debug(a.'+f+');' +
-                            '}'+
+                        'static testMethod void run() {'+
+                        ObjName+' a = New '+ObjName+'();'+
+                        'a.Name = \'test\' ;'+
+                        'a.CloseDate = Date.today();'+
+                        'a.'+f+' =  \'test\' ;'+
+                        'a.StageName = \'Qualification\';'+
+                        'insert a;'+
+                        'System.debug(a.'+f+');' +
+                        '}'+
                         '}';
+            }else{
+                System.debug('@IsTest ' +
+                        'private class  AL_'+triggerId+'Test {'+
+                        'static testMethod void run() {'+
+                        ObjName+' a = New '+ObjName+'();'+
+                        'a.Name = \'test\' ;'+
+                        'a.CloseDate = Date.today();'+
+                        'a.StageName = \'Qualification\';'+
+//                        'a.'+f+' =  Decimal.valueOf(\'50\') ;'+
+                        'insert a;'+
+                        'System.debug(a.'+f+');' +
+                        '}'+
+                        '}');
+                return '@IsTest ' +
+                        'private class  AL_'+triggerId+'Test {'+
+                        'static testMethod void run() {'+
+                        ObjName+' a = New '+ObjName+'();'+
+                        'a.Name = \'test\' ;'+
+                        'a.CloseDate = Date.today();'+
+                        'a.StageName = \'Qualification\';'+
+//                        'a.'+f+' =  Decimal.valueOf(\'50\') ;'+
+                        'insert a;'+
+                        'System.debug(a.'+f+');' +
+                        '}'+
+                        '}';
+
+                }
+//            if(fldName == 'Probability'){
+//                }
             }else if(ObjName == 'Contract'){
             system.debug(
                     '@IsTest ' +
@@ -313,19 +310,6 @@ public class MetadataDeployController2{
             }
     }
 
-//    public String getHelloWorldTest()
-//    {
-//        return	'@IsTest' +
-//                ' private class HelloWorldTest' +
-//                '{'+
-//                'static testMethod void helloWorldTest()' +
-//                '{' +
-//                'HelloWorld.helloWorld() ;' +
-//                '}' +
-//                '}';
-//    }
-
-
     public PageReference deployZip()
     {
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Creating Rule >>> please wait.'));
@@ -356,7 +340,7 @@ public class MetadataDeployController2{
         MetadataService.DeployResult deployResult = service.checkDeployStatus(AsyncResult.Id, true);
         if(deployResult.done)
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Rule Created, refresh page to continue.'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Processed, minimize this window, or hit "refresh" to create new rules.'));
 
             // Deployment errors?
             if(deployResult.details!=null && deployResult.details.componentFailures!=null)
