@@ -50,17 +50,11 @@ public class AnalyzeObject {
         if(o instanceof Decimal)            return 'Decimal';  // we can't distinguish between decimal and double
         if(o instanceof Double)             return 'Double';   // we can't distinguish between decimal and double
         if(o instanceof List<object>)       return 'List';
-        return 'Object';                    // actually we can't detect maps and sets and maps
+        return 'Object';                    // actually we can't detect maps and sets
     }
 
-
-//    Schema.DescribeSObjectResult r = System.ObjectType.getDescribe();
-//    Map<String,Schema.SObjectField> M = r.fields.getMap();
-//    for(String fieldName : M.keySet())
-//    {
-//    Schema.SObjectField field = M.get(fieldName);
-//    Schema.DescribeFieldResult F = field.getDescribe();
-//    //A nillable field can have empty content. A isNillable Boolean non-nillable field must have a value for the object to be                       //created or saved.
-//    // if F.isNillable() is false then field is mandatory
-//    Boolean isFieldreq  = F.isNillable()
-            }
+    public static boolean hasSObjectField(String fieldName, String so){
+        Map<String, Schema.SObjectType> gd = Schema.getGlobalDescribe();
+        return gd.get(so).getDescribe().fields.getMap().keySet().contains(fieldName.toLowerCase());
+    }
+}

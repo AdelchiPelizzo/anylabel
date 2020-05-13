@@ -3,20 +3,81 @@
  -->
 
 <apex:page id="updateGlobalPicklist" standardController="AnyLabel__c" extensions="GlobalPicklistEngine"  showheader="false" sidebar="false" standardStylesheets="false" title="Update Global Picklist" >
-        <head>
-                <apex:slds/>
-        </head>
-        <div class="slds-text-heading_small" >You are about to update global picklist field values.<br/><br/> Standard and custom objects of your organization are going to be available for assignment to Labels.
-        </div>
+    <head>
+        <apex:slds/>
+    </head>
 
-        <br/>
-        <br/>
-        <apex:form>
-                <div class="slds-float_right">
-                        <apex:commandButton title="Click to update AnyLabel global picklist values." value="Proceed" styleClass=" slds-button slds-button_success" action="{!runUpdate}" onclick="if(!confirm('Are you sure?')){return false};"/>
+    <section class="slds-card">
+        <header class="slds-theme_shade slds-p-around_medium slds-m-bottom_small">
+            <div>
+                <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" >
+                    <span class="slds-text-heading_small">AnyLabel Settings</span>
+                    <span aria-hidden="true">
+                    </span>
                 </div>
-        </apex:form>
-<!--onclick="{!runUpdate}"     -->
-<!--        <apex:commandButton onClick="close_window()">Picklist has been updated. Please close</apex:commandButton>-->
-<!--    </apex:form>-->
+            </div>
+        </header>
+        <ol class="slds-setup-assistant">
+            <li class="slds-setup-assistant__item" >
+                <label class=" slds-text-title_bold" for="objectName">Update "Assignee" Global Picklist for Labels</label>
+                <article class="slds-setup-assistant__step" >
+                    <div class="slds-summary-detail">
+                        <div class="slds-form-element">
+                            <div class="slds-combobox__form-element slds-m-top_large" role="none">
+                                <apex:form>
+                                    <div class="slds-float_right">
+                                        <apex:commandButton title="Click to update AnyLabel global picklist values." value="Proceed" styleClass=" slds-button slds-button_success" action="{!runUpdate}" onclick="if(!confirm('Are you sure?')){return false};"/>
+                                    </div>
+                                </apex:form>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article>
+                    <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
+                        <p>Please update every time a new SObject is created in your org, and you want it to be enabled for AnyLabel</p>
+                    </div>
+                </article>
+            </li>
+
+            <li class="slds-setup-assistant__item" >
+                <label class=" slds-text-title_bold" for="objectName">Select SObject to work with AnyLabel</label>
+                <article class="slds-setup-assistant__step" id="objectName">
+                    <div class="slds-summary-detail">
+                        <div class="slds-form-element">
+                            <div class="slds-combobox__form-element" role="none">
+                                <apex:form>
+                                    <div class="slds-text-heading_small" id="lab">
+                                        <apex:actionRegion >
+                                            <apex:selectList value="{!SObjectSelected}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input slds-p-left_large slds-p-right_large slds-color__background_gray-3 labelName">
+                                                <apex:actionSupport reRender="test" event="onchange" action="{!getSObjectSelected}" />
+                                                <apex:selectOptions value="{!SelOptObj}" />
+                                            </apex:selectList>
+                                        </apex:actionRegion>
+                                    </div>
+                                    <div class="slds-m-top_large">
+                                        <apex:actionRegion >
+                                            <apex:commandButton title="Click to setup SObject for AnyLabel Application." value="Proceed" styleClass=" slds-button slds-button_success" action="{!setLabelsField}" onclick="if(!confirm('Are you sure?')){return false};"/>
+                                        </apex:actionRegion>
+                                    </div>
+                                </apex:form>
+
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article>
+                    <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
+                        <p>Select Object to be enabled for AnyLabel.<br/>A custom field named "Labels" will be added to it.</p>
+                    </div>
+                </article>
+            </li>
+        </ol>
+    </section>
+
+
+
+    <!--onclick="{!runUpdate}"     -->
+    <!--        <apex:commandButton onClick="close_window()">Picklist has been updated. Please close</apex:commandButton>-->
+    <!--    </apex:form>-->
 </apex:page>

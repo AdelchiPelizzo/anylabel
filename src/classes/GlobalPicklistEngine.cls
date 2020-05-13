@@ -13,6 +13,33 @@ global with sharing class GlobalPicklistEngine {
  */
     private final AnyLabel__c a;
 
+    public static String SObjectSelected {get{System.debug('selected');return SobjectSelected;} set;}
+
+    public static void setLabelsField(){
+        if(SObjectSelected!=null){
+            createCustomFieldLabels(SObjectSelected);
+        }
+    }
+
+    public static void getSObjectSelected(){
+        SObjectSelected = SObjectSelected;
+        system.debug(SObjectSelected);
+    }
+
+    public static List<SelectOption> SelOptObj = new List<SelectOption>();
+
+    public static List<SelectOption> getSelOptObj(){
+        List<String> AllObjStrLst = getSObjectList();
+
+        SelOptObj.add(new SelectOption('',''));
+        for(String s : AllObjStrLst){
+            if(!AnalyzeObject.hasSObjectField('Labels__c', s)){
+                SelOptObj.add(new SelectOption(s,s));
+            }
+        }
+        return SelOptObj;
+    }
+
     @AuraEnabled(cacheable=true)
     public static void runUpdate(){
         System.debug('running update ....');
@@ -129,6 +156,23 @@ global with sharing class GlobalPicklistEngine {
         }
         System.debug('getting picklist id');
         return globalPicklistId;
+    }
+
+    public static void createCustomFieldLabels(String SObj){
+        System.debug(AnalyzeObject.getTypeOf(SObj));
+        System.debug(UserInfo.getOrganizationId()+''+UserInfo.getSessionId().SubString(15));
+        HttpRequest reqPOST = new HttpRequest();
+        reqPOST.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
+        reqPOST.setHeader('Content-Type', 'application/json');
+        reqPOST.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v48.0/tooling/sobjects/CustomField/');
+        reqPOST.setMethod('POST');
+        reqPOST.setBody('{"FullName": "'+SObj+'.Labels__c","Metadata": {"label": "Labels","description": "AnyLabel data", "required": false, "externalId": false, "type": "Long Text Area", "length": 100000 }}');
+        Http httpReqPOST = new Http();
+        SObject so = Schema.getGlobalDescribe().get(SObj).newSObject();
+        if(!so.getSobjectType().getDescribe().fields.getMap().containsKey('Labels__c')){
+            HttpResponse resPOST  = httpReqPOST.send(reqPOST);
+            System.debug(resPOST);
+        }
     }
 
     @AuraEnabled

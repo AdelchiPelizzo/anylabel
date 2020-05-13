@@ -37,6 +37,10 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
+                            <option name="name" value="AnalyzeObjectTest" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
                             <option name="name" value="AnyLabelAutomation" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -53,15 +57,11 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
-                            <option name="name" value="CalloutClassTest" />
+                            <option name="name" value="CreateCustomFieldLabels" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="GeneratorPicklistCalloutClassTest" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                          <MetadataEntry>
-                            <option name="name" value="getType" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
@@ -94,6 +94,10 @@
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="MockHttpRespGenUpdateGlobalPicklistId" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="MockHttpResponseCreateCustomFieldLabels" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
