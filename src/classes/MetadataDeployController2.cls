@@ -167,7 +167,8 @@ public class MetadataDeployController2{
                 '{' +
                 DataTp+' vNew = aNew.'+f+';'+
                 DataTp+' vOld = aNew.'+f+';'+
-                'if('+cond+'){' +
+//                'if(vNew!=null){' +
+                'if('+cond+' && vNew != null){' +
                 'if(labList.size()>'+1+'){' +
                 'for(Integer i=0; i<labList.size(); i++){'+
                 'if(aNew.Labels__c == null){' +
@@ -179,11 +180,14 @@ public class MetadataDeployController2{
                 'aNew.Labels__c += labList[i];' +
                 '}' +
                 '}'+
-                '}else{' +
+                '}else if(aNew.Labels__c == null){' +
+                'aNew.Labels__c = \'\';'+
                 'aNew.Labels__c += \''+Label1+'\';'+
                 '}' +
                 '}'+
-                '}' +
+//                '}' +
+                '}'+
+
                 '}else if (Trigger.isUpdate){' +
                 'for(' + ObjName + ' aOld : Trigger.old)' +
                 '{' +
@@ -193,7 +197,7 @@ public class MetadataDeployController2{
                 DataTp+' vOld = objOld.'+f+';'+
                 DataTp+' vNew = objNew.'+f+';'+
                 'if('+cond+'){' +
-                'if(labList.size()>'+1+'){' +
+                'if(labList.size()>'+1+'){'+
                 'for(String s : labList){'+
                 'System.debug(s);'+
                 'if(rec.Labels__c == null){rec.Labels__c = \'\';}'+
@@ -201,7 +205,7 @@ public class MetadataDeployController2{
                 'objNew.Labels__c += \';\'+s;'+
                 '}'+
                 '}'+
-                '}else if (rec.Labels__c==null){'+
+                '}else if (objNew.Labels__c==null){'+
                 'objNew.Labels__c = \'\';'+
                 'objNew.Labels__c += \''+Label1+'\';'+
                 '}else{' +
@@ -291,11 +295,15 @@ public class MetadataDeployController2{
             s =	'@IsTest ' +
                     'private class AL_'+triggerId+'Test {'+
                     'static testMethod void run() {'+
-                    ObjName+' a = New '+ObjName+'();'+
-                    'a.Status = \'New\';'+
-                    'a.Origin = \'Phone\';'+
-                    'insert a;'+
-                    '}' +
+                        'try {'+
+                            ObjName+' a = New '+ObjName+'();'+
+//                            'a.Status = \'New\';'+
+//                            'a.Origin = \'Phone\';'+
+                            'insert a;'+
+                            'update a;'+
+                        '} catch(Exception e) {'+
+                            '}'+
+                        '}'+
                     '}';
             system.debug(s);
             return s;

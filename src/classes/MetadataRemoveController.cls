@@ -25,31 +25,33 @@ public class MetadataRemoveController {
     }
 
     public String getMetadata()
-    {   String members= '';
+    {   system.debug('getting metadata to remove ...');
+        String members= '';
+        String members2 = '';
+        String s;
         if(trigger_Name!=null){
             for(ApexTrigger apxTrg : trigger_Name){
                 members += '<members>'+apxTrg.Name+'</members>';
+                members2 += '<members>'+apxTrg.Name+'Test</members>';
             }
         }else{
             members += '<members></members>';
+            members2 += '<members></members>';
         }
-        system.debug(members);
-        system.debug('<?xml version="1.0" encoding="UTF-8"?>'+
+        s = '<?xml version="1.0" encoding="UTF-8"?>'+
                 '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
                 '<types>'+
                 members+
                 '<name>ApexTrigger</name>'+
                 '</types>'+
-                '<version>28.0</version>'+
-                '</Package>');
-        return '<?xml version="1.0" encoding="UTF-8"?>'+
-                '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
-                    '<types>'+
-                        members+
-                        '<name>ApexTrigger</name>'+
-                    '</types>'+
+                '<types>'+
+                members2+
+                '<name>ApexClass</name>'+
+                '</types>'+
                 '<version>28.0</version>'+
                 '</Package>';
+        system.debug(s);
+        return s;
     }
 
     public PageReference deployZip()

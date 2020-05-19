@@ -49,7 +49,7 @@ public class AnalyzeObject {
             for(String fieldName : MapofField.keySet()) {
                 Schema.SObjectField field = MapofField .get(fieldName);
                 Schema.DescribeFieldResult F = field.getDescribe();
-                if(!F.isNillable() && F.getType()!= Schema.DisplayType.ID && F.getType()!= Schema.DisplayType.DATETIME && F.getType()!= Schema.DisplayType.DATE && !F.isAutoNumber() && !F.isCalculated() && F.getType()!=Schema.DisplayType.REFERENCE)
+                if(F.isCreateable() && !F.isDefaultedOnCreate() && !F.isNillable() )
                 {
                     reqFields.add(fieldName );
                     system.debug(fieldName);

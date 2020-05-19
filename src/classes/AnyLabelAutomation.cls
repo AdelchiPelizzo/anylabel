@@ -41,6 +41,10 @@ public with sharing class AnyLabelAutomation {
         return triggerList;
     }
 
+    public static String stripPrefix(String nm){
+        return nm.substringAfter('_');
+    }
+
     public PageReference getSelected()
     {
         selectedTriggers.clear();
