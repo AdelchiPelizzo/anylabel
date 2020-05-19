@@ -1,16 +1,18 @@
+/*
+ *  Copyright (c) 2020.  adelForce (Adelchi Ltd)
+ *  All Rights Reserved
+ *  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+ *  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+ */
+
 /**
  * Created by Adelchi on 14/04/2020.
- * Purpose : (Write a succinct description of this class here.)
+ * Purpose : (Controller for TriggerEngine.page and RemoveRule.page.)
  */
 
 
 public with sharing class AnyLabelAutomation {
-    /**
- * Purpose : (Write a succinct description of this method here.)
- * @param (parameter name) (Describe the first parameter here)
- * @param (parameter name) (Do the same for each additional parameter)
- * @return (description of the return value)
- */
 
     public String objectName {get; set;}
     public String fieldName {get; set;}
@@ -23,23 +25,17 @@ public with sharing class AnyLabelAutomation {
     public String triggerLink {get{
         return Url.getSalesforceBaseUrl().toExternalForm()+'/';
     }set;}
-
     private final AnyLabel__c a;
-
     ApexPages.StandardController stdCtrl;
 
     public AnyLabelAutomation(){}
-
-//    public static List<ApexTrigger> triggers {get{
-//        return [SELECT Id, Name, TableEnumOrId, Status  FROM ApexTrigger];
-//    }set;}
-
     public List<triggerWrapper> triggerList = new List<triggerWrapper>();
     public List<ApexTrigger> selectedTriggers = new List<ApexTrigger>();
 
     public List<triggerWrapper> getTriggers()
     {
         for(ApexTrigger a : [SELECT Id, Name, TableEnumOrId, Status, CreatedDate FROM ApexTrigger WHERE Name LIKE 'AL_%' ORDER BY CreatedDate DESC ]){
+            System.debug(a.Name);
             triggerList.add(new triggerWrapper(a));
         }
         return triggerList;
@@ -119,11 +115,8 @@ public with sharing class AnyLabelAutomation {
         List<String> b = New List<String>();
         for(Integer i=0; i<objectFields.size(); i++){
             b.add(String.valueOf(objectFields.values()[i].getDescribe().getType()));
-            if(objectFields.values()[i].getDescribe().isAccessible() && objectFields.values()[i].getDescribe()
-                    .isCreateable() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values
-                    ()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId() && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATETIME&& objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATE){
+            if(objectFields.values()[i].getDescribe().name!='Labels__c' && objectFields.values()[i].getDescribe().isAccessible() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId() && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATETIME && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATE && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.PHONE){
                 options.add(new SelectOption(lst[i]+'-'+b[i], objectFields.values().get(i).getDescribe().getLabel()));
-
             }
         }
         system.debug(b);
@@ -187,9 +180,15 @@ public with sharing class AnyLabelAutomation {
             ConditionNames.add(new SelectOption('Less than', 'Less than'));
             ConditionNames.add(new SelectOption('Changed', 'Changed'));
         } else if(fld.contains('PERCENT')) {
+            ConditionNames.add(new SelectOption('',''));
             ConditionNames.add(new SelectOption('Equal', 'Equal'));
             ConditionNames.add(new SelectOption('Higher', 'Higher'));
             ConditionNames.add(new SelectOption('Lower', 'Lower'));
+        }else if (fld.contains('BOOLEAN')){
+            ConditionNames.add(new SelectOption('',''));
+            ConditionNames.add(new SelectOption('Is True', 'Is True'));
+            ConditionNames.add(new SelectOption('Is False', 'Is False'));
+            ConditionNames.add(new SelectOption('Has Value Changed', 'Has Value Changed'));
         }else{
             ConditionNames.add(new SelectOption('',''));
             ConditionNames.add(new SelectOption('Includes', 'Includes'));
@@ -202,51 +201,3 @@ public with sharing class AnyLabelAutomation {
         return null;
     }
 }
-
-//    @RemoteAction
-//    public static void createTrigger(List<String> setup){
-//        for(Integer i=0; i<setup.size(); i++){
-//            system.debug('I am running ...'+setup[i]);
-//        }
-//        String x = String.valueOf(Datetime.now());
-//        String y = x.replace(' ', '_');
-//        String z = y.replace('-', '_');
-//        String w = z.replace(':', '_');
-////        AnyLabelTrigger__c alt = new AnyLabelTrigger__c(
-////                Name = setup[0],
-////                fieldName__c = setup[1],
-////                condition__c = setup[2],
-////                inputValue__c = setup[3],
-////                labelsName__c = setup[4]
-////        );
-////        insert alt;
-//        String json = '{ "Name" : "AnyLabelsTrigger", "TableEnumOrId" : "'+setup[0]+'", "Body" : "trigger AnyLabelTrigger_'+w+' on '+setup[0]+' (before update,after insert){String objectSelected=\''+setup[0]+'\';String fieldSelected=\''+setup[1]+'\';String conditionSelected=\''+setup[2]+'\';String checkValue=\''+setup[3]+'\';String labelsSelected=\''+setup[4]+'\';List<AnyLabel__c> aList= [SELECT Name FROM AnyLabel__c WHERE Assignee__c INCLUDES(\''+setup[0]+'\')];system.debug(aList.size());}"}'; //List<String> lstLab=labelsSelected.split(\',\');List<AnyLabel__c> al=[SELECT Name FROM  AnyLabel__c WHERE Assignee__c INCLUDES (\''+setup[0]+'\')];List<'+setup[0]+'> acc=new List<'+setup[0]+'>(); JSON format to create trigger
-//        system.debug(json);
-//        HttpRequest req = new HttpRequest();
-//        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/sobjects/ApexTrigger');
-//        req.setMethod('POST');
-//        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
-//        req.setHeader('Content-Type', 'application/json');
-//        req.setBody(json);
-//        Http httpReq = new Http();
-//        HttpResponse res  = httpReq.send(req);
-//        System.debug(res.getBody());
-//    }
-
-
-
-//    @future (callout=true)
-////    @InvocableMethod
-//    public static void anyLabelProcessAction(List<String> recId){
-//        String recordId = recId[0];
-//        HttpRequest req = new HttpRequest();
-//        req.setEndpoint('https://anylabel.herokuapp.com/1/2');
-//        req.setMethod('GET');
-//        Http httpReq = new Http();
-//        HttpResponse res  = httpReq.send(req);
-//        System.debug(res.getBody());
-//        Account a = [SELECT test__c from Account WHERE Id = :recordId LIMIT 1];
-//        a.test__c = res.getBody();
-//        update a;
-//    }
-//}

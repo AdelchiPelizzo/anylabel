@@ -39,7 +39,7 @@
                 </article>
                 <article>
                     <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please select an Object type on which Labels will be applied automatically.</p>
+                        <p>Select an Object type on which Labels will be applied automatically.</p>
                     </div>
                 </article>
             </li>
@@ -50,34 +50,20 @@
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
-<!--                                    <apex:actionRegion >-->
-                                        <div class="slds-text-heading_small">
-                                            <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" >
-<!--                                                <apex:actionSupport event="onchange" action="{!filterOptions}" reRender="opt"/>-->
-                                                <apex:actionSupport event="onchange" action="{!getFieldName}" reRender="opt" />
-                                                <apex:selectOptions value="{!fieldNames}" />
-                                               </apex:selectList>
-                                        </div>
-<!--                                    </apex:actionRegion>-->
+                                    <div class="slds-text-heading_small">
+                                        <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" >
+                                            <apex:actionSupport event="onchange" action="{!getFieldName}" reRender="opt" />
+                                            <apex:selectOptions value="{!fieldNames}" />
+                                        </apex:selectList>
+                                    </div>
                                 </apex:form>
-<!--                                <apex:form>-->
-<!--                                    <apex:actionRegion >-->
-<!--                                        <div class="slds-text-heading_small">-->
-<!--                                            <apex:actionSupport event="onChange" action="{!passFieldName}" reRender="test" >-->
-<!--                                            <apex:selectList value="{!fieldName}"  multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" onChange="filterCondition(this)" >-->
-<!--&lt;!&ndash;                                                &ndash;&gt;-->
-<!--                                                <apex:selectOptions value="{!fieldNames}" />-->
-<!--                                            </apex:selectList></apex:actionSupport>-->
-<!--                                        </div>-->
-<!--                                    </apex:actionRegion>-->
-<!--                                </apex:form>-->
                             </div>
                         </div>
                     </div>
                 </article>
                 <article>
                     <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please select a Field to be tracked. When its value changes a Label of your choice will be applied to the relative record.</p>
+                        <p>Please select a Field to be referenced.</p>
                     </div>
                 </article>
             </li>
@@ -102,7 +88,7 @@
                 </article>
                 <article>
                     <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please select a Condition which, the selected field will be checked against, and a Label (or Labels) of your choice will be applied to the relative Object record.</p>
+                        <p>Select a Condition which, the selected field will be checked against, and a Label (or Labels) of your choice will be applied to the relative Object record.</p>
                     </div>
                 </article>
             </li>
@@ -116,7 +102,6 @@
                                     <article id="input">
                                         <apex:actionSupport action="{!getInputValue}" event="onkeyup" reRender="test"/>
                                         <apex:input  value="{!InputValue}" />
-<!--                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" value="{!InputValue}" />-->
                                     </article>
                                 </apex:form>
                             </div>
@@ -151,21 +136,20 @@
                 </article>
                 <article>
                     <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please Select Label(s) to be applied.</p>
+                        <p>Select Label(s) to be applied.</p>
                     </div>
                 </article>
             </li>
             <li class="slds-setup-assistant__item" >
-                <label for="fieldName" class=" slds-text-title_bold">Rule Name ( <span style="color: crimson;font-size:12px; font-weight: lighter"> Max 25 characters</span>)</label>
+                <label for="fieldName" class=" slds-text-title_bold">Rule Name </label>
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
-                        <div class="slds-form-element" >
+                        <div class="slds-form-element" ><span style="color: crimson;font-size:12px">Max 25 characters - No spaces allowed</span>
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
                                     <article id="input">{!triggerId}
                                         <apex:actionSupport action="{!getTriggerId}" event="onkeyup" reRender="test"/>
                                         <apex:input  value="{!triggerId}" html-placeholder="enter a brief description"/>
-                                        <!--                                        <input class="slds-input slds-text-heading_small inputValue" title="Enter value to check with" value="{!InputValue}" />-->
                                     </article>
                                 </apex:form>
                             </div>
@@ -173,26 +157,17 @@
                     </div>
                 </article>
                 <article>
-                <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
-                        <p>Please enter Rule Identifier.</p>
+                    <div class="slds-setup-assistant__step-summary-content slds-m-top_small">
+                        <p>Enter Rule Identifier.</p>
                     </div>
                 </article>
             </li>
             <li class="slds-setup-assistant__item" >
-<!--                <label for="fieldName" class=" slds-text-title_bold">Select Label</label>-->
                 <article class="slds-setup-assistant__step" id="fieldName">
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right slds-float_right" role="button">
-<!--                                <apex:form>-->
-<!--                                    <div class="slds-button-group slds-float_right">-->
-
                                 <c:metadatadeploy ObjNm="{!objectName}" FldNm="{!fieldName}" id="test" CondNm="{!conditionName}" InpV="{!InputValue}" Labls="{!labelName}" trgId="{!triggerId}"/>
-<!--                                        <apex:actionRegion>-->
-<!--                                            <apex:commandButton  styleClass="slds-button slds-button_success" onClick="setTriggerItems();" title="Set Rule" value="Create Rule" />-->
-<!--                                        </apex:actionRegion>-->
-<!--                                    </div>-->
-<!--                                </apex:form>-->
                             </div>
                         </div>
                     </div>
@@ -200,79 +175,4 @@
             </li>
         </ol>
     </section>
-    <script>
-        function setTriggerItems(){
-            console.log('setting up trigger START ...')
-            var obj = document.getElementsByClassName('objectName')[0].value;
-            console.log('setting up trigger 1st step START ...');
-            var fie = document.getElementsByClassName('fieldName')[0].value;
-            console.log('setting up trigger 2nd step START ...')
-            var cond = document.getElementsByClassName('condition')[0].value;
-            console.log('setting up trigger 3rd step START ...')
-            var inp = document.getElementsByName('inputValue')[0].value;
-            console.log('setting up trigger 4th step START ...')
-            var labOptions = document.getElementsByClassName('labelName')[0];
-            console.log('setting up trigger 5th step START ...')
-            var labValues = [];
-            console.log('labValues ... '+labValues);
-            for (var i=0; i< labOptions.options.length ; i++) {
-                console.log('labValues ... Inside for. '+i);
-                if (labOptions.options[i].selected) {
-                    console.log('last if ... ... ');
-                labValues.push(labOptions.options[i].text)}
-            }
-            var lab = labValues.toString();
-            console.log(lab);
-            // var labOptions = document.getElementsByClassName('labelName').options;
-            // for(var i=0; i<labOptions.length; i++){
-            //     if(labOptions[i]){
-            //
-            //     }
-            //
-            // }
-            var setupList = [];
-            setupList.push(obj);
-            setupList.push(fie.split('-',1).toString());
-            setupList.push(cond);
-            setupList.push(inp);
-            setupList.push(lab);
-            Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.AnyLabelAutomation.createTrigger}', setupList, function(result, event){}, {escape: false, timeout:3000, buffer: false});
-            // Visualforce.remoting.Manager.invokeAction();
-            console.log('setting up trigger ... '+setupList);
-        }
-        function filterCondition(el){
-            console.log('field type ... ');
-            console.log('field type ... '+el.value);
-            // document.getElementsByName('fieldName')[0].innerText = el.value.split('-',1);includes('CURRENCY')
-            // console.log(document.getElementsByName('fieldName')[0].value);
-            var elF = document.getElementsByClassName('condition')[0];
-            //Remove condition not compatible with data type
-            if(el.value.includes('CURRENCY') || el.value.includes('DOUBLE') || el.value.includes('INTEGER') || el.value.includes('DATE')){
-                for(var i=0; i<elF.children.length; i++){
-                    console.log('I am IN ...');
-                    console.log('This is the value ... '+elF.children[i].value);
-                    var v = '';
-                    v = elF.children[i].value;
-                    console.log(typeof v);
-                    var v2 = '';
-                    v2 = "Start with";
-                    console.log('Does the above value matches "Start With" ? '+( v2 === v));
-                    if(elF.children[i].value === 'Start with'){
-                        console.log('I am deeper in ...');
-                        elF.children[i].style.display='none';
-                    }
-                }
-            }
-            //Restore condition on field type change
-            else if(el.value.includes('STRING')){
-                for(var i=0; i<elF.children.length; i++){
-                    if(elF.children[i].value === 'Start with'){
-                        console.log('restore value');
-                        elF.children[i].style.display='inline';
-                    }
-                }
-            }
-        }
-
-    </script>
 </apex:page>

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020.  adelForce (Adelchi Ltd)
+ *  All Rights Reserved
+ *  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+ *  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+ */
 /**
  * Created by Adelchi on 24/03/2020.
  * Purpose : (Write a succinct description of this class here.)
@@ -20,10 +27,8 @@ public with sharing class AnyLabelCtrl {
             userIdList.add(shareList[i].UserOrGroupId);
         }
         if(userIdList.contains(UserInfo.getUserId())){
-            System.debug(true);
             return false;
         }else{
-            System.debug(false);
             return true;
         }
     }
@@ -31,7 +36,6 @@ public with sharing class AnyLabelCtrl {
     @AuraEnabled
     public static List<AnyLabel__c> getGlobalLabels(){
         List<AnyLabel__c> al = [SELECT Font_Color__c, Background_Color__c, Assignee__c, Name FROM AnyLabel__c];
-        system.debug(al.size());
         return al;
     }
 
@@ -54,7 +58,6 @@ public with sharing class AnyLabelCtrl {
 
     @AuraEnabled
     public static void NewLabelMultiAssign(List<String> objectNames, String fc, String bc, String n){
-        system.debug('saving from apex ... !');
         String objs = '';
         for(Integer i=0; i<objectNames.size(); i++){
             objs += objectNames[i]+';';
@@ -110,7 +113,6 @@ public with sharing class AnyLabelCtrl {
         system.debug(alA.size()+'<>'+alR.size());
         
         List<AnyLabel__c> alToAdd = new List<AnyLabel__c>();
-//        String target = obj+';';
         String addObj = ';'+obj;
         for(Integer i=0; i<alA.size(); i++){
             if(!alA[i].Assignee__c.contains(obj)){
@@ -119,7 +121,6 @@ public with sharing class AnyLabelCtrl {
                 alToAdd.add(alA[i]);
             }
         }
-        system.debug(alToAdd.size());
         update alToAdd;
         List<AnyLabel__c> alToRem = new List<AnyLabel__c>();
         String targetR = obj+';';
@@ -152,19 +153,16 @@ public with sharing class AnyLabelCtrl {
         String obj = recId.getSobjectType().getDescribe().localName;
         List<AnyLabel__c> values = new List<AnyLabel__c>();
         String query = 'SELECT Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Assignee__c INCLUDES (\''+obj+'\') ORDER BY Name ASC';
-                values = Database.query(query);
+        values = Database.query(query);
         return  values;
     }
 
     @AuraEnabled(cacheable=true)
     public static List<AnyLabel__c> getAssignedLabelsList(String recordId){
-        system.debug('getting assigned labels to record ...');
         Id recId = recordId;
         String obj = recId.getSobjectType().getDescribe().localName;
-        system.debug(obj);
         String query = 'SELECT Labels__c FROM '+obj+' WHERE Id = \''+recordId+'\'';
         List<SObject> record = Database.query(query);
-        system.debug('Number of record '+recId+' assigned labels list .. '+record.size());
         List<AnyLabel__c> anyLabelsList = new List<AnyLabel__c>();
         List<AnyLabel__c> anyLabelsListToReturn = new List<AnyLabel__c>();
         List<String> labelsList = new List<String>();
@@ -172,14 +170,14 @@ public with sharing class AnyLabelCtrl {
             String labelsListString = (String) record[0].get('Labels__c');
             labelsList = labelsListString.split(';');
         }else{
-            system.debug(record[0].get('Labels__c'));
             return null;
         }
         anyLabelsList = [SELECT Assignee__c, Font_Color__c, Background_Color__c, Name FROM AnyLabel__c WHERE Name IN :labelsList];
         for(Integer i=0; i<anyLabelsList.size(); i++){
             if(anyLabelsList[i].Assignee__c.contains(obj)){
                 anyLabelsListToReturn.add(anyLabelsList[i]);
-            }else{system.debug('no labels to return for this record');}
+            }else{
+                system.debug('no labels to return for this record');}
         }
         if(anyLabelsListToReturn.size()==0){
             return null;

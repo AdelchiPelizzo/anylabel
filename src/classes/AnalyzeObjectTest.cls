@@ -8,7 +8,7 @@
 
 /**
  * Created by Adelchi on 13/05/2020.
- * Purpose : (Write a succinct description of this class here.)
+ * Purpose : (Test Class.)
  */
 
 

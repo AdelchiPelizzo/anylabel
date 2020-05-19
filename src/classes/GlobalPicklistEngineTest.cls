@@ -18,7 +18,8 @@ private class GlobalPicklistEngineTest {
         ctrl.runEngine();
         system.assert(ctrl.fieldNames.size()>0);
         ctrl.getObjectNames();
-//        system.assert(GlobalPicklistEngine.getGlobalPicklistId('SObject') != null);
+        system.assert(GlobalPicklistEngine.createCustomFieldLabels('Account') == null);
+        system.assert(GlobalPicklistEngine.getSelOptObj() != null);
         Test.stopTest();
 
     }

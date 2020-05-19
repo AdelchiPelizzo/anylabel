@@ -6,7 +6,7 @@
 
 <template >
     <template if:true={showModal} >
-        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large" >
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium" >
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <lightning-button-icon class="slds-modal__close" title="Close" icon-name="utility:close" icon-class="slds-button_icon-inverse" onclick={handleDialogClose} >
@@ -66,8 +66,8 @@
                     </lightning-tab>
                     <lightning-tab label="Create New"  title="New Labels will be available ONLY for current object" >
                         <div class="slds-modal__content slds-p-left--large slds-p-bottom--large" id="modal-content-id-2" >
-                            <input class="slds-input  slds-size--1-of-2" style={labelSample} required id="name" label="Name" placeholder="enter label name here"></input>
-                            <lightning-input class="hex" required type="color" name="input-color" style="width: 50%; margin-bottom: 6px" label="Favorite color" value={labelColor} onchange={getColor}></lightning-input>
+                            <input class="slds-input  slds-size--1-of-2 inputName" style={labelSample} required id="name" label="Name" placeholder="enter label name here"></input>
+                            <lightning-input class="hex" required type="color" name="input-color" style="width: 50%; margin-bottom: 6px" label="Color" value={labelColor} onchange={getColor}></lightning-input>
                             <lightning-button class="slds-button" variant="brand" style="margin-top: 5px" label="Save" onclick={createNewLabel}>
                             </lightning-button>
                         </div>

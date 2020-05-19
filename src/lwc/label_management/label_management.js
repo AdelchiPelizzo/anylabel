@@ -176,8 +176,11 @@ export default class label_management extends LightningElement {
     }
 
     createNewLabel() {
-        let el = this.template.querySelector("lightning-input");
+        console.log('Create new label ..');
+        let el = this.template.querySelector(".inputName");
+        console.log('Create new label ..'+el.value);
         let name = JSON.parse(JSON.stringify(el.value));
+        console.log(name);
         let val = [];
         val = this.globalLabelsList;
         let globList = [];
@@ -222,6 +225,7 @@ export default class label_management extends LightningElement {
                 fields[LABEL_FONT_COLOR.fieldApiName] = font_Color;
                 fields[LABEL_BACKGROUND_COLOR.fieldApiName] = background_Color;
                 fields[ASSIGNEE_NAME.fieldApiName] = this.objectApiName;
+                console.log(fields);
                 const recordInput = { apiName: LABELS_OBJECT.objectApiName, fields };
                 createRecord(recordInput).then(() => {
                     this.dispatchEvent(
@@ -253,7 +257,7 @@ export default class label_management extends LightningElement {
         for(let i=1; i<labels.children.length; i++){
             labelsList += labels.children[i].textContent+";";
         }
-        // console.log("labels ..."+labelsList);
+        console.log("labels ..."+labelsList);
         let recordInput = {fields:{
                 Id:  this.recordId,
                 Labels__c: labelsList,
@@ -435,9 +439,11 @@ export default class label_management extends LightningElement {
     getColor(event){
         event.preventDefault();
         let color = event.target.value;
+        console.log(color);
         this.labelColor = color;
         this.fontColor = this.getContrastYIQ(color);
         this.labelSample = "background-color: "+color+"; color: "+this.fontColor+"; width: 50%; margin-bottom: 6px; text-align: center";
+        console.log(this.labelSample);
         // el.children[2].style.backgroundColor =  color;
         // el.children[2].style.color = this.fontColor;
     }

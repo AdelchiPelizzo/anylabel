@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="slds-m-top_large">
                                         <apex:actionRegion >
-                                            <apex:commandButton title="Click to setup SObject for AnyLabel Application." value="Proceed" styleClass=" slds-button slds-button_success" action="{!setLabelsField}" onclick="if(!confirm('Are you sure?')){return false};"/>
+                                            <apex:commandButton title="Click to setup SObject for AnyLabel Application." value="Proceed" styleClass=" slds-button slds-button_success" action="{!setLabelsField}" onclick="if(!confirm('Are you sure?')){return false;}"/>
                                         </apex:actionRegion>
                                     </div>
                                 </apex:form>
@@ -74,10 +74,4 @@
             </li>
         </ol>
     </section>
-
-
-
-    <!--onclick="{!runUpdate}"     -->
-    <!--        <apex:commandButton onClick="close_window()">Picklist has been updated. Please close</apex:commandButton>-->
-    <!--    </apex:form>-->
 </apex:page>

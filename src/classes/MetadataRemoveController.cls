@@ -68,8 +68,8 @@ public class MetadataRemoveController {
         deployOptions.rollbackOnError = true;
 //        String[] s = new String[]{'AnyLabelTrigger'+triggerId+'Test'};
 //        deployOptions.runTests = s;
-//        deployOptions.testLevel = 'RunSpecifiedTests';
-        deployOptions.testLevel = 'NoTestRun';
+//        deployOptions.testLevel = 'RunSpecifiedTests' ;
+        deployOptions.testLevel = 'RunLocalTests';
         deployOptions.singlePackage = true;
         AsyncResult = service.deploy(ZipData, DeployOptions);
         return null;
@@ -82,7 +82,9 @@ public class MetadataRemoveController {
         MetadataService.DeployResult deployResult = service.checkDeployStatus(AsyncResult.Id, true);
         if(deployResult.done)
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Rules Removed - refresh page to continue.'));
+//            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Rules Removed - refresh page to continue.'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, '<span style="color: darkblue">Processing has been completed.<br/>Minimize this window, or hit "refresh", to continue removing rules.</span>'));
+
 
             // Deployment errors?
             if(deployResult.details!=null && deployResult.details.componentFailures!=null)
@@ -97,7 +99,7 @@ public class MetadataRemoveController {
         }
         else
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Deploying...'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Processing... please wait.'));
         }
         return null;
     }

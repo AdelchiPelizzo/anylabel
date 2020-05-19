@@ -11,10 +11,10 @@
         <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-deflate.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-inflate.js')}"/>
 
-        <apex:attribute name="triggerName" type="ApexTrigger[]" assignTo="{!trigger_Name}" description="pass   triggers list"/>
+        <apex:attribute name="triggerName" type="ApexTrigger[]" assignTo="{!trigger_Name}" description="pass triggers list"/>
 
         <apex:form id="form" style="width: 100%">
-            <div class="slds-text-body_small slds-text-color_destructive slds-m-bottom_medium"><apex:pageMessages  /></div>
+            <div class="slds-text-body_small slds-text-color_destructive slds-m-bottom_medium"><apex:pageMessages escape="false" /></div>
             <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
             <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
                 <apex:param name="data" assignTo="{!ZipData}" value=""/>
@@ -24,7 +24,7 @@
                 <c:zipEntry path="destructiveChanges.xml" data="{!Metadata}"/>
             </c:zip>
             <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
-                <input class="slds-button slds-button_success slds-float_right" type="button" onclick="generateZip();" value="Remove"/>
+                <input class="slds-button slds-button_success slds-float_left" type="button" onclick="generateZip();" value="Remove"/>
             </apex:outputPanel>
         </apex:form>
 
