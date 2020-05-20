@@ -5,15 +5,8 @@
 
 
 public class MetadataRemoveController {
-    /**
- * Purpose : (Write a succinct description of this method here.)
- * @param (parameter name) (Describe the first parameter here)
- * @param (parameter name) (Do the same for each additional parameter)
- * @return (description of the return value)
- */
     public String ZipData { get; set; }
     public List<ApexTrigger> trigger_Name {get; set;}
-
     public MetadataService.AsyncResult AsyncResult {get; private set;}
 
     public String getPackageXml()

@@ -37,7 +37,7 @@ public class MetadataDeployController2{
                 '<members>AL_'+triggerId+'Test</members>' +
                 '<name>ApexClass</name>' +
                 '</types>'+
-                '<version>26.0</version>' +
+                '<version>28.0</version>' +
                 '</Package>';
     }
 
@@ -234,64 +234,64 @@ public class MetadataDeployController2{
     public String getHelloWorldTest()
     {
         String s;
-        String f = '';
-        Schema.DisplayType fieldDisplayType;
-        if(fldName!=null ){f = getFieldName().substringBefore('-');
-            if(ObjName!=null){
-                fieldDisplayType = Schema.getGlobalDescribe().get(ObjName).getDescribe().fields.getMap().get(f).getDescribe().getType();
-                System.debug(fieldDisplayType);
-            }
-        }
-        if(ObjName == 'Opportunity'){
-            if(f == 'Probability'){
-                s = '@IsTest ' +
-                        'private class  AL_'+triggerId+'Test {'+
-                        'static testMethod void run() {'+
-                        ObjName+' a = New '+ObjName+'();'+
-                        'a.Name = \'test\' ;'+
-                        'a.CloseDate = Date.today();'+
-//                        'a.'+f+' =  \'test\' ;'+
-                        'a.StageName = \'Qualification\';'+
-                        'insert a;'+
-                        'System.debug(a.'+f+');' +
-                        '}'+
-                        '}';
-                system.debug(s);
-                return s;
-            }else{
-                s = '@IsTest ' +
-                        'private class  AL_'+triggerId+'Test {'+
-                        'static testMethod void run() {'+
-                        ObjName+' a = New '+ObjName+'();'+
-                        'a.Name = \'test\' ;'+
-                        'a.CloseDate = Date.today();'+
-                        'a.StageName = \'Qualification\';'+
-//                        'a.'+f+' =  Decimal.valueOf(\'50\') ;'+
-                        'insert a;'+
-                        'System.debug(a.'+f+');' +
-                        '}'+
-                        '}';
-                system.debug(s);
-                return s;
-            }
-        }else if(ObjName == 'Contract'){
-            s = '@IsTest ' +
-                    'private class  AL_'+triggerId+'Test {'+
-                    'static testMethod void run() {'+
-                    'Account acc = new Account();'+
-                    'acc.Name = \'test\';'+
-                    'insert acc;'+
-                    ObjName+' a = New '+ObjName+'();'+
-                    'a.Status = \'Draft\' ;'+
-                    'a.AccountId = acc.Id;'+
-                    'a.StartDate = Date.today();'+
-                    'a.ContractTerm = '+12+';'+
-                    'insert a;'+
-                    '}'+
-                    '}';
-            system.debug(s);
-            return s;
-        }else if (ObjName=='Case') {
+//        String f = '';
+//        Schema.DisplayType fieldDisplayType;
+//        if(fldName!=null ){f = getFieldName().substringBefore('-');
+//            if(ObjName!=null){
+//                fieldDisplayType = Schema.getGlobalDescribe().get(ObjName).getDescribe().fields.getMap().get(f).getDescribe().getType();
+//                System.debug(fieldDisplayType);
+//            }
+//        }
+//        if(ObjName == 'Opportunity'){
+//            if(f == 'Probability'){
+//                s = '@IsTest ' +
+//                        'private class  AL_'+triggerId+'Test {'+
+//                        'static testMethod void run() {'+
+//                        ObjName+' a = New '+ObjName+'();'+
+//                        'a.Name = \'test\' ;'+
+//                        'a.CloseDate = Date.today();'+
+////                        'a.'+f+' =  \'test\' ;'+
+//                        'a.StageName = \'Qualification\';'+
+//                        'insert a;'+
+//                        'System.debug(a.'+f+');' +
+//                        '}'+
+//                        '}';
+//                system.debug(s);
+//                return s;
+//            }else{
+//                s = '@IsTest ' +
+//                        'private class  AL_'+triggerId+'Test {'+
+//                        'static testMethod void run() {'+
+//                        ObjName+' a = New '+ObjName+'();'+
+//                        'a.Name = \'test\' ;'+
+//                        'a.CloseDate = Date.today();'+
+//                        'a.StageName = \'Qualification\';'+
+////                        'a.'+f+' =  Decimal.valueOf(\'50\') ;'+
+//                        'insert a;'+
+//                        'System.debug(a.'+f+');' +
+//                        '}'+
+//                        '}';
+//                system.debug(s);
+//                return s;
+//            }
+//        }else if(ObjName == 'Contract'){
+//            s = '@IsTest ' +
+//                    'private class  AL_'+triggerId+'Test {'+
+//                    'static testMethod void run() {'+
+//                    'Account acc = new Account();'+
+//                    'acc.Name = \'test\';'+
+//                    'insert acc;'+
+//                    ObjName+' a = New '+ObjName+'();'+
+//                    'a.Status = \'Draft\' ;'+
+//                    'a.AccountId = acc.Id;'+
+//                    'a.StartDate = Date.today();'+
+//                    'a.ContractTerm = '+12+';'+
+//                    'insert a;'+
+//                    '}'+
+//                    '}';
+//            system.debug(s);
+//            return s;
+//        }else{
             s =	'@IsTest ' +
                     'private class AL_'+triggerId+'Test {'+
                     'static testMethod void run() {'+
@@ -307,23 +307,24 @@ public class MetadataDeployController2{
                     '}';
             system.debug(s);
             return s;
-        }else{
-            s = '@IsTest ' +
-                    'private class AL_'+triggerId+'Test {'+
-                    'static testMethod void run() {'+
-                    ObjName+' a = New '+ObjName+'();'+
-                    'a.Name = \'test\';'+
-                    'insert a;'+
-                    '}' +
-                    '}';
-            system.debug(s);
-            return s;
-        }
+//        }
+//        else{
+//            s = '@IsTest ' +
+//                    'private class AL_'+triggerId+'Test {'+
+//                    'static testMethod void run() {'+
+//                    ObjName+' a = New '+ObjName+'();'+
+//                    'a.Name = \'test\';'+
+//                    'insert a;'+
+//                    '}' +
+//                    '}';
+//            system.debug(s);
+//            return s;
+//        }
     }
 
     public PageReference deployZip()
     {
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Creating Rule >>> please wait.'));
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Processing Rule >>> please wait.'));
 
         // Deploy zip file posted back from the page action function
         MetadataService.MetadataPort service = createService();
@@ -351,7 +352,7 @@ public class MetadataDeployController2{
         MetadataService.DeployResult deployResult = service.checkDeployStatus(AsyncResult.Id, true);
         if(deployResult.done)
         {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, '<br/><br/>Processing has been completed.<br/><span style="color: darkblue">Minimize this window, or hit "refresh", to create new rules.</span>'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Info, 'Processing has been completed.<br/><span style="color: darkblue">Minimize this window, or hit "refresh", to create new rules.</span>'));
 
             // Deployment errors?
             if(deployResult.details!=null && deployResult.details.componentFailures!=null)

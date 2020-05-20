@@ -147,7 +147,7 @@
                         <div class="slds-form-element" ><span style="color: crimson;font-size:12px">Max 25 characters - No spaces allowed</span>
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                                 <apex:form>
-                                    <article id="input">{!triggerId}
+                                    <article id="input">
                                         <apex:actionSupport action="{!getTriggerId}" event="onkeyup" reRender="test"/>
                                         <apex:input  value="{!triggerId}" html-placeholder="enter a brief description"/>
                                     </article>

@@ -17,6 +17,18 @@
     <apex:attribute name="Labls" type="String[]" assignTo="{!Labs}" description="pass the labels name "/>
     <apex:attribute name="trgId" type="String" assignTo="{!triggerId}" description="pass the trigger name "/>
     <apex:form id="form">
+        <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
+            <input class="slds-button slds-button_success slds-float_left slds" type="button" onclick="generateZip();" value="Set Rule" />
+        </apex:outputPanel>
+        <apex:outputPanel  id="container" >
+            <div class="slds-notify__content">
+                <p>
+                <div class="slds-text-body_regular" style="color: crimson">
+                    <apex:pageMessages escape="false"  id="apxMsg"/>
+                </div>
+                </p>
+            </div>
+        </apex:outputPanel>
         <apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
         <apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
             <apex:param name="data" assignTo="{!ZipData}" value=""/>
@@ -28,17 +40,5 @@
             <c:zipEntry path="triggers/AL_{!triggerId}.trigger" data="{!HelloWorld}"/>
             <c:zipEntry path="classes/AL_{!triggerId}Test.cls" data="{!HelloWorldTest}"/>
         </c:zip>
-        <apex:outputPanel  id="container" >
-            <div class="slds-notify__content">
-                <p>s
-                <div class="slds-text-body_regular" style="color: crimson">
-                    <apex:pageMessages escape="false"  id="apxMsg"/>
-                </div>
-                </p>
-            </div>
-        </apex:outputPanel>
-        <apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
-            <input class="slds-button slds-button_success slds-float_left slds" type="button" onclick="generateZip();" value="Set Rule" />
-        </apex:outputPanel>
     </apex:form>
 </apex:component>

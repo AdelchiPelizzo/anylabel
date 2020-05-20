@@ -119,7 +119,7 @@ public with sharing class AnyLabelAutomation {
         List<String> b = New List<String>();
         for(Integer i=0; i<objectFields.size(); i++){
             b.add(String.valueOf(objectFields.values()[i].getDescribe().getType()));
-            if(objectFields.values()[i].getDescribe().name!='Labels__c' && objectFields.values()[i].getDescribe().isAccessible() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId() && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATETIME && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATE && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.PHONE){
+            if(objectFields.values()[i].getDescribe().name!='Labels__c' && !objectFields.values()[i].getDescribe().isUnique() && objectFields.values()[i].getDescribe().isAccessible() && !objectFields.values()[i].getDescribe().isAutoNumber() && !objectFields.values()[i].getDescribe().isIdLookup() && !objectFields.values()[i].getDescribe().isExternalId() && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATETIME && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.DATE && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.PHONE && objectFields.values()[i].getDescribe().getType()!=Schema.DisplayType.ADDRESS){
                 options.add(new SelectOption(lst[i]+'-'+b[i], objectFields.values().get(i).getDescribe().getLabel()));
             }
         }
