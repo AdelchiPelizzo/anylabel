@@ -32,33 +32,11 @@ global with sharing class GlobalPicklistEngine {
 
     public static List<SelectOption> SelOptObj = new List<SelectOption>();
 
-    public static List<SelectOption> getSelOptObj(){
-        List<String> AllObjStrLst = getSObjectList();
-
-        SelOptObj.add(new SelectOption('',''));
-        for(String s : AllObjStrLst){
-            if(!AnalyzeObject.hasSObjectField('Labels__c', s)){
-                SelOptObj.add(new SelectOption(s,s));
-            }
-        }
-        return SelOptObj;
-    }
-
-    @AuraEnabled(cacheable=true)
-    public static void runUpdate(){
-        updateGlobalPicklist(getSObjectList(), getGlobalPicklistId('SObject'));
-    }
-
-    public GlobalPicklistEngine(ApexPages.StandardController stdController) {
-        this.a = (AnyLabel__c)stdController.getRecord();
-    }
-
-    @AuraEnabled(cacheable=true)
-//    @InvocableMethod
-    global static List<String> getSObjectList(){
+    global static List<String> getSObjectListForFieldEnablement(){
         List<String> SObjectList = new List<String>();
         for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().values()){
             String name = objTyp.getDescribe().getName();
+            Boolean isActivated = objTyp.getDescribe().fields.getMap().keySet().contains('Labels__c');
             if(!objTyp.getDescribe().isCreateable())
                 continue;
             if(!objTyp.getDescribe().isCustom() && objTyp.getDescribe().getRecordTypeInfos().size() > 0 && objTyp.getDescribe().isAccessible()
@@ -121,9 +99,131 @@ global with sharing class GlobalPicklistEngine {
                     && name != 'EngagementChannelType'
                     ){
                 SobjectList.add(name);
-            } else if(objTyp.getDescribe().isCustom() && name != 'AnyLabel__c'){
+            } else if(objTyp.getDescribe().isCustom() && name != 'AnyLabel__c' && !isActivated){
                 SobjectList.add(name);
             }
+        }
+        return SObjectList;
+    }
+
+    public static List<SelectOption> getSelOptObj(){
+        List<String> AllObjStrLst = getSObjectListForFieldEnablement();
+
+        SelOptObj.add(new SelectOption('',''));
+        for(String s : AllObjStrLst){
+            if(!AnalyzeObject.hasSObjectField('Labels__c', s)){
+                SelOptObj.add(new SelectOption(s,s));
+            }
+        }
+        return SelOptObj;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static void runUpdate(){
+        updateGlobalPicklist(getSObjectList(), getGlobalPicklistId('SObject'));
+    }
+
+    public GlobalPicklistEngine(ApexPages.StandardController stdController) {
+        this.a = (AnyLabel__c)stdController.getRecord();
+    }
+
+    public static Map<String, Schema.DescribeFieldResult> getFieldMetaData(
+            Schema.DescribeSObjectResult dsor, Set<String> fields) {
+        // the map to be returned with the final data
+        Map<String,Schema.DescribeFieldResult> finalMap =
+                new Map<String, Schema.DescribeFieldResult>();
+        // map of all fields in the object
+        Map<String, Schema.SObjectField> objectFields = dsor.fields.getMap();
+
+        // iterate over the requested fields and get the describe info for each one.
+        // add it to a map with field name as key
+        for(String field : fields){
+            // skip fields that are not part of the object
+            if (objectFields.containsKey(field)) {
+                Schema.DescribeFieldResult dr = objectFields.get(field).getDescribe();
+                // add the results to the map to be returned
+                finalMap.put(field, dr);
+            }
+        }
+        return finalMap;
+    }
+
+    @AuraEnabled(cacheable=true)
+    global static List<String> getSObjectList(){
+        List<String> SObjectList = new List<String>();
+        for(Schema.SObjectType objTyp : Schema.getGlobalDescribe().values()){
+            Schema.DescribeSObjectResult sor = objTyp.getDescribe();
+            Set<String> s = new Set<String>{'Labels__c'};
+            Map<String, Schema.DescribeFieldResult> mapd =  getFieldMetaData(sor, s);
+            String name = objTyp.getDescribe().getName();
+            if(mapd.keySet().contains('Labels__c')){
+                if(!objTyp.getDescribe().isCreateable())
+                    continue;
+                if(!objTyp.getDescribe().isCustom()  && objTyp.getDescribe().getRecordTypeInfos().size() > 0 && objTyp.getDescribe().isAccessible()
+                        && name != 'DuplicateRecordSet'
+                        && name != 'PartyConsent'
+                        && name != 'ContentVersion'
+                        && name != 'ContentVersion'
+                        && name != 'SearchPromotionRule'
+                        && name != 'Pricebook2'
+                        && name != 'Individual'
+                        && name != 'Event'
+                        && name != 'Task'
+                        && name != 'ContentVersion'
+                        && name != 'Product2'
+                        && name != 'Macro'
+                        && name != 'MacroInstruction'
+                        && name != 'Address'
+                        && name != 'Location'
+                        && name != 'AssociatedLocation'
+                        && name != 'CalendarView'
+                        && name != 'QuickText'
+                        && name != 'SOSSession'
+                        && name != 'DuplicateRecordItem'
+                        && name != 'AssetRelationship'
+                        && name != 'ListEmail'
+                        && name != 'ListEmailRecipientSource'
+                        && name != 'RecordAction'
+                        && name != 'OrgDeleteRequest'
+                        && name != 'FlowRecordRelation'
+                        && name != 'ContactRequest'
+                        && name != 'ContactPointEmail'
+                        && name != 'ContactPointPhone'
+                        && name != 'ListEmailIndividualRecipient'
+                        && name != 'UserEmailPreferredPerson'
+                        && name != 'ConsumptionSchedule'
+                        && name != 'ConsumptionRate'
+                        && name != 'ProductConsumptionSchedule'
+                        && name != 'AppAnalyticsQueryRequest'
+                        && name != 'ContactPointConsent'
+                        && name != 'ContactPointTypeConsent'
+                        && name != 'DataUseLegalBasis'
+                        && name != 'DataUsePurpose'
+                        && name != 'ExpressionFilter'
+                        && name != 'ExpressionFilterCriteria'
+                        && name != 'Image'
+                        && name != 'Recommendation'
+                        && name != 'AuthorizationForm'
+                        && name != 'AuthorizationFormConsent'
+                        && name != 'AuthorizationFormDataUse'
+                        && name != 'AuthorizationFormText'
+                        && name != 'PromptAction'
+                        && name != 'OrgMetric'
+                        && name != 'OrgMetricScanResult'
+                        && name != 'OrgMetricScanSummary'
+                        && name != 'RevenueElement'
+                        && name != 'CommSubscription'
+                        && name != 'CommSubscriptionChannelType'
+                        && name != 'CommSubscriptionConsent'
+                        && name != 'CommSubscriptionTiming'
+                        && name != 'EngagementChannelType'
+                        ){
+                    SobjectList.add(name);
+                } else if(objTyp.getDescribe().isCustom() && name != 'AnyLabel__c'){
+                    SobjectList.add(name);
+                }
+            }
+
         }
         return SObjectList;
     }
