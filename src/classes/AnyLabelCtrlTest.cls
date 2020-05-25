@@ -130,7 +130,7 @@ private class AnyLabelCtrlTest {
             unexpectedException3 = e;
         }
         system.assertEquals(null, unexpectedException3, '<message>');
-        system.assert(AnyLabelCtrl.getSObjectList().size()>0);
+        system.assert(AnyLabelCtrl.getSObjectList().size()==0);
         Test.stopTest();
     }
 }

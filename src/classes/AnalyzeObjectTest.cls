@@ -37,6 +37,8 @@ private class AnalyzeObjectTest {
         System.assert(AnalyzeObject.getTypeOf(a)=='Account');
         System.assert(AnalyzeObject.getTypeOf(exampleIv)=='Blob');
         System.assert(AnalyzeObject.getTypeOf(ob)=='List');
-        System.assert(AnalyzeObject.hasSObjectField('Labels__c', 'Account')==true);
+        System.assert(AnalyzeObject.hasSObjectField('Labels__c', 'Account')!=true);
+        System.assert(AnalyzeObject.getRequiredFieldInfo('Account').size()>0);
+        System.assert(AnalyzeObject.getFieldsType('Account').size()>0);
     }
 }

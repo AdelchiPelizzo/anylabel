@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2020.  adelForce (Adelchi Ltd)
+ * Copyright (c) 2020.  adelForce (Adelchi Ltd)
  *  All Rights Reserved
  *  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
  *  The intellectual and technical concepts contained are protected by trade secret or copyright law.

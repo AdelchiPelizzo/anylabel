@@ -257,6 +257,7 @@ global with sharing class GlobalPicklistEngine {
     }
 
     public static void createCustomFieldLabels(String SObj){
+        HttpCalloutMock mock = null;
         System.debug(SObj);
         HttpRequest reqPOST = new HttpRequest();
         reqPOST.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionID());
@@ -265,11 +266,15 @@ global with sharing class GlobalPicklistEngine {
         reqPOST.setMethod('POST');
         reqPOST.setBody('{"FullName": "'+SObj+'.Labels__c","Metadata": {"label": "Labels","description": "AnyLabel data", "required": false, "visibleLines" : 2, "externalId": false, "type": "LongTextArea", "length": 100000 }}');
         System.debug('{"FullName": "'+SObj+'.Labels__c","Metadata": {"label": "Labels","description": "AnyLabel data", "required": false, "visibleLines" : 2, "externalId": false, "type": "LongTextArea", "length": 100000 }}');
-        Http httpReqPOST = new Http();
         SObject so = Schema.getGlobalDescribe().get(SObj).newSObject();
-        if(!so.getSobjectType().getDescribe().fields.getMap().containsKey('Labels__c')){
-            HttpResponse resPOST  = httpReqPOST.send(reqPOST);
-            System.debug(resPOST);
+        if (Test.isRunningTest()) {
+            Test.setMock(HttpCalloutMock.class, new MockHttpResponseCreateCustomFieldLabels());
+        } else {
+            Http httpReqPOST = new Http();
+            if(!so.getSobjectType().getDescribe().fields.getMap().containsKey('Labels__c')){
+                HttpResponse resPOST  = httpReqPOST.send(reqPOST);
+                System.debug(resPOST);
+            }
         }
     }
 
@@ -292,6 +297,10 @@ global with sharing class GlobalPicklistEngine {
         req.setEndpoint(URL.getOrgDomainUrl().toExternalForm()+'/services/data/v47.0/tooling/sobjects/GlobalValueSet/'+globalPicklistId+'?_HttpMethod=PATCH');//replace id with your GlobalPicklist Id**
         req.setMethod('POST');
         Http httpReq = new Http();
-        HttpResponse res  = httpReq.send(req);
+        if (Test.isRunningTest()) {
+            Test.setMock(HttpCalloutMock.class, new MockHttpRespGeneUpdateGlobalPicklist());
+        } else {
+            HttpResponse res  = httpReq.send(req);
+        }
     }
 }

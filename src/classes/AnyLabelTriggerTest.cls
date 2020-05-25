@@ -6,17 +6,4 @@
  *  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
  */
 
-/**
- * Created by Adelchi on 18/04/2020.
- * Purpose : (Write a succinct description of this class here.)
- */
-
-
-@IsTest
-private class GeneratorPicklistCalloutClassTest {
-    @IsTest
-    static void testBehavior () {
-        Test.setMock(HttpCalloutMock.class, new MockHttpResponseGeneratorGPicklistEngine());
-        GlobalPicklistEngine.getGlobalPicklistId('SObject');
-    }
-}
+@IsTest private class  AnyLabelTriggerTest {private static Account a = New Account();static testMethod void run() {a.Name = 'test';insert a;System.debug(a.Name);}}
