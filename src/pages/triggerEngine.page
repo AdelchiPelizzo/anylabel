@@ -1,4 +1,12 @@
 <!--
+  - Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  -  All Rights Reserved
+  -  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  -  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  -  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+
+<!--
  - Created by Adelchi on 14/04/2020.
  -->
 
@@ -23,7 +31,7 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element">
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <apex:actionRegion >
                                         <div class="slds-text-heading_small">
                                             <apex:selectList value="{!objectName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input objectName">
@@ -49,7 +57,7 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <div class="slds-text-heading_small">
                                         <apex:selectList value="{!fieldName}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input fieldName" >
                                             <apex:actionSupport event="onchange" action="{!getFieldName}" reRender="opt" />
@@ -98,10 +106,10 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <article id="input">
                                         <apex:actionSupport action="{!getInputValue}" event="onkeyup" reRender="test"/>
-                                        <apex:input  value="{!InputValue}" />
+                                        <apex:input value="{!InputValue}" />
                                     </article>
                                 </apex:form>
                             </div>
@@ -120,7 +128,7 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" >
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <div class="slds-text-heading_small">
                                         <apex:actionRegion >
                                             <apex:selectList value="{!labelName}" multiSelect="true" size="5" styleClass="slds-input slds-combobox__input slds-p-left_large slds-p-right_large slds-color__background_gray-3 labelName">
@@ -146,10 +154,10 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element" ><span style="color: crimson;font-size:12px">Max 25 characters - No spaces allowed</span>
                             <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <article id="input">
                                         <apex:actionSupport action="{!getTriggerId}" event="onkeyup" reRender="test"/>
-                                        <apex:input  value="{!triggerId}" html-placeholder="enter a brief description"/>
+                                        <apex:input value="{!triggerId}" html-placeholder="enter a brief description"/>
                                     </article>
                                 </apex:form>
                             </div>

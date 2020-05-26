@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  ~  All Rights Reserved
+  ~  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  ~  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  ~  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Contract</fullName>
+        <default>false</default>
+        <label>Contract</label>
+    </customValue>
+    <customValue>
+        <fullName>Order</fullName>
+        <default>false</default>
+        <label>Order</label>
+    </customValue>
+    <customValue>
+        <fullName>Campaign</fullName>
+        <default>false</default>
+        <label>Campaign</label>
+    </customValue>
+    <customValue>
+        <fullName>CampaignMember</fullName>
+        <default>false</default>
+        <label>CampaignMember</label>
+    </customValue>
+    <customValue>
+        <fullName>Account</fullName>
+        <default>false</default>
+        <label>Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Contact</fullName>
+        <default>false</default>
+        <label>Contact</label>
+    </customValue>
+    <customValue>
+        <fullName>Lead</fullName>
+        <default>false</default>
+        <label>Lead</label>
+    </customValue>
+    <customValue>
+        <fullName>Opportunity</fullName>
+        <default>false</default>
+        <label>Opportunity</label>
+    </customValue>
+    <customValue>
+        <fullName>Asset</fullName>
+        <default>false</default>
+        <label>Asset</label>
+    </customValue>
+    <customValue>
+        <fullName>Case</fullName>
+        <default>false</default>
+        <label>Case</label>
+    </customValue>
+    <customValue>
+        <fullName>Solution</fullName>
+        <default>false</default>
+        <label>Solution</label>
+    </customValue>
+    <customValue>
+        <fullName>Idea</fullName>
+        <default>false</default>
+        <label>Idea</label>
+    </customValue>
+    <customValue>
+        <fullName>AnyLabel_Setup_Trigger__c</fullName>
+        <default>false</default>
+        <label>AnyLabel_Setup_Trigger__c</label>
+    </customValue>
+    <customValue>
+        <fullName>AnyLabelTrigger__c</fullName>
+        <default>false</default>
+        <label>AnyLabelTrigger__c</label>
+    </customValue>
+    <masterLabel>SObject</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

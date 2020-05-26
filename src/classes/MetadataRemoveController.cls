@@ -21,7 +21,7 @@ public class MetadataRemoveController {
     {
         return '<?xml version="1.0" encoding="UTF-8"?>' +
                 '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'+
-                '<version>26.0</version>' +
+                '<version>28.0</version>' +
                 '</Package>';
     }
 
@@ -69,7 +69,6 @@ public class MetadataRemoveController {
         deployOptions.performRetrieve = false;
         deployOptions.purgeOnDelete = false;
         deployOptions.rollbackOnError = true;
-//        String[] s = new String[]{'AnyLabelTrigger'+triggerId+'Test'};
 //        deployOptions.runTests = s;
 //        deployOptions.testLevel = 'RunSpecifiedTests' ;
         deployOptions.testLevel = 'RunLocalTests';

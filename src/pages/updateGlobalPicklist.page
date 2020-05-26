@@ -1,10 +1,18 @@
 <!--
+  - Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  -  All Rights Reserved
+  -  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  -  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  -  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+
+<!--
  - Created by Adelchi on 07/04/2020.
  -->
 
 <apex:page id="updateGlobalPicklist" standardController="AnyLabel__c" extensions="GlobalPicklistEngine"  showheader="false" sidebar="false" standardStylesheets="false" title="Update Global Picklist" >
     <head>
-        <apex:slds/>
+        <apex:slds />
     </head>
 
     <section class="slds-card">
@@ -24,7 +32,7 @@
 <!--                    <div class="slds-summary-detail">-->
 <!--                        <div class="slds-form-element">-->
 <!--                            <div class="slds-combobox__form-element slds-m-top_large" role="none">-->
-<!--                                <apex:form>-->
+<!--                                <apex:form >-->
 <!--                                    <div class="slds-float_right">-->
 <!--                                        <apex:commandButton title="Click to update AnyLabel global picklist values." value="Proceed" styleClass=" slds-button slds-button_success" action="{!runUpdate}" onclick="if(!confirm('Are you sure?')){return false};"/>-->
 <!--                                    </div>-->
@@ -46,7 +54,7 @@
                     <div class="slds-summary-detail">
                         <div class="slds-form-element">
                             <div class="slds-combobox__form-element" role="none">
-                                <apex:form>
+                                <apex:form >
                                     <div class="slds-text-heading_small" id="lab">
                                         <apex:actionRegion >
                                             <apex:selectList value="{!SObjectSelected}" multiSelect="false" size="1" styleClass="slds-input slds-combobox__input slds-p-left_large slds-p-right_large slds-color__background_gray-3 labelName">

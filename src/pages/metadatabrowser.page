@@ -1,0 +1,70 @@
+<!--
+  - Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  -  All Rights Reserved
+  -  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  -  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  -  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+<apex:page sidebar="false">
+	<link rel="stylesheet" href="{!URLFOR($Resource.extjs, 'resources/css/ext-all.css')}"/>
+	<script type="text/javascript" src="{!URLFOR($Resource.extjs, 'ext-all-debug.js')}"></script>
+	<script>
+		Ext.onReady(function() {
+		    var store = Ext.create('Ext.data.TreeStore', {
+		        proxy: {
+		            type: 'ajax',
+		            url: '{!$Page.metadatadata}'
+		        },
+		        sorters: [{
+		            property: 'leaf',
+		            direction: 'ASC'
+		        }, {
+		            property: 'text',
+		            direction: 'ASC'
+		        }]
+		    });
+		
+		    var tree = Ext.create('Ext.tree.Panel', {
+		        store: store,
+		        rootVisible: false,
+		        useArrows: true,
+		        frame: true,
+		        title: 'Metadata Components',
+		        renderTo: '{!$Component.appcanvas}',
+		        width: 1000,
+		        height: 500,
+		        dockedItems: [{
+		            xtype: 'toolbar',
+		            items: {
+		                text: 'Retrieve',
+		                handler: function(){
+		                    var records = tree.getView().getChecked(),
+		                        names = [];
+		                    
+		                    Ext.Array.each(records, function(rec){
+		                        names.push(rec.get('text'));
+		                    });
+		                    
+		                    Ext.MessageBox.show({
+		                        title: 'Selected Nodes',
+		                        msg: names.join('<br />'),
+		                        icon: Ext.MessageBox.INFO
+		                    });
+		                }
+		            }
+		        }]
+		    });
+		    
+		    tree.on('checkchange', 
+		    	function(node, checked, eOpts) 
+	    		{
+					Ext.each(node.childNodes, 
+						function(child) 
+						{
+							child.set('checked', checked); 
+						});
+				});
+		});
+	</script>
+	<apex:outputPanel id="appcanvas"/>  
+</apex:page>

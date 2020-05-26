@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  ~  All Rights Reserved
+  ~  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  ~  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  ~  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customObject>true</customObject>
+    <icon>AnyLabel/AnyLabIcon.png</icon>
+    <motif>Custom162: TV Widescreen</motif>
+</CustomTab>

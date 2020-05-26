@@ -1,0 +1,31 @@
+<!--
+  - Copyright (c) 2020.  adelForce (Adelchi Ltd)
+  -  All Rights Reserved
+  -  NOTICE:  All information contained herein is, and remains the property of adelForce (Adelchi Ltd) .
+  -  The intellectual and technical concepts contained are protected by trade secret or copyright law.
+  -  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
+  -->
+<apex:page controller="MetadataDeployController" sidebar="false">
+	<apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-load.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-deflate.js')}"/>
+	<apex:includeScript value="{!URLFOR($Resource.jszip, '/jszip-inflate.js')}"/>
+	<apex:form id="form">
+	    <apex:sectionHeader title="Metadata Deploy Demo"/>
+		<apex:pageMessages />
+		<apex:actionPoller action="{!checkAsyncRequest}" interval="5" rerender="form" rendered="{!NOT(ISNULL(AsyncResult))}"/>
+		<apex:actionFunction name="deployZip" action="{!deployZip}" rendered="{!ISNULL(AsyncResult)}" rerender="form">
+			<apex:param name="data" assignTo="{!ZipData}" value=""/>
+		</apex:actionFunction>
+		<c:zip name="generateZip" oncomplete="deployZip(data);" rendered="{!ISNULL(AsyncResult)}">
+			<c:zipEntry path="package.xml" data="{!PackageXml}"/>
+			<c:zipEntry path="classes/HelloWorld.cls-meta.xml" data="{!HelloWorldMetadata}"/>
+			<c:zipEntry path="classes/HelloWorldTest.cls-meta.xml" data="{!HelloWorldTestMetadata}"/>
+			<c:zipEntry path="classes/HelloWorld.cls" data="{!HelloWorld}"/>
+			<c:zipEntry path="classes/HelloWorldTest.cls" data="{!HelloWorldTest}"/>
+		</c:zip>
+		<apex:outputPanel rendered="{!ISNULL(AsyncResult)}">
+			<input type="button" onclick="generateZip();" value="Deploy"/>
+		</apex:outputPanel>
+ 	</apex:form>
+</apex:page>

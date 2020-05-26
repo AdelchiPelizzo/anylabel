@@ -6,4 +6,16 @@
  *  Dissemination of this information or reproduction of this material is strictly forbidden unless prior written permission is obtained from  adelForce (Adelchi Ltd).
  */
 
-@IsTest private class  AnyLabelTriggerTest {private static Account a = New Account();static testMethod void run() {a.Name = 'test';insert a;System.debug(a.Name);}}
+/**
+ * Created by Adelchi on 07/04/2020.
+ */
+
+import {LightningElement} from 'lwc';
+import update_picklist from '@salesforce/apex/GlobalPicklistEngine.runUpdate';
+
+export default class RunPicklistUpdate extends LightningElement {
+
+    connectedCallback(){
+        update_picklist().then(result =>{console.log('updated ...');});
+    }
+}
