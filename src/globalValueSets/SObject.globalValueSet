@@ -68,16 +68,6 @@
         <default>false</default>
         <label>Idea</label>
     </customValue>
-    <customValue>
-        <fullName>AnyLabel_Setup_Trigger__c</fullName>
-        <default>false</default>
-        <label>AnyLabel_Setup_Trigger__c</label>
-    </customValue>
-    <customValue>
-        <fullName>AnyLabelTrigger__c</fullName>
-        <default>false</default>
-        <label>AnyLabelTrigger__c</label>
-    </customValue>
     <masterLabel>SObject</masterLabel>
     <sorted>false</sorted>
 </GlobalValueSet>
